@@ -30,6 +30,7 @@
   {
     "id": "amsterdam",
     "place": "Amsterdam",
+    "townOffsetFromHarbor": {"x": 0.75, "y": 0},
     "rosterName": "Amsterdam"
   },
   {

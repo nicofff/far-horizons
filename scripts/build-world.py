@@ -240,6 +240,10 @@ for entry in selection:
         lx,ly=lx[keep],ly[keep]
     closest = np.argmin((lx+tx0+.5-px)**2+(ly+ty0+.5-py)**2)
     town = world(lx[closest]+tx0, ly[closest]+ty0)
+    if entry.get('townOffsetFromHarbor'):
+        town = {axis:round(anchor[axis]+entry['townOffsetFromHarbor'][axis],4) for axis in ['x','y']}
+        if not mask[int(town['y']*4),int(town['x']*4)]:
+            issues.append(f'Town offset must occupy land: {entry["id"]}')
     ports[entry['id']] = anchor | {'town':town, 'coordinates':{'lon':lon,'lat':lat}, 'gazetteerId':str(place['ne_id']) if place['ne_id'] else None, 'place':place['name'], 'source':entry.get('source', 'https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-populated-places/')}
     for key in ['rosterName', 'locationNote']:
         if key in entry:

@@ -12,7 +12,7 @@ All 100 trading ports and all 30 supply ports in that reference roster are imple
 
 [ports.json](ports.json) records each selected place and any name or coordinate override. Most city positions come from [Natural Earth populated places](https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-populated-places/). Small places absent from that gazetteer have explicit coordinates and individual source links. Island groups use a named harbor, such as Funchal for Madeira and Ponta Delgada for the Azores. Goa uses Panaji, Pernambuco uses Recife, Danzig uses Gdansk, and Copenhagen uses Kobenhavn. Historical labels remain visible in the game.
 
-For each city, the generator chooses the nearest raster water cell connected to the ocean as its anchorage, then the nearest land cell for its town sprite. These positions are separate from the source city coordinates. London uses the north bank. This preserves a land-based town and a reachable harbor without moving the entire coastline to accommodate a port. In the local sailing view, each port name sits beneath its town sprite.
+For each city, the generator chooses the nearest raster water cell connected to the ocean as its anchorage, then the nearest land cell for its town sprite. These positions are separate from the source city coordinates. London uses the north bank. Amsterdam's sprite uses an explicit offset from its anchorage to stand beside the waterfront; its sourced city coordinates and sailing destination stay unchanged. This preserves a land-based town and a reachable harbor without moving the entire coastline to accommodate a port. In the local sailing view, each port name sits beneath its town sprite.
 
 ## Narrow passages
 
