@@ -1,15 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createSeaBackground } from '../sea-background.js';
+import { createSeaBackground, SURF_STEP } from '../sea-background.js';
 import { createChart, SEA_VIEW } from '../chart.js';
 import { createGame } from '../engine.js';
 
 function canvasFactory(){
   const images=[];
   function create(){
-    const calls={fills:0,images:[]},image={width:0,height:0,calls,setAttribute(){}};
-    const context=new Proxy({fillRect(){calls.fills++;},drawImage(...args){calls.images.push(args);}},{get:(o,key)=>key in o?o[key]:()=>{}});
-    image.getContext=()=>context;images.push(image);return image;
+    const calls={fills:0,images:[],pixels:[]},image={width:0,height:0,calls,setAttribute(){}};let record=false;
+    const context=new Proxy({fillRect(...args){calls.fills++;if(record)calls.pixels.push([...args,this.fillStyle]);},clearRect(){calls.pixels=[];},drawImage(...args){calls.images.push(args);}},{get:(o,key)=>key in o?o[key]:()=>{}});
+    image.getContext=(type,options)=>{record=options?.alpha!==false;return context;};images.push(image);return image;
   }
   return {create,images};
 }
@@ -28,6 +28,31 @@ test('scenery tiles survive camera motion, cover the viewport, and have a bounde
   for(let y=0;y<384;y++)for(let x=0;x<512;x++)assert.ok(draws.some(a=>x>=a[5]&&x<a[5]+a[7]&&y>=a[6]&&y<a[6]+a[8]),`${x},${y} is covered`);
   assert.ok(initial<=9);background.clear();assert.equal(background.size,0);
   const before=samples;background.draw(c,position);assert.ok(samples>before,'invalidating a voyage rebuilds its scenery');
+});
+
+test('surf animates cached water pixels, loops, and stays attached to the coast while scrolling',()=>{
+  const factory=canvasFactory(),paint=[];let samples=0;
+  const landAt=(x,y)=>{samples++;return x<=100;},background=createSeaBackground(SEA_VIEW,landAt,factory.create);
+  const c={drawImage(image,...args){if(args.length===2)for(const [x,y,w,h,color] of image.calls.pixels)paint.push([x+args[0],y+args[1],w,h,color]);}};
+  function draw(position,time){
+    paint.length=0;background.draw(c,position,time);
+    const left=Math.round(position.x*SEA_VIEW.scale-SEA_VIEW.width/2),top=Math.round(position.y*SEA_VIEW.scale-SEA_VIEW.height/2);
+    return paint.filter(([x,y])=>x>=0&&y>=0&&x<512&&y<384).map(([x,y,w,h,color])=>[x+left,y+top,w,h,color]);
+  }
+  const position={x:100,y:100},first=draw(position,0),built=samples,frames=[];
+  assert.ok(first.length,'coastal water has visible surf');
+  const fills=()=>factory.images.reduce((n,image)=>n+image.calls.fills,0),before=fills();
+  draw(position,SURF_STEP/2);assert.equal(fills(),before,'the same surf step reuses its overlay while the ship animates');
+  for(let phase=0;phase<8;phase++){
+    const points=draw(position,phase*SURF_STEP);frames.push(JSON.stringify(points));
+    for(const [x,,w,h] of points){assert.ok(x/40>100&&x/40<=100.25,'foam only occupies the water band beside land');assert.equal(w,2);assert.equal(h,2);}
+  }
+  assert.ok(new Set(frames).size>1,'foam moves through the surf cycle');
+  assert.deepEqual(draw(position,8*SURF_STEP),first,'the animation loops without a discontinuity');
+  const shiftedPosition={x:100.1,y:100.1},shifted=draw(shiftedPosition,0),top=p=>Math.round(p.y*SEA_VIEW.scale-SEA_VIEW.height/2);
+  const shared=points=>points.filter(p=>p[1]>=top(shiftedPosition)&&p[1]<top(position)+SEA_VIEW.height);
+  assert.deepEqual(shared(shifted),shared(first),'scrolling does not reset or shift the waves in world space');
+  assert.equal(samples,built,'animation and camera motion do not sample terrain after tiles are cached');
 });
 
 test('chart sleeps when static, wakes for input, and cancels rendering in a hidden tab',async t=>{

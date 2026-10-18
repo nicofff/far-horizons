@@ -3,7 +3,7 @@ import { onLand, inSight, visiblePirates, supplyDays, SIGHT_RADIUS, CHART_CELL, 
 import { text, wrapText, panel, palette as P, drawShip, drawTown } from './pixel.js';
 import { createDisplay } from './display.js';
 import { biomeStyleAt } from './biomes.js';
-import { createSeaBackground } from './sea-background.js';
+import { createSeaBackground, SURF_STEP } from './sea-background.js';
 import { drawLandmark, landmarkPoint } from './landmarks.js';
 
 export const SCREEN={width:512,height:384};
@@ -22,7 +22,7 @@ export function createChart(canvas,getState,actions){
   function terrain(s,time){
     const v=SEA_VIEW,start={x:s.position.x-v.width/2/v.scale,y:s.position.y-v.height/2/v.scale};
     c.save();c.beginPath();c.rect(v.x,v.y,v.width,v.height);c.clip();
-    background.draw(c,s.position);
+    background.draw(c,s.position,time);
     const wavePhase=Math.floor(time/450)%4,minx=Math.floor(start.x),miny=Math.floor(start.y);
     for(let wy=miny;wy<start.y+v.height/v.scale;wy++)for(let wx=minx;wx<start.x+v.width/v.scale;wx++){
       const h=hash(wx,wy);if(h%3===0||landAt(wx+.4,wy+.4))continue;const p=seaPoint(s.position,{x:wx+.2+(h%5)*.1,y:wy+.2});
@@ -78,7 +78,7 @@ export function createChart(canvas,getState,actions){
     if(host.querySelector('dialog')?.open)return;
     if(!s.paused){animationId=requestAnimationFrame(draw);return;}
     let delay=Infinity;
-    if(mode==='sea')delay=Math.min(...[450,500,600,650].map(period=>period-time%period));
+    if(mode==='sea')delay=Math.min(...[SURF_STEP,450,500,600,650].map(period=>period-time%period));
     if(notice&&time<noticeUntil)delay=Math.min(delay,noticeUntil-time);
     if(Number.isFinite(delay))timer=setTimeout(()=>{timer=null;refresh();},Math.ceil(delay));
   }
