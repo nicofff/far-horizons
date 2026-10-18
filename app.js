@@ -25,13 +25,14 @@ function toggleMusic(){music.setEnabled(!music.enabled);notify(music.enabled?'Mu
 function save(announce=false){try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));saveAvailable=true;if(announce)notify('Voyage saved.');}catch{saveAvailable=false;if(announce)notify('Browser storage unavailable. Export your voyage from the voyage menu.');}}
 function result(r){notify(r.message);if(r.ok){save();updateStatus();}return r.ok;}
 function transact(r,render){const ok=result(r);if(ok)render();const feedback=$('menu-feedback');if(feedback){feedback.textContent=r.message;feedback.hidden=false;}return ok;}
-function updateStatus(){const p=portById(state.port);$('status').textContent=`${p?'At anchor in '+p.name:state.paused?'Holding position':'Under sail'}. ${supplyDays(state)} days of provisions. ${state.ships.length} ships. ${fmt(state.gold)} gold.`;$('speed-button').innerHTML=`${state.speed}X <small>SPEED</small>`;$('pause-button').setAttribute('aria-label',state.paused?'Resume sailing':'Pause sailing');}
+function updateStatus(refresh=true){if(refresh){chart.refresh();wakeSimulation();}const p=portById(state.port);$('status').textContent=`${p?'At anchor in '+p.name:state.paused?'Holding position':'Under sail'}. ${supplyDays(state)} days of provisions. ${state.ships.length} ships. ${fmt(state.gold)} gold.`;$('speed-button').innerHTML=`${state.speed}X <small>SPEED</small>`;$('pause-button').setAttribute('aria-label',state.paused?'Resume sailing':'Pause sailing');}
 function showModal(type,title,body,footer=''){
   steeringKeys.clear();
   state.paused=true;modalType=type;$('modal-content').innerHTML=`<header class="menu-header"><h1 id="menu-title">${title}</h1><button class="menu-close" aria-label="Close menu">×</button></header><div class="menu-body"><p id="menu-feedback" class="notice" role="status" hidden></p>${body}</div>${footer?`<footer class="menu-footer">${footer}</footer>`:''}`;
   modal.querySelector('.menu-close').onclick=closeModal;if(!modal.open)modal.showModal();modal.scrollTop=0;updateStatus();
 }
 function closeModal(){if(state.battle)return;modal.close();modalType=null;$('screen').querySelector('canvas').focus({preventScroll:true});updateStatus();}
+modal.addEventListener('close',()=>chart.refresh());
 modal.addEventListener('cancel',e=>{if(state.battle)e.preventDefault();else modalType=null;});
 modal.addEventListener('keydown',e=>{if(['ArrowDown','ArrowUp'].includes(e.key)&&!['INPUT','SELECT'].includes(document.activeElement.tagName)){e.preventDefault();const items=[...modal.querySelectorAll('.menu-body button:not(:disabled),.menu-footer button')];const i=items.indexOf(document.activeElement),next=(i+(e.key==='ArrowDown'?1:-1)+items.length)%items.length;items[next]?.focus();}});
 function menuButton(id,label,enabled=true){return `<button id="${id}" ${enabled?'':'disabled'}>${label}</button>`;}
@@ -193,11 +194,13 @@ document.addEventListener('keydown',e=>{
 });
 document.addEventListener('keyup',e=>{if(steeringKeys.delete(e.key.toLowerCase())&&!modal.open&&chart.mode==='sea'&&!state.paused)steerFromKeys();});
 window.addEventListener('blur',()=>steeringKeys.clear());
-document.addEventListener('visibilitychange',()=>{music.setHidden(document.hidden);if(document.hidden){steeringKeys.clear();state.paused=true;save();}});window.addEventListener('pagehide',()=>save());
-let last=performance.now();
-function frame(now){const seconds=Math.min(.15,(now-last)/1000);last=now;advance(state,seconds*state.speed*.045);music.update({...state.position,port:state.port});
+document.addEventListener('visibilitychange',()=>{music.setHidden(document.hidden);if(document.hidden){steeringKeys.clear();state.paused=true;cancelAnimationFrame(frameId);frameId=null;clearTimeout(idleTimer);idleTimer=null;save();}else{last=performance.now();wakeSimulation();}});window.addEventListener('pagehide',()=>save());
+let last=performance.now(),frameId=null,idleTimer=null;
+function wakeSimulation(){if(idleTimer!==null)last=performance.now();clearTimeout(idleTimer);idleTimer=null;if(frameId===null&&!document.hidden)frameId=requestAnimationFrame(frame);}
+function frame(now){frameId=null;if(document.hidden)return;const seconds=Math.min(.15,(now-last)/1000);last=now;advance(state,seconds*state.speed*.045);music.update({...state.position,port:state.port});
   if(state.port!==lastPort){lastPort=state.port;if(state.port){notify('Landfall at '+portById(state.port).name+'. P enters the harbor.');save();}}
   if(state.battle&&modalType!=='battle')showBattle();if(state.lost&&modalType!=='lost')showLost();
-  if(now-saveTime>4000){save();saveTime=now;updateStatus();}requestAnimationFrame(frame);
+  if(now-saveTime>4000){save();saveTime=now;updateStatus(false);}
+  if(frameId===null){if(state.paused||state.battle||state.lost)idleTimer=setTimeout(wakeSimulation,250);else wakeSimulation();}
 }
-updateStatus();save();chart.notify(state.day<.1&&state.port==='lisbon'?'Lisbon. P opens the harbor. Visit Butler Marco before you sail.':'Voyage restored. ENTER opens commands. SPACE resumes a passage.');requestAnimationFrame(frame);
+updateStatus();save();chart.notify(state.day<.1&&state.port==='lisbon'?'Lisbon. P opens the harbor. Visit Butler Marco before you sail.':'Voyage restored. ENTER opens commands. SPACE resumes a passage.');wakeSimulation();

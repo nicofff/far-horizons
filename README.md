@@ -53,6 +53,8 @@ The game draws its sea view, sprites, and bitmap text into a 512 × 384 pixel fr
 
 This is a pixel renderer with a WebGPU presentation backend. Terrain and sprite drawing still happen on the CPU. It does not yet use GPU tile batching or GPU water simulation. Command windows use HTML with a locally generated bitmap font, so they retain keyboard and screen-reader controls. There are no remote font or graphics requests.
 
+Terrain and scenery use a bounded cache of 32 tiles, each covering 256 × 256 pixels with a 32-pixel margin for trees crossing tile boundaries. Sailing reuses these tiles as the camera scrolls, and the sight mask is drawn once. The sea renders at up to 30 FPS while sailing; at anchor, it wakes only for sprite animation changes. The paused chart repaints on input or notice expiry, menus stop background animation, and hidden tabs stop the render and simulation loops. Paused simulation checks run at four per second, with steering and other commands waking it immediately.
+
 The font is checked in at `assets/far-horizons.ttf`. To regenerate it from the shared bitmap alphabet, run the dependency-declared script with [uv](https://docs.astral.sh/uv/):
 
 ```sh
