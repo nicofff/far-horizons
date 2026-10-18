@@ -1,5 +1,6 @@
 import { biomeStyleAt } from './biomes.js';
 import { seasonalStyleAt } from './world-time.js';
+import { elevationAt, mountainAt } from './relief.js';
 
 export function terrainHash(x,y){let h=Math.imul(x,374761393)^Math.imul(y,668265263);h=Math.imul(h^(h>>>13),1274126177);return (h^(h>>>16))>>>0;}
 
@@ -64,15 +65,65 @@ function scenery(c,x,y,style,h){
   }
 }
 
+function mountain(c,x,y,style,h,strength,elevation,latitude,month){
+  const arid=style.feature==='dune'||style.feature==='olive',frozen=style.feature==='ice'||style.feature==='tundra';
+  const colors=arid?['#68675b','#918b78','#bbb59d']:frozen?['#63777a','#93a5a1','#bdcac0']:['#4d5e57','#7d8b78','#a4ad91'];
+  const height=12+strength*3+Math.min(6,Math.floor(elevation/650))+(h%4),half=10+strength*3+((h>>>4)%4),peak=-4+(h>>>9)%8;
+  const winter=month===null||month===undefined?0:Math.cos((month-.5)*Math.PI/6)*(latitude<0?-1:1);
+  const snowLine=Math.max(900,3900-Math.max(0,Math.abs(latitude)-20)*45-winter*300);
+  const snow=elevation>=snowLine?Math.min(9,3+Math.floor((elevation-snowLine)/350)):0;
+  const paint=(points,color)=>{
+    points=points.map(([dx,dy])=>[Math.round(dx),Math.round(dy)]);c.fillStyle=color;
+    const bottom=Math.max(...points.map(p=>p[1]));
+    for(let row=Math.min(...points.map(p=>p[1]));row<bottom;row++){
+      const crossings=[];
+      for(let i=0;i<points.length;i++){
+        const [ax,ay]=points[i],[bx,by]=points[(i+1)%points.length];
+        if((ay<=row+.5&&by>row+.5)||(by<=row+.5&&ay>row+.5))crossings.push(ax+(row+.5-ay)*(bx-ax)/(by-ay));
+      }
+      crossings.sort((a,b)=>a-b);
+      for(let i=0;i+1<crossings.length;i+=2){const left=Math.round(crossings[i]),right=Math.round(crossings[i+1]);if(right>left)c.fillRect(x+left,y+row,right-left,1);}
+    }
+  };
+  const west=[[-half,1],[-half*.8,-height*.3],[-half*.6,-height*.27],[-half*.42,-height*.62],[-half*.25,-height*.5],[peak,-height]];
+  paint([...west,[half*.25,-height*.6],[half*.4,-height*.7],[half*.65,-height*.3],[half*.75,-height*.36],[half,1]],colors[0]);
+  paint([...west,[peak+half*.22,-height*.44],[half*.2,1]],colors[1]);
+  paint([[peak,-height],[-half*.25,-height*.5],[-half*.42,-height*.62],[-half*.57,-height*.25],[-half*.35,-height*.35],[-half*.5,1],[-half*.1,-height*.2],[peak+half*.08,-height*.48]],colors[2]);
+  paint([[half*.4,-height*.7],[half*.1,-height*.2],[half*.6,1],[half*.45,-height*.35]],colors[1]);
+  if(snow){
+    paint([[peak,-height],[peak+snow*.55,-height+snow],[peak+1,-height+snow-1],[peak-1,-height+snow+2],[peak-snow*.55,-height+snow]],'#e3e8dc');
+    paint([[peak,-height],[peak+snow*.55,-height+snow],[peak+1,-height+snow-1],[peak-1,-height+snow+2]],'#b3c7c4');
+  }
+  c.fillStyle=style.ground[2];c.fillRect(x-half+1,y+1,half*2-2,1);
+}
+
+function mountainFits(x,y,landAt){
+  // Check the whole sprite footprint so a river cannot disappear beneath a ridge.
+  for(let dy=-.75;dy<=.125;dy+=.125)for(let dx=-.625;dx<=.625;dx+=.125)if(!landAt(x+dx,y+dy))return false;
+  return true;
+}
+
 export function drawScenery(c,position,view,landAt,month){
   const left=position.x-view.width/2/view.scale,top=position.y-view.height/2/view.scale,cell=.5,items=[];
   for(let gy=Math.floor(top/cell)-1;gy<(top+view.height/view.scale)/cell+2;gy++)for(let gx=Math.floor(left/cell)-1;gx<(left+view.width/view.scale)/cell+2;gx++){
     const h=terrainHash(gx,gy),x=(gx+.5)*cell+((h>>>8)%7-3)*.035,y=(gy+.5)*cell+((h>>>16)%7-3)*.035;
     if(!landAt(x,y))continue;
     const style=month===undefined?biomeStyleAt(x,y):seasonalStyleAt(x,y,month),cluster=terrainHash(Math.floor(x),Math.floor(y));
+    if(mountainAt(x,y)&&h%5!==0)continue;
     if(h%100>=style.density*100||(style.feature==='jungle'||style.feature==='pine')&&cluster%9===0)continue;
     if(!landAt(x-.3,y-.3)||!landAt(x+.3,y-.3)||!landAt(x,y-.55)||!landAt(x,y+.1))continue;
     items.push({x:Math.round((x-left)*view.scale),y:Math.round((y-top)*view.scale),style,h});
   }
-  items.sort((a,b)=>a.y-b.y);for(const item of items)scenery(c,item.x,item.y,item.style,item.h);
+  const spacing=.7;
+  for(let gy=Math.floor(top/spacing)-1;gy<(top+view.height/view.scale)/spacing+2;gy++)for(let gx=Math.floor(left/spacing)-1;gx<(left+view.width/view.scale)/spacing+2;gx++){
+    const h=terrainHash(gx+829,gy-431),x=(gx+.5)*spacing+((h>>>8)%7-3)*.03,y=(gy+.5)*spacing+((h>>>16)%7-3)*.04;
+    const strength=mountainAt(x,y);if(!strength||h%100>=[0,42,68,88][strength])continue;
+    if(!mountainFits(x,y,landAt))continue;
+    const style=month===undefined?biomeStyleAt(x,y):seasonalStyleAt(x,y,month);
+    items.push({x:Math.round((x-left)*view.scale),y:Math.round((y-top)*view.scale),style,h,strength,elevation:elevationAt(x,y),latitude:90-y/5});
+  }
+  items.sort((a,b)=>a.y-b.y);for(const item of items){
+    if(item.strength)mountain(c,item.x,item.y,item.style,item.h,item.strength,item.elevation,item.latitude,month);
+    else scenery(c,item.x,item.y,item.style,item.h);
+  }
 }

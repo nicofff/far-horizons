@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createSeaBackground, SURF_STEP } from '../sea-background.js';
 import { createChart, SEA_VIEW, seaPoint } from '../chart.js';
-import { createGame } from '../engine.js';
+import { createGame, onLand } from '../engine.js';
 import { ports, landmarks } from '../data.js';
 import { landmarkPoint } from '../landmarks.js';
 
@@ -97,6 +97,24 @@ test('seasonal crossfades reuse monthly scenery and ocean tiles within the bound
   ocean.draw(c,position,0,.5);const seaBuilt=seaSamples;
   for(const day of [31,80,170,270,360])ocean.draw(c,position,0,day);
   assert.equal(seaSamples,seaBuilt,'open ocean does not allocate seasonal duplicates');
+});
+
+test('Andean mountain scenery stays cached through surf animation and camera motion',()=>{
+  const factory=canvasFactory(),position=ports.find(p=>p.id==='callao');let samples=0;
+  const background=createSeaBackground(SEA_VIEW,(x,y)=>{samples++;return onLand(x,y);},factory.create),c={drawImage(){}};
+  background.draw(c,position,0,199.5);background.drawScenery(c,position,199.5);
+  const built=samples,sceneryFills=()=>factory.images.filter(image=>image.width===320&&image.alpha).reduce((sum,image)=>sum+image.calls.fills,0),painted=sceneryFills();
+  const scenery=factory.images.filter(image=>image.width===320&&image.alpha);
+  assert.ok(scenery.reduce((sum,image)=>sum+image.calls.pixels.length,0)>1000,'The mountainous coast contains detailed cached scenery.');
+  for(const image of scenery)for(const [x,y,w,h] of image.calls.pixels){assert.ok([x,y,w,h].every(Number.isInteger),'Mountain edges remain crisp framebuffer pixels.');}
+  for(let phase=0;phase<8;phase++){
+    background.draw(c,position,phase*SURF_STEP,199.5);background.drawScenery(c,position,199.5);
+  }
+  assert.equal(samples,built);assert.equal(sceneryFills(),painted,'Surf animation does not repaint mountain sprites.');
+  background.draw(c,{x:position.x+.025,y:position.y},0,199.5);background.drawScenery(c,{x:position.x+.025,y:position.y},199.5);
+  assert.equal(samples,built,'Moving one framebuffer pixel reuses the existing mountain tiles.');
+  assert.equal(sceneryFills(),painted,'Moving the camera does not repaint the mountain sprites.');
+  assert.ok(background.size<=32);
 });
 
 test('chart sleeps when static, wakes for input, and cancels rendering in a hidden tab',async t=>{

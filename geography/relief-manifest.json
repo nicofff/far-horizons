@@ -1,0 +1,45 @@
+{
+  "source": {
+    "url": "https://oceania.generic-mapping-tools.org/server/earth/earth_relief/earth_relief_10m_p.grd",
+    "sha256": "bf61348f617ae6c3d6df4f71192362f6eae6861eccabaa0c0334bf3686de8ec9",
+    "name": "SRTM15 Earth Relief v2.7 at 10 arc minutes",
+    "description": "Reduced by Gaussian Cartesian filtering (52.4 km fullwidth) from SRTM15_V2.7.nc [Tozer et al., 2019; https://doi.org/10.1029/2019EA000658]",
+    "documentation": "https://www.generic-mapping-tools.org/remote-datasets/earth-relief.html",
+    "citation": "Tozer et al. (2019), Global bathymetry and topography at 15 arc seconds: SRTM15+",
+    "doi": "https://doi.org/10.1029/2019EA000658",
+    "license": "CC-BY-4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "licenseReference": "https://figshare.com/articles/online_resource/Tozer_et_al_2019_SRTM15_GMT_Grids/7979780"
+  },
+  "projection": "Equirectangular, longitude -180..180, latitude 90..-90",
+  "raster": [
+    2160,
+    1080
+  ],
+  "degreesPerPixel": 0.16666666666666666,
+  "worldUnitsPerPixel": 0.8333333333333334,
+  "encoding": "Unsigned byte: upper six bits = elevation in 250 m steps, lower two bits = mountain strength 0..3; value and varint run lengths.",
+  "mountainThresholds": [
+    {
+      "strength": 1,
+      "minimumElevation": 500,
+      "minimumLocalRelief": 400
+    },
+    {
+      "strength": 2,
+      "minimumElevation": 1000,
+      "minimumLocalRelief": 1000
+    },
+    {
+      "strength": 3,
+      "minimumElevation": 2000,
+      "minimumLocalRelief": 1800
+    }
+  ],
+  "localReliefWindowCells": 3,
+  "assetSha256": "3ab777576948afb16363b21a4e13ab758a4612b65591653f182e3f3014ab182c",
+  "adaptations": [
+    "Marine elevations are clamped to zero; the navigation mask remains authoritative.",
+    "Mountain sprites, exaggerated heights, colors and snow lines are original artistic interpretations."
+  ]
+}
