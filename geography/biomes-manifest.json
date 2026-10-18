@@ -13,7 +13,7 @@
   ],
   "degreesPerPixel": 0.1,
   "worldUnitsPerPixel": 0.5,
-  "terrainSha256": "681a50e8a855dd655d933719e81288c5a749945871ddcff2116d1649b60c7cd0",
+  "terrainSha256": "b030cac40fe3787c4c5f95232b6bd218cf98506d2697109a6164eb42cf58ff26",
   "adaptations": [
     "Rasterized biome numbers 1\u201314; Rock and Ice mapped to 15.",
     "Coastal gaps use the nearest sourced ecoregion.",
