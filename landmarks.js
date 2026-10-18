@@ -67,6 +67,15 @@ export function drawLandmark(c,site,x,y){
       for(const [x,h] of [[-24,23],[-15,18],[19,25],[27,17]]){rect(c,sand.shade,x,-h,4,h);rect(c,sand.light,x-1,-h,4,h);rect(c,sand.mid,x-2,-h-3,7,3);rect(c,sand.light,x-2,0,7,3);}
       rect(c,sand.mid,-6,-19,19,21);rect(c,sand.light,-8,-22,23,4);rect(c,sand.dark,-1,-10,9,13);rect(c,sand.dark,1,-13,5,3);
       rect(c,sand.light,12,3,8,3);rect(c,sand.mid,-18,5,12,3);break;
+    case 'nubian-ruins':
+      polygon(c,[[-32,4],[-23,-2],[23,-1],[33,6],[9,10],[-28,8]],'#ae925f');
+      rect(c,'#895b46',-26,-10,48,16);rect(c,'#bd805c',-25,-10,45,13);
+      polygon(c,[[-25,-10],[-25,-19],[-19,-19],[-19,-15],[-14,-15],[-14,-9],[-5,-9],[-5,-23],[3,-23],[3,-18],[11,-18],[11,-11],[20,-11],[20,3],[-25,3]],'#c39069');
+      rect(c,'#ddbb8a',-24,-17,3,18);rect(c,'#ddbb8a',-4,-21,3,23);
+      rect(c,'#594d3e',2,-8,8,11);rect(c,'#594d3e',4,-11,4,3);
+      rect(c,'#895b46',-17,-7,5,5);rect(c,'#895b46',14,-5,4,4);
+      for(const y of [-6,0,6])for(const x of [-28,-20,13,23])rect(c,'#95694d',x,y,6,2);
+      rect(c,'#d6ab79',-30,5,10,3);rect(c,'#c39069',21,3,9,4);break;
     case 'mosque':
       rect(c,'#b5ab83',-27,-5,54,12);rect(c,'#e1d0a2',-26,-7,51,11);
       for(const x of [-18,-3,12]){polygon(c,[[x-7,-7],[x-6,-13],[x-3,-16],[x+2,-16],[x+6,-12],[x+7,-7]],'#e1d0a2');rect(c,'#a49575',x+3,-11,3,4);}

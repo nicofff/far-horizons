@@ -82,4 +82,4 @@ These colors and sprites are artistic adaptations. Ecoregions describe broad eco
 
 ## Landmarks
 
-Ten real landmarks have original pixel sprites and collector reports. Their geographic placement, history sources, Nile approach, exploration rules, and save compatibility are documented in [LANDMARKS.md](LANDMARKS.md).
+Eleven real landmarks have original pixel sprites and collector reports. Their geographic placement, history sources, Nile approach, exploration rules, and save compatibility are documented in [LANDMARKS.md](LANDMARKS.md).

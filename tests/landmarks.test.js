@@ -15,7 +15,7 @@ function passage(start,end){
 }
 
 test('historic landmarks keep geographic coordinates, collector clues and reachable water approaches',()=>{
-  assert.equal(landmarks.length,10);assert.equal(new Set(discoveries.map(d=>d.id)).size,discoveries.length);
+  assert.equal(landmarks.length,11);assert.equal(new Set(discoveries.map(d=>d.id)).size,discoveries.length);
   for(const d of landmarks){
     assert.deepEqual({x:d.x,y:d.y},xy(d.lon,d.lat),d.id);
     assert.ok(d.source.startsWith('https://')&&d.history.length>20,d.id);
@@ -36,6 +36,20 @@ test('the Nile gives Giza a short navigable passage from the Mediterranean and b
   assert.deepEqual(s.position,d.approach);assert.ok(s.found.includes('giza'));assert.equal(s.gold,gold);assert.equal(s.fame,fame+10);
   assert.equal(s.paused,true);assert.ok(validateSave(s));
   assert.ok(plotCourse(s,'alexandria').ok);advance(s,10);assert.equal(s.port,'alexandria');
+});
+
+test('the Nile terminus reaches Soba and records its ruins for collectors',()=>{
+  const d=landmarks.find(d=>d.id==='soba'),alex=portById('alexandria');
+  assert.ok(onLand(d.x,d.y));assert.ok(d.approach.y>371);
+  assert.ok(passage(alex,d.approach)<160);assert.ok(passage(d.approach,{x:alex.x,y:alex.y})<160);
+  const s=createGame();s.port=null;s.position={x:d.approach.x,y:d.approach.y-3};
+  reveal(s);assert.ok(!s.found.includes(d.id));
+  s.position={x:1062.375,y:371.875};reveal(s);assert.ok(s.found.includes(d.id),'the visible river endpoint discovers Soba');
+  const restored=migrateSave(JSON.parse(JSON.stringify(s)));assert.ok(restored.found.includes(d.id));
+  dock(restored,'alexandria');assert.ok(signContract(restored,'ranajame').ok);
+  assert.ok(discoveryReport(restored).items.some(item=>item.id===d.id));
+  const gold=restored.gold;assert.ok(reportDiscoveries(restored,'ranajame').ok);
+  assert.equal(restored.gold,gold+d.reward);
 });
 
 test('landmark field notes require a close approach and pay only once across collectors and saves',()=>{

@@ -136,5 +136,18 @@
     "clue": "Far west of the Chilean coast lies a small, isolated island. Look for stone figures along its eastern shore.",
     "source": "https://whc.unesco.org/en/list/715/",
     "history": "Moai carving and ahu construction predate 1522. The stylized group does not reproduce the modern restored arrangement at Ahu Tongariki."
+  },
+  {
+    "id": "soba",
+    "name": "Ruins of Soba",
+    "label": "SOBA RUINS",
+    "lon": 32.6808,
+    "lat": 15.5239,
+    "sprite": "nubian-ruins",
+    "reward": 2200,
+    "description": "Red-brick walls stand among broken courtyards near the river. Our shore party sketches the roofless churches of Soba, once the capital of the kingdom of Alwa.",
+    "clue": "Follow the Nile south from Egypt to the end of the navigable river. A short shore expedition to the southeast reaches the ruined city of Soba.",
+    "source": "https://www.cambridge.org/core/journals/antiquity/article/spatial-organisation-of-soba-a-medieval-capital-on-the-blue-nile/466B19906F3251FCDFDC910B006D8FB2",
+    "history": "Medieval capital of Alwa, conquered around 1504 and subsequently abandoned. Shown as damaged brick buildings in 1522, before nineteenth-century brick extraction. The nearby Blue Nile site is reached by a shore party from the mapped river terminus."
   }
 ]
