@@ -11,11 +11,12 @@ export function createSeaBackground(view,landAt,createCanvas=()=>document.create
     if(tiles.has(key)){const entry=tiles.get(key);tiles.delete(key);tiles.set(key,entry);return entry;}
     const image=createCanvas();image.width=image.height=TILE+PADDING*2;
     const c=image.getContext('2d',{alpha:false}),left=tx*TILE-PADDING,top=ty*TILE-PADDING;
-    const surf=Array.from({length:8},()=>SURF_COLORS.map(()=>[]));
+    const surf=Array.from({length:8},()=>SURF_COLORS.map(()=>[]));let hasLand=false;
     c.fillStyle='#2865ce';c.fillRect(0,0,image.width,image.height);
     for(let sy=0;sy<image.height;sy+=2)for(let sx=0;sx<image.width;sx+=2){
       const wx=(left+sx)/view.scale,wy=(top+sy)/view.scale,h=terrainHash(Math.floor(wx*8),Math.floor(wy*8));
       if(landAt(wx,wy)){
+        hasLand=true;
         const coast=!landAt(wx-.12,wy)||!landAt(wx+.12,wy)||!landAt(wx,wy-.12)||!landAt(wx,wy+.12);
         c.fillStyle=landColor(wx,wy,coast);c.fillRect(sx,sy,2,2);
       }else{
@@ -34,10 +35,14 @@ export function createSeaBackground(view,landAt,createCanvas=()=>document.create
         else if(h%19===0){c.fillStyle='#306dd5';c.fillRect(sx,sy,2,2);}
       }
     }
-    // Render beyond each tile so trees crossing a seam survive the crop.
-    const area={width:image.width,height:image.height,scale:view.scale};
-    drawScenery(c,{x:(left+image.width/2)/view.scale,y:(top+image.height/2)/view.scale},area,landAt);
-    const entry={image,surf:surf.map(colors=>colors.map(points=>new Uint16Array(points))),overlay:null,phase:-1};
+    let scenery=null;
+    if(hasLand){
+      // Render beyond each tile so trees crossing a seam survive the crop.
+      scenery=createCanvas();scenery.width=image.width;scenery.height=image.height;
+      const area={width:image.width,height:image.height,scale:view.scale};
+      drawScenery(scenery.getContext('2d'),{x:(left+image.width/2)/view.scale,y:(top+image.height/2)/view.scale},area,landAt);
+    }
+    const entry={image,scenery,surf:surf.map(colors=>colors.map(points=>new Uint16Array(points))),overlay:null,phase:-1};
     tiles.set(key,entry);if(tiles.size>MAX_TILES)tiles.delete(tiles.keys().next().value);
     return entry;
   }
@@ -54,15 +59,22 @@ export function createSeaBackground(view,landAt,createCanvas=()=>document.create
     }
     return entry.overlay;
   }
+  function visibleTiles(position,paint){
+    const left=Math.round(position.x*view.scale-view.width/2),top=Math.round(position.y*view.scale-view.height/2);
+    for(let ty=Math.floor(top/TILE);ty*TILE<top+view.height;ty++)for(let tx=Math.floor(left/TILE);tx*TILE<left+view.width;tx++){
+      paint(tile(tx,ty),view.x+tx*TILE-left,view.y+ty*TILE-top);
+    }
+  }
   return {
     draw(c,position,time=0){
-      const left=Math.round(position.x*view.scale-view.width/2),top=Math.round(position.y*view.scale-view.height/2);
       const phase=Math.floor(time/SURF_STEP)%8;
-      for(let ty=Math.floor(top/TILE);ty*TILE<top+view.height;ty++)for(let tx=Math.floor(left/TILE);tx*TILE<left+view.width;tx++){
-        const entry=tile(tx,ty),x=view.x+tx*TILE-left,y=view.y+ty*TILE-top;
+      visibleTiles(position,(entry,x,y)=>{
         c.drawImage(entry.image,PADDING,PADDING,TILE,TILE,x,y,TILE,TILE);
         const overlay=surfImage(entry,phase);if(overlay)c.drawImage(overlay,x,y);
-      }
+      });
+    },
+    drawScenery(c,position){
+      visibleTiles(position,(entry,x,y)=>{if(entry.scenery)c.drawImage(entry.scenery,PADDING,PADDING,TILE,TILE,x,y,TILE,TILE);});
     },
     clear(){tiles.clear();},
     get size(){return tiles.size;},

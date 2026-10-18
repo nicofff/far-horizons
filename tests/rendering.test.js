@@ -9,7 +9,7 @@ function canvasFactory(){
   function create(){
     const calls={fills:0,images:[],pixels:[]},image={width:0,height:0,calls,setAttribute(){}};let record=false;
     const context=new Proxy({fillRect(...args){calls.fills++;if(record)calls.pixels.push([...args,this.fillStyle]);},clearRect(){calls.pixels=[];},drawImage(...args){calls.images.push(args);}},{get:(o,key)=>key in o?o[key]:()=>{}});
-    image.getContext=(type,options)=>{record=options?.alpha!==false;return context;};images.push(image);return image;
+    image.getContext=(type,options)=>{image.alpha=options?.alpha!==false;record=image.alpha;return context;};images.push(image);return image;
   }
   return {create,images};
 }
@@ -53,6 +53,26 @@ test('surf animates cached water pixels, loops, and stays attached to the coast 
   const shared=points=>points.filter(p=>p[1]>=top(shiftedPosition)&&p[1]<top(position)+SEA_VIEW.height);
   assert.deepEqual(shared(shifted),shared(first),'scrolling does not reset or shift the waves in world space');
   assert.equal(samples,built,'animation and camera motion do not sample terrain after tiles are cached');
+});
+
+test('cached scenery renders above every water layer and keeps its tile-edge padding',()=>{
+  const factory=canvasFactory(),draws=[];let samples=0;
+  const background=createSeaBackground(SEA_VIEW,(x,y)=>{samples++;return x<=100;},factory.create);
+  const c={drawImage:(...args)=>draws.push(args)},position={x:100,y:100};
+  const isScenery=draw=>Array.isArray(draw)&&draw[0].alpha&&draw[0].width===320;
+  let built,painted;
+  for(let phase=0;phase<8;phase++){
+    draws.length=0;background.draw(c,position,phase*SURF_STEP);
+    assert.equal(draws.some(isScenery),false,'the water pass cannot bake in tree canopies');
+    draws.push('open-water waves');background.drawScenery(c,position);
+    const first=draws.findIndex(isScenery);assert.ok(first>draws.indexOf('open-water waves'));
+    assert.ok(draws.slice(first).every(isScenery),'all foreground tiles render after all water tiles');
+    for(const args of draws.filter(isScenery))assert.deepEqual(args.slice(1,5),[32,32,256,256]);
+    const scenery=factory.images.filter(image=>image.alpha&&image.width===320),fills=scenery.reduce((n,image)=>n+image.calls.fills,0);
+    assert.ok(fills>0,'the foreground contains painted scenery');
+    if(phase===0){built=samples;painted=fills;}
+    else{assert.equal(samples,built,'no terrain probes while animating');assert.equal(fills,painted,'trees are not regenerated while animating');}
+  }
 });
 
 test('chart sleeps when static, wakes for input, and cancels rendering in a hidden tab',async t=>{

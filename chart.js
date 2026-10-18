@@ -28,6 +28,7 @@ export function createChart(canvas,getState,actions){
       const h=hash(wx,wy);if(h%3===0||landAt(wx+.4,wy+.4))continue;const p=seaPoint(s.position,{x:wx+.2+(h%5)*.1,y:wy+.2});
       c.fillStyle=h%2?'#4b85e0':'#3b78dc';const shift=wavePhase===h%4?1:0;c.fillRect(Math.round(p.x),Math.round(p.y+shift),6,1);c.fillRect(Math.round(p.x-1),Math.round(p.y+1+shift),1,1);c.fillRect(Math.round(p.x+6),Math.round(p.y-1+shift),1,1);
     }
+    background.drawScenery(c,s.position);
     for(const d of discoveries.filter(d=>inSight(s,d))){
       const p=landmarkPoint(d,seaPoint(s.position,d)),found=s.found.includes(d.id);
       if(d.sprite)drawLandmark(c,d,p.x,p.y);
