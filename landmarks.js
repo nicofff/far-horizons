@@ -1,8 +1,10 @@
 const sand={light:'#f5df9b',mid:'#d8b15f',shade:'#a57a43',dark:'#75593b'};
+const SPRITE_SCALE=.5;
 
 export function landmarkPoint(site,p){return {x:p.x+(site.drawOffset?.[0]||0),y:p.y+(site.drawOffset?.[1]||0)};}
 
 function polygon(c,points,color){
+  points=points.map(([x,y])=>[Math.round(x*SPRITE_SCALE),Math.round(y*SPRITE_SCALE)]);
   c.fillStyle=color;
   const bottom=Math.max(...points.map(p=>p[1]));
   for(let y=Math.min(...points.map(p=>p[1]));y<bottom;y++){
@@ -15,7 +17,11 @@ function polygon(c,points,color){
     for(let i=0;i+1<crossings.length;i+=2)c.fillRect(Math.round(crossings[i]),y,Math.round(crossings[i+1])-Math.round(crossings[i]),1);
   }
 }
-function rect(c,color,x,y,w,h){c.fillStyle=color;c.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h));}
+function rect(c,color,x,y,w,h){
+  c.fillStyle=color;
+  const left=Math.round(x*SPRITE_SCALE),top=Math.round(y*SPRITE_SCALE);
+  c.fillRect(left,top,Math.round((x+w)*SPRITE_SCALE)-left,Math.round((y+h)*SPRITE_SCALE)-top);
+}
 function pyramid(c,x,y,w,h){
   polygon(c,[[x-w/2,y],[x,y-h],[x+w/2,y]],sand.mid);
   polygon(c,[[x,y-h],[x+w/2,y],[x+3,y]],sand.shade);
