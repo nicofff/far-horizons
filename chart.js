@@ -49,10 +49,10 @@ export function createChart(canvas,getState,actions){
       const name=p.name.toUpperCase(),label=town,x=Math.min(v.x+v.width-name.length*6-4,Math.max(v.x+4,label.x-name.length*3));
       c.fillStyle='#142441';c.fillRect(x-3,label.y+17,name.length*6+5,12);text(c,name,x,label.y+20,P.gold);
     }
-    for(const enemy of visiblePirates(s)){const p=seaPoint(s.position,enemy);drawShip(c,p.x,p.y,{enemy:true,bob:Math.floor(time/500)%2});text(c,'!',p.x-2,p.y-21,P.red);}
+    for(const enemy of visiblePirates(s)){const p=seaPoint(s.position,enemy);drawShip(c,p.x,p.y,{type:enemy.type,enemy:true,bob:Math.floor(time/500)%2});text(c,'!',p.x-2,p.y-34,P.red);}
     const center=seaPoint(s.position,s.position),toward=sailingHeading(s);
     if(!s.paused){c.fillStyle='#71aeb9';for(let i=0;i<3;i++){const x=center.x-(toward?.x>0?1:-1)*(18+i*7);c.fillRect(x,center.y+10+(i%2)*2,5-i,1);}}
-    drawShip(c,center.x,center.y,{flip:toward?.x<0,bob:Math.floor(time/650)%2});
+    drawShip(c,center.x,center.y,{type:s.ships[0]?.type,flip:toward?.x<0,bob:Math.floor(time/650)%2});
     c.drawImage(fog,v.x,v.y);
     c.restore();
   }
@@ -78,7 +78,7 @@ export function createChart(canvas,getState,actions){
     }
     for(const d of discoveries.filter(d=>s.found.includes(d.id))){const q=toScreen(d);c.fillStyle=P.gold;c.fillRect(Math.round(q.x),Math.round(q.y)-3,1,7);c.fillRect(Math.round(q.x)-3,Math.round(q.y),7,1);}
     for(const p of ports.filter(p=>s.known.includes(p.id))){const q=toScreen(p);if(q.x<v.x+8||q.x>v.x+v.width-8||q.y<v.y+8||q.y>v.y+v.height-8)continue;c.fillStyle=s.visited.includes(p.id)?P.gold:P.white;c.fillRect(Math.round(q.x)-2,Math.round(q.y)-2,5,5);const labelX=Math.min(v.x+v.width-p.name.length*6-5,q.x+6);text(c,p.name,labelX,q.y-3,P.white);}
-    const p=toScreen(s.position);drawShip(c,p.x,p.y,{small:true});c.restore();text(c,'RECORDED COASTS ONLY',v.x+9,v.y+9,P.gold);
+    const p=toScreen(s.position);drawShip(c,p.x,p.y,{type:s.ships[0]?.type,small:true});c.restore();text(c,'RECORDED COASTS ONLY',v.x+9,v.y+9,P.gold);
     c.fillStyle='#202450';c.fillRect(v.x+5,v.y+v.height-19,350,14);text(c,'DRAG TO PAN',v.x+10,v.y+v.height-16,P.muted);for(const [label,color,x]of [['LAND','#91a878',102],['SEA','#2a6888',151],['UNKNOWN','#35405a',194]]){c.fillStyle=color;c.fillRect(x,368,6,6);text(c,label,x+10,368,P.muted);}text(c,'ARROWS: WIND',263,368,P.muted);
   }
   function draw(time){

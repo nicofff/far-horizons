@@ -15,3 +15,5 @@ dialog{font-size:16px;position:fixed;inset:auto;top:calc(var(--screen-top, 0px) 
 
 .controller,.keyboard-hint,#modal-content{zoom:var(--ui-scale,1)}
 dialog{max-width:calc(780px * var(--ui-scale,1))}
+
+.screen .ship-preview{box-sizing:content-box;display:block;flex:0 0 auto;width:96px;height:80px;object-fit:contain;image-rendering:pixelated;background:linear-gradient(#263e60 75%,#2a6888 75%);border:1px solid #8a754f}.battle-grid .ship-preview,.menu-body>.ship-preview{margin-bottom:12px}@media(max-width:650px),(max-height:500px){.screen .ship-preview{width:72px;height:60px}.ship-row{gap:10px}}

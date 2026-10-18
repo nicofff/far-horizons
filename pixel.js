@@ -19,33 +19,7 @@ export function panel(ctx,x,y,w,h,fill=palette.panel){
 export function sprite(ctx,rows,x,y,colors,scale=1,flip=false){
   rows.forEach((row,j)=>[...row].forEach((c,i)=>{if(colors[c]){ctx.fillStyle=colors[c];ctx.fillRect(Math.round(x+(flip?row.length-1-i:i)*scale),Math.round(y+j*scale),scale,scale);}}));
 }
-const ship=[
-'............brrr..........',
-'............brrr..........',
-'............b.............',
-'...........wb.............',
-'..........wwb.............',
-'.........wwwb.w...........',
-'........wwwwb.ww..........',
-'.......wwwwwb.www.........',
-'......wwwwwwb.wwww........',
-'.....wwwwwwwb.wwwww.......',
-'.....wwwwwwwb.wwwww.......',
-'......sswwwwb.wwwwww......',
-'........ssssb.ssssss......',
-'............b.............',
-'.....a......b.......a.....',
-'....aaabbbbbbbbbbbbaaa....',
-'.....abcccccccccccbaa.....',
-'......abcccccccccbaa......',
-'.......abbbbbbbbbaa.......',
-'.........aaaaaaaa.........',
-'.......tttttttttttt.......',
-];
-export function drawShip(ctx,x,y,{enemy=false,small=false,flip=false,bob=0}={}){
-  const colors={b:'#3b293b',a:'#b97748',c:'#80533d',w:enemy?'#b1b4c7':'#f4e7b5',s:enemy?'#767d9a':'#d6bb80',r:enemy?'#d85b5c':'#dc7950',t:'#3982a5'};
-  ctx.save();ctx.translate(Math.round(x),Math.round(y+bob));if(small)ctx.scale(.75,.75);sprite(ctx,ship,-13,-13,colors,1,flip);ctx.restore();
-}
+export { drawShip } from './ship-sprites.js';
 export function drawTown(ctx,x,y){
   const roof='#b85b47',wall='#e6d49d',shade='#b39f79';
   ctx.fillStyle='#705142';ctx.fillRect(x-26,y+9,45,5);ctx.fillStyle='#b68a56';for(let i=0;i<4;i++)ctx.fillRect(x-25+i*12,y+9,2,7);
