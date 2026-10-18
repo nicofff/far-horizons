@@ -17,7 +17,7 @@ Open [the game](http://localhost:5173). The server listens on your computer only
 - Arrow keys or WASD set a heading. The ship continues on that heading until you stop, turn, or encounter land. The camera follows the fleet.
 - Enter or Z opens the sea or port commands. Use Up/Down and Enter to select, or click a command. Escape closes a menu.
 - M opens or closes the recorded chart. Drag and scroll there to inspect your notes. The sailing view cannot pan or zoom away from the fleet.
-- F opens fleet commands. R opens sailing data. P enters the current harbor.
+- F opens fleet commands. R opens sailing data. P reopens the current harbor menu. Harbors open automatically when you arrive.
 - Space pauses or resumes sailing. T cycles 1X, 4X, and 16X time. N turns music on or off. The controls below the screen also work with a mouse or touch.
 - Click nearby open water to quick-sail to that location. Click a visible harbor or enemy ship to inspect it.
 
@@ -25,9 +25,9 @@ Menus, landfall, low provisions, combat, and leaving the browser tab pause time.
 
 ## First passage
 
-For the new specialist loop, press P in Lisbon and visit Butler Marco at the Franco residence. Sign a discovery contract, ask for a rumour, then ask about Olives. Palma becomes a known destination. Olives can teach Cartography and buy reports of your newly charted waters. See [port specialists and reporting](SPECIALISTS.md) for the full roster and rules.
+In Lisbon, visit Butler Marco at the Franco residence from the harbor menu. Sign a discovery contract, ask for a rumour, then ask about Olives. Palma becomes a known destination. Olives can teach Cartography and buy reports of your newly charted waters. See [port specialists and reporting](SPECIALISTS.md) for the full roster and rules.
 
-In Lisbon, press Enter, choose **Enter harbor**, and visit the market. Buy five units of Olive Oil. Return to the commands, choose **Auto sail**, and select Madeira. Use T twice for 16X travel if desired. Landfall pauses the game. Enter Madeira's market and sell the Olive Oil at its higher regional price.
+In Lisbon's harbor menu, visit the market and buy five units of Olive Oil. Choose **Auto sail** and select Madeira. Use T twice for 16X travel if desired. Landfall pauses the game and opens the harbor menu automatically. Enter Madeira's market and sell the Olive Oil at its higher regional price.
 
 Use Harbor / Supply to choose 10, 25, 50, or 100 days of provisions. Food and water take cargo space. Each ten crew consume one unit of each per day, with a minimum of one unit. Water is free in port. Order ships at regional shipyards, wait for construction, then return to the ordering port to launch them. Or capture pirates by weakening them with gunfire and boarding. Provision again after expanding the fleet.
 
