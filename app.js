@@ -15,7 +15,12 @@ try{const raw=localStorage.getItem(SAVE_KEY);state=raw?migrateSave(JSON.parse(ra
 state ||= createGame();state.paused=true;lastPort=state.port;
 const modal=$('modal');
 for(const event of ['pointerdown','pointerup','pointermove','wheel'])modal.addEventListener(event,e=>e.stopPropagation());
-function fitMenus(){const rect=$('screen').getBoundingClientRect();for(const [key,value] of Object.entries({top:rect.top,left:rect.left,width:rect.width,height:rect.height}))document.documentElement.style.setProperty('--screen-'+key,value+'px');}
+function fitMenus(){
+  const screen=$('screen'),root=document.documentElement;
+  root.style.setProperty('--ui-scale',Math.max(1,screen.getBoundingClientRect().width/1024));
+  const rect=screen.getBoundingClientRect();
+  for(const [key,value] of Object.entries({top:rect.top,left:rect.left,width:rect.width,height:rect.height}))root.style.setProperty('--screen-'+key,value+'px');
+}
 new ResizeObserver(fitMenus).observe($('screen'));window.addEventListener('resize',fitMenus);document.fonts.ready.then(fitMenus);fitMenus();
 const chart=createChart($('chart'),()=>state,{port:showHarbor,fleet:showFleet,log:showLog,menu:showCommands,pause:togglePause,speed:cycleSpeed,select:showPort,landmark:showLandmark,course,enemy:showEnemy,mode:()=>{steeringKeys.clear();updateStatus();}});
 function notify(message){chart.notify(message);$('status').textContent=message;}

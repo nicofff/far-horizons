@@ -49,7 +49,7 @@ The chosen range is a design setting for this prototype, not a claim about the o
 
 ## Rendering
 
-The game draws its sea view, sprites, and bitmap text into a 512 × 384 pixel framebuffer. A WebGPU presenter uploads that frame to a texture and displays it with a WGSL shader. When no adapter is available, initialization fails, or the device is lost, it uses Canvas 2D. CSS scales the frame with nearest-neighbor filtering. Append [`?renderer=canvas`](http://localhost:5173/?renderer=canvas) to force the fallback for comparison.
+The game draws its sea view, sprites, and bitmap text into a 512 × 384 pixel framebuffer. A WebGPU presenter uploads that frame to a texture and displays it with a WGSL shader. When no adapter is available, initialization fails, or the device is lost, it uses Canvas 2D. The console fits the browser window while keeping its 4:3 playfield. Controls and menus scale up with large displays, and CSS enlarges the same framebuffer with nearest-neighbor filtering. Append [`?renderer=canvas`](http://localhost:5173/?renderer=canvas) to force the fallback for comparison.
 
 This is a pixel renderer with a WebGPU presentation backend. Terrain and sprite drawing still happen on the CPU. It does not yet use GPU tile batching or GPU water simulation. Command windows use HTML with a locally generated bitmap font, so they retain keyboard and screen-reader controls. There are no remote font or graphics requests.
 
