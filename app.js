@@ -6,6 +6,7 @@ import { guildTypes, hasGuild, checkGuildDeadline, guildObjective, guildDelivery
 import { portraitUrl } from './portraits.js';
 import { createChart } from './chart.js';
 import { createMusic } from './music.js';
+import { createSimulationLoop } from './simulation-loop.js';
 import { windReport } from './wind.js';
 import { musicRegions, regionById, regionTunes } from './music-score.js';
 
@@ -244,13 +245,12 @@ document.addEventListener('keydown',e=>{
 });
 document.addEventListener('keyup',e=>{if(steeringKeys.delete(e.key.toLowerCase())&&!modal.open&&chart.mode==='sea'&&!state.paused)steerFromKeys();});
 window.addEventListener('blur',()=>steeringKeys.clear());
-document.addEventListener('visibilitychange',()=>{music.setHidden(document.hidden);if(document.hidden){steeringKeys.clear();state.paused=true;cancelAnimationFrame(frameId);frameId=null;clearTimeout(idleTimer);idleTimer=null;save();}else{last=performance.now();wakeSimulation();}});window.addEventListener('pagehide',()=>save());
-let last=performance.now(),frameId=null,idleTimer=null;
-function wakeSimulation(){if(idleTimer!==null)last=performance.now();clearTimeout(idleTimer);idleTimer=null;if(frameId===null&&!document.hidden)frameId=requestAnimationFrame(frame);}
-function frame(now){frameId=null;if(document.hidden)return;const seconds=Math.min(.15,(now-last)/1000);last=now;const contract=state.guild.active?.id;advance(state,seconds*state.speed*.045);if(contract&&!state.guild.active&&state.guild.history[0]?.id===contract&&state.guild.history[0].outcome==='expired'){notify('Guild assignment expired. Check the quest log.');save();}music.update({...state.position,port:state.port});
+document.addEventListener('visibilitychange',()=>{steeringKeys.clear();simulation.visibilityChanged();save();});window.addEventListener('pagehide',()=>save());
+const simulation=createSimulationLoop(frame,{idle:()=>state.paused||state.battle||state.lost});
+function wakeSimulation(){simulation.wake();}
+function frame(seconds,now){const contract=state.guild.active?.id;advance(state,seconds*state.speed*.045);if(contract&&!state.guild.active&&state.guild.history[0]?.id===contract&&state.guild.history[0].outcome==='expired'){notify('Guild assignment expired. Check the quest log.');save();}music.update({...state.position,port:state.port});
   if(state.port!==lastPort){lastPort=state.port;if(state.port){notify('Landfall at '+portById(state.port).name+'. Welcome ashore.');save();showHarbor();}}
   if(state.battle&&modalType!=='battle')showBattle();if(state.lost&&modalType!=='lost')showLost();
   if(now-saveTime>4000){save();saveTime=now;updateStatus(false);}
-  if(frameId===null){if(state.paused||state.battle||state.lost)idleTimer=setTimeout(wakeSimulation,250);else wakeSimulation();}
 }
 updateStatus();save();chart.notify(state.day<.1&&state.port==='lisbon'?'Lisbon. Visit Butler Marco before you sail.':state.port?'Welcome back to '+portById(state.port).name+'.':'Voyage restored. ENTER opens commands. SPACE resumes a passage.');if(state.port&&!state.battle&&!state.lost)showHarbor();wakeSimulation();

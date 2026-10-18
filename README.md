@@ -21,7 +21,7 @@ Open [the game](http://localhost:5173). The server listens on your computer only
 - Space pauses or resumes sailing. T cycles 1X, 4X, and 16X time. N turns music on or off. The controls below the screen also work with a mouse or touch.
 - Click nearby open water to quick-sail to that location. Click a visible harbor or enemy ship to inspect it.
 
-Menus, landfall, low provisions, combat, and leaving the browser tab pause time. Closing a menu leaves the voyage paused; press Space to resume.
+Menus, landfall, low provisions, and combat pause time. Sailing continues at the selected speed when you switch tabs, and music follows its on/off setting. Closing a menu leaves the voyage paused; press Space to resume.
 
 ## First passage
 
@@ -69,7 +69,7 @@ The game draws its sea view, sprites, and bitmap text into a 512 × 384 pixel fr
 
 This is a pixel renderer with a WebGPU presentation backend. Terrain and sprite drawing still happen on the CPU. It does not yet use GPU tile batching or GPU water simulation. Command windows use HTML with a locally generated bitmap font, so they retain keyboard and screen-reader controls. There are no remote font or graphics requests.
 
-Terrain and scenery use a bounded cache of 32 tiles, each covering 256 × 256 pixels with a 32-pixel margin for trees crossing tile boundaries. Sailing reuses these tiles as the camera scrolls, and the sight mask is drawn once. The sea renders at up to 30 FPS while sailing; at anchor, it wakes only for sprite animation changes. The paused chart repaints on input or notice expiry, menus stop background animation, and hidden tabs stop the render and simulation loops. Paused simulation checks run at four per second, with steering and other commands waking it immediately.
+Terrain and scenery use a bounded cache of 32 tiles, each covering 256 × 256 pixels with a 32-pixel margin for trees crossing tile boundaries. Sailing reuses these tiles as the camera scrolls, and the sight mask is drawn once. The sea renders at up to 30 FPS while sailing; at anchor, it wakes only for sprite animation changes. The paused chart repaints on input or notice expiry, menus stop background animation, and hidden tabs stop rendering. Background sailing uses one timer per second and accounts for elapsed time if the browser delays it. Returning to the tab settles that elapsed passage before repainting. Background travel still stops for landfall, encounters, low provisions, and other normal pause conditions; paused hidden voyages have no simulation timer. Visible paused simulation checks run at four per second, with steering and other commands waking it immediately.
 
 Chart memory keeps a derived lookup of recorded squares and appends only new observations. Movement never rebuilds or copies the full exploration history. The saved record keeps its original order for cartographer payments, and importing a voyage rebuilds its lookup once. Run `node scripts/benchmark-sailing.mjs` to compare simulation cost with 100 to 100,000 charted squares.
 
