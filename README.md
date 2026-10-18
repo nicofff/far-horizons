@@ -39,6 +39,8 @@ The economy uses the original game's regional goods and shipyard catalog from do
 
 ## Local awareness and charting
 
+The Paraná is navigable from the Río de la Plata near Montevideo to the lower Iguazú, ending below Iguazú Falls. Follow the river inland to record the falls and return to a collector for the report reward.
+
 The sailing screen shows remaining supply days below the date, based on whichever runs out first: food or water at the current fleet's consumption rate. The counter turns red at ten days or fewer.
 
 Daylight follows the fractional voyage day, with a restrained blue night tint, warm dawn and dusk, and lit harbor windows. A small phase and season indicator sits below the supplies. Lighting eases during fast travel and stays fixed while paused. Temperate foliage and ground colors shift through the calendar, with reversed seasons south of the equator and longer summer days. Tropical forests, mangroves, deserts, and permanent ice keep their regional palettes. Monthly scenery colors blend in sixteen small cached steps; ordinary frames reuse those composites within the existing 32-tile limit, and open ocean shares its tiles across seasons.
@@ -107,7 +109,7 @@ npm test
 
 The tests cover all harbor-to-harbor routes, land avoidance, supplies, trade, fleet growth, monthly port development, regional ship unlocks, construction, refits, capture, combat, local sightings, manual steering, specialist contracts, report payments, lessons, regional music and songbook saves, and save migration. Browser verification covers WebGPU and forced Canvas rendering, market fill-hold purchases, monthly investment settlement, advanced ship construction and launch, refits, supply selection, specialist contracts, report payments, skill training, and responsive menus.
 
-The current sandbox has 132 ports, 11 named specialists, seventeen discoveries including eleven real landmarks, a catalog of 25 original ship types, and four pirate fleets. All 46 original commodities and all 25 ship blueprints can be reached through port development. Coastlines use rasterized geographic data; prices and unlock requirements use fan reference tables. Taxes, fluctuating market indices, cannon equipment, figureheads, and the original sailing physics are not implemented. The original game's walkable towns, character stories, diplomacy, crew job allocation, and tactical battle map are not implemented. Harbor activity uses command menus and combat remains a simplified round-based system.
+The current sandbox has 132 ports, 11 named specialists, eighteen discoveries including twelve real landmarks, a catalog of 25 original ship types, and four pirate fleets. All 46 original commodities and all 25 ship blueprints can be reached through port development. Coastlines use rasterized geographic data; prices and unlock requirements use fan reference tables. Taxes, fluctuating market indices, cannon equipment, figureheads, and the original sailing physics are not implemented. The original game's walkable towns, character stories, diplomacy, crew job allocation, and tactical battle map are not implemented. Harbor activity uses command menus and combat remains a simplified round-based system.
 
 ## Reference points
 

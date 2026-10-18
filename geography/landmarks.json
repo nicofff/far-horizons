@@ -149,5 +149,22 @@
     "clue": "Follow the Nile south from Egypt to the end of the navigable river. A short shore expedition to the southeast reaches the ruined city of Soba.",
     "source": "https://www.cambridge.org/core/journals/antiquity/article/spatial-organisation-of-soba-a-medieval-capital-on-the-blue-nile/466B19906F3251FCDFDC910B006D8FB2",
     "history": "Medieval capital of Alwa, conquered around 1504 and subsequently abandoned. Shown as damaged brick buildings in 1522, before nineteenth-century brick extraction. The nearby Blue Nile site is reached by a shore party from the mapped river terminus."
+  },
+  {
+    "id": "iguazu",
+    "name": "Iguazu Falls",
+    "label": "IGUAZU FALLS",
+    "lon": -54.4367,
+    "lat": -25.6953,
+    "sprite": "waterfall",
+    "reward": 2400,
+    "description": "A low roar grows into thunder beyond the river bend. White curtains of water plunge between forested cliffs, and spray hangs above the gorge as our shore party sketches the falls.",
+    "clue": "From Montevideo, sail west into the Rio de la Plata and follow the Parana inland. Near the upper end of the passage, turn east into the lower Iguazu River and approach the falls.",
+    "source": "https://whc.unesco.org/en/list/303/",
+    "history": "Natural waterfall complex on the Iguazu River, upstream of its confluence with the Parana. The route ends below the cataracts and represents a final shore excursion. No modern dams, bridges or tourism infrastructure are depicted.",
+    "drawOffset": [
+      20,
+      16
+    ]
   }
 ]

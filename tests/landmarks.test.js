@@ -15,7 +15,7 @@ function passage(start,end){
 }
 
 test('historic landmarks keep geographic coordinates, collector clues and reachable water approaches',()=>{
-  assert.equal(landmarks.length,11);assert.equal(new Set(discoveries.map(d=>d.id)).size,discoveries.length);
+  assert.equal(landmarks.length,12);assert.equal(new Set(discoveries.map(d=>d.id)).size,discoveries.length);
   for(const d of landmarks){
     assert.deepEqual({x:d.x,y:d.y},xy(d.lon,d.lat),d.id);
     assert.ok(d.source.startsWith('https://')&&d.history.length>20,d.id);

@@ -303,5 +303,18 @@
       "url": "https://naturalearth.s3.amazonaws.com/10m_cultural/ne_10m_populated_places_simple.zip",
       "sha256": "2963ee08f7743f13f37d5243acd77a2f7a510e26a36c7e04b920f1b381f2b251"
     }
+  },
+  "riverRoutes": {
+    "file": "parana-iguazu.geojson",
+    "sha256": "1a2e899ab1b004fe46bb9b46f575567b33e14ed14c6fd0b1ff08a59edbb9e1eb",
+    "source": {
+      "name": "HydroRIVERS v1.0, South America",
+      "url": "https://data.hydrosheds.org/file/HydroRIVERS/HydroRIVERS_v10_sa_shp.zip",
+      "documentation": "https://www.hydrosheds.org/products/hydrorivers",
+      "sha256": "38bfdcdfcc0698b1b37c1700434bcd65e792244d704153f055969f356d5cc7d5",
+      "citation": "Lehner, B., Grill G. (2013): Global river hydrography and network routing: baseline data and new approaches to study the world\u2019s large river systems. Hydrological Processes, 27(15): 2171\u20132186.",
+      "license": "https://www.hydrosheds.org/terms-of-use"
+    },
+    "widthCells": 3
   }
 }

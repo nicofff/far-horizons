@@ -30,6 +30,10 @@ The northern Gulf of Riga route follows the Hari and Suur straits through the V�
 
 The southern Malacca and Singapore passages use a different treatment to preserve the larger islands. The builder finds water-only routes through the sixteen-times-resolution Natural Earth coastline between approach points, including a southern waypoint for Singapore Strait and a north–south route west of Batam through the Durian approach. It draws those routes with a three-cell water stroke into the regular collision mask. Only the corridor edges change; island coasts elsewhere retain their original raster. This is a gameplay width adjustment rather than a hydrographic shipping chart. [manifest.json](manifest.json) records the approach points and stroke widths.
 
+The Paraná and lower Iguazú use a connected route extracted from [HydroRIVERS v1.0](https://www.hydrosheds.org/products/hydrorivers), developed by WWF and McGill University. [parana-iguazu.geojson](parana-iguazu.geojson) retains 436 linked river reaches and 1,576 source vertices, starting below Iguazú Falls and following `NEXT_DOWN` links to the Paraná delta. It includes the short Río de la Plata estuary connection needed to meet the Natural Earth coastline. The three-cell channel follows that geometry and stops below the cataracts; modern dams and reservoirs are not added. Widths and unrestricted fleet passage through river rapids are gameplay abstractions. [UNESCO describes the Iguazú–Paraná connection](https://whc.unesco.org/en/list/303/). The builder opens only the traced river corridor, preserves existing water and port positions, and records the route checksum in [manifest.json](manifest.json). Terrain revision 8 refreshes saved routes without changing cargo, fleet, supplies, or prior discoveries.
+
+HydroRIVERS attribution: Lehner, B., Grill G. (2013), “Global river hydrography and network routing: baseline data and new approaches to study the world’s large river systems,” Hydrological Processes, 27(15), 2171–2186. See the [data terms and license references](https://www.hydrosheds.org/products/hydrorivers). To regenerate the checked-in river extract, run `uv run scripts/extract-parana.py`; it downloads the South America archive into `tmp/geography/` and verifies its SHA-256 before following the source network. Normal world rebuilds use the checked-in extract.
+
 The route planner subdivides coastal areas to individual terrain cells while using larger water rectangles offshore. Adjacent rectangles connect through their shared water edges. Segment checks traverse every crossed raster cell, including diagonal corners, so smoothing a route cannot cut across land.
 
 ## Rebuild
@@ -82,4 +86,4 @@ These colors and sprites are artistic adaptations. Ecoregions describe broad eco
 
 ## Landmarks
 
-Eleven real landmarks have original pixel sprites and collector reports. Their geographic placement, history sources, Nile approach, exploration rules, and save compatibility are documented in [LANDMARKS.md](LANDMARKS.md).
+Twelve real landmarks have original pixel sprites and collector reports. Their geographic placement, history sources, Nile approach, exploration rules, and save compatibility are documented in [LANDMARKS.md](LANDMARKS.md).

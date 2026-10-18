@@ -161,6 +161,20 @@ for record in source('rivers').iterShapeRecords():
     patch = np.minimum(np.asarray(image.crop(box)), np.asarray(overlay.crop(box)))
     image.paste(Image.fromarray(patch), box[:2])
 
+river_route_path = ROOT / 'geography/parana-iguazu.geojson'
+river_route = json.loads(river_route_path.read_text())
+for feature in river_route['features']:
+    points = feature['geometry']['coordinates']
+    width = feature['properties']['widthCells']
+    draw.line([pixel(*point) for point in points], fill=0, width=width)
+    ex, ey = pixel(*points[-1])
+    x0, y0 = int(ex)-20, int(ey)-20
+    yy, xx = np.nonzero(base_ocean[y0:y0+41,x0:x0+41])
+    if not len(xx):
+        raise ValueError('No estuary connection for the Parana route.')
+    nearest = np.argmin((xx+x0-ex)**2+(yy+y0-ey)**2)
+    draw.line([(ex,ey),(int(xx[nearest]+x0),int(yy[nearest]+y0))], fill=0, width=width)
+
 # Sample narrow straits at higher resolution before reducing them to game cells.
 strait_windows = [(25.8,39.7,29.4,41.5), (15.3,37.9,15.8,38.4), (9.4,54.5,13.1,56.3), (17.8,59.0,19.0,59.6), (36.2,45.0,36.9,45.6), (10.2,59.1,10.9,60.0), (16.4,68.0,17.7,68.65), (-135.0,57.5,-133.9,58.6)]
 open_water_windows = [(130.5,32.6,135.7,35.1), (139.65,41.05,142.0,42.0), (104.8,-6.9,106.4,-5.3)]
@@ -285,5 +299,6 @@ rgb[coast] = [214,189,98]
 Image.fromarray(rgb).save(ASSETS / 'world-map.png', optimize=True)
 image.point(lambda p: p*255).save(CACHE / 'land-mask.png')
 manifest = {'projection':'Equirectangular, longitude -180..180, latitude 90..-90','raster':[WIDTH,HEIGHT],'degreesPerPixel':.05,'worldUnitsPerPixel':.25,'riverChannels':river_windows,'supersampledStraits':strait_windows,'widenedPassages':{'windows':clearance_windows,'passages':clearance_passages},'sources':{kind:{'url':f'https://naturalearth.s3.amazonaws.com/{group}/{name}.zip','sha256':hashlib.sha256((CACHE/(name+'.zip')).read_bytes()).hexdigest()} for kind,(group,name) in SOURCES.items()}}
+manifest['riverRoutes'] = {'file':'parana-iguazu.geojson','sha256':hashlib.sha256(river_route_path.read_bytes()).hexdigest(),'source':river_route['source'],'widthCells':3}
 (ROOT / 'geography/manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 print('Encoded terrain:',len(encoded),'bytes;',len(ports),'port positions')
