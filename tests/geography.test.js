@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { WORLD, ports, xy } from '../data.js';
 import { rasterWidth, rasterHeight, rasterCell, terrainMask, onLand, clearPassage } from '../terrain.js';
 import { findRoute } from '../navigation.js';
-import { createGame, migrateSave, portById, plotCourse, steer, advance, MAP_REVISION } from '../engine.js';
+import { createGame, migrateSave, portById, plotCourse, steer, advance, fleetSpeed, MAP_REVISION } from '../engine.js';
 
 test('the generated raster covers the existing world projection',()=>{
   assert.equal(rasterWidth*rasterCell,WORLD.width);assert.equal(rasterHeight*rasterCell,WORLD.height);
@@ -41,7 +41,7 @@ test('the Strait of Messina stays navigable between Sicily and Calabria in both 
     for(const point of route){assert.ok(clearPassage(previous,point));length+=Math.hypot(point.x-previous.x,point.y-previous.y);previous=point;}
     assert.deepEqual(route.at(-1),end);assert.ok(length<4,'Pass through Messina instead of sailing around Sicily.');
     const auto=createGame();auto.port=null;auto.position={...start};assert.ok(plotCourse(auto,end).ok);advance(auto,.5);assert.deepEqual(auto.position,end);
-    const manual=createGame();manual.port=null;manual.position={...start};steer(manual,end.x-start.x,end.y-start.y);advance(manual,.18);
+    const manual=createGame();manual.port=null;manual.position={...start};steer(manual,end.x-start.x,end.y-start.y);advance(manual,Math.hypot(end.x-start.x,end.y-start.y)/fleetSpeed(manual)*1.1);
     assert.equal(manual.paused,false);assert.equal(onLand(manual.position.x,manual.position.y),false);
     assert.ok((manual.position.y-end.y)*Math.sign(end.y-start.y)>0,'Manual steering must cross the strait.');
   }
@@ -64,7 +64,7 @@ test('the Sound and both Belt passages connect the Kattegat to the Baltic in bot
   }
   const north=xy(12.525,56.125),south=xy(12.675,55.925);
   for(const [start,end] of [[north,south],[south,north]]){
-    const s=createGame();s.port=null;s.position={...start};steer(s,end.x-start.x,end.y-start.y);advance(s,.12);
+    const s=createGame();s.port=null;s.position={...start};steer(s,end.x-start.x,end.y-start.y);advance(s,Math.hypot(end.x-start.x,end.y-start.y)/fleetSpeed(s)*1.1);
     assert.equal(s.paused,false);assert.equal(onLand(s.position.x,s.position.y),false);
     assert.ok((s.position.y-end.y)*Math.sign(end.y-start.y)>0,'Manual steering must cross the narrowest part of the Sound.');
   }
@@ -91,11 +91,11 @@ test('Singapore Strait and the Durian approach stay open in both directions with
     }
   }
   for(const lon of [103.625,103.675,103.725])assert.ok(clearPassage(xy(lon,.725),xy(lon,1.175)),'Parallel water lanes allow steering room west of Batam.');
-  for(const [a,b,days] of [
-    [[103.725,1.225],[104.075,1.225],.18],
-    [[103.65,.775],[103.65,1.025],.15],
+  for(const [a,b] of [
+    [[103.725,1.225],[104.075,1.225]],
+    [[103.65,.775],[103.65,1.025]],
   ])for(const [start,end] of [[xy(...a),xy(...b)],[xy(...b),xy(...a)]]){
-    const s=createGame();s.port=null;s.position={...start};steer(s,end.x-start.x,end.y-start.y);advance(s,days);
+    const s=createGame();s.port=null;s.position={...start};steer(s,end.x-start.x,end.y-start.y);advance(s,Math.hypot(end.x-start.x,end.y-start.y)/fleetSpeed(s)*1.1);
     assert.equal(s.paused,false);assert.equal(onLand(s.position.x,s.position.y),false);
     assert.ok((s.position.x-end.x)*(end.x-start.x)+(s.position.y-end.y)*(end.y-start.y)>0,'Manual sailing must cross the narrow section.');
   }
@@ -135,7 +135,7 @@ test('Sunda Strait connects the Java Sea and Indian Ocean with a short passage i
   }
   const a=xy(105.7625,-5.8375),b=xy(105.7875,-6.0125);
   for(const [start,end]of[[a,b],[b,a]]){
-    const s=createGame();s.port=null;s.position={...start};steer(s,end.x-start.x,end.y-start.y);advance(s,.08);
+    const s=createGame();s.port=null;s.position={...start};steer(s,end.x-start.x,end.y-start.y);advance(s,Math.hypot(end.x-start.x,end.y-start.y)/fleetSpeed(s)*1.1);
     assert.equal(s.paused,false);assert.equal(onLand(s.position.x,s.position.y),false);
     assert.ok((s.position.x-end.x)*(end.x-start.x)+(s.position.y-end.y)*(end.y-start.y)>0);
   }

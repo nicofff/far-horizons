@@ -9,6 +9,7 @@ import { createExpedition, hasSkill, validExpedition } from './specialists.js';
 export { log } from './journal.js';
 import { MAX_FLEET, makeShip, shipStats, shipQuote, shipyardCatalog, portDevelopment, marketGoods, price, invest, settleDevelopment, nextMonthDay } from './economy.js';
 import { tuneById } from './music-score.js';
+import { windAt, prevailingWindAt, prevailingCost, sailingFactor } from './wind.js';
 export { MAX_FLEET, shipStats, shipQuote, shipyardCatalog, portDevelopment, marketGoods, price, invest, marketCatalog, investmentLimit, nextMonthDay, formatDate } from './economy.js';
 
 export const distance = (a,b) => Math.hypot(a.x-b.x,a.y-b.y);
@@ -23,7 +24,7 @@ export function createShip(type,name,options={}) {
 }
 export function createGame(seed=1530) {
   const home=ports[0];
-  const s={version:4,mapRevision:MAP_REVISION,seed,day:0,gold:7200,fame:0,food:120,water:140,morale:95,ships:[createShip('caravela-latina','Santa Clara')],cargo:{},position:{x:home.x,y:home.y},port:'lisbon',route:[],heading:null,destination:null,known:[...initialKnown],visited:['lisbon'],found:[],seen:[],investments:{},development:{},shipOrders:[],expedition:createExpedition(),songbook:[],defeated:[],battle:null,lost:false,won:false,rewards:[],events:[],lastEvent:-20,supplyWarned:false,wind:0.4,speed:1,paused:true};
+  const s={version:4,mapRevision:MAP_REVISION,windRevision:1,weatherSeed:seed>>>0,seed,day:0,gold:7200,fame:0,food:120,water:140,morale:95,ships:[createShip('caravela-latina','Santa Clara')],cargo:{},position:{x:home.x,y:home.y},port:'lisbon',route:[],heading:null,destination:null,known:[...initialKnown],visited:['lisbon'],found:[],seen:[],investments:{},development:{},shipOrders:[],expedition:createExpedition(),songbook:[],defeated:[],battle:null,lost:false,won:false,rewards:[],events:[],lastEvent:-20,supplyWarned:false,wind:0.4,speed:1,paused:true};
   log(s,'A letter of passage','The chart ends at the horizon. Your voyage begins in Lisbon. Butler Marco at the Franco residence is looking for discovery reports. Visit him before you sail.','discovery');reveal(s);s.expedition.charted=s.seen.length;return s;
 }
 export function random(s) {s.seed=(Math.imul(s.seed,1664525)+1013904223)>>>0;return s.seed/4294967296;}
@@ -32,7 +33,29 @@ export const capacity = s => s.ships.reduce((n,a)=>n+shipStats(a).hold,0);
 export const cargoUsed = s => Object.values(s.cargo).reduce((n,a)=>n+a,0)+(s.food+s.water)*0.15;
 export const rationRate = s => Math.max(1,crewCount(s)/10);
 export const supplyDays = s => Math.floor(Math.min(s.food,s.water)/rationRate(s));
-export const fleetSpeed = s => Math.min(...s.ships.map(a=>shipStats(a).speed))*(0.85+Math.cos(s.wind)*0.15)*(s.morale<30?0.7:1)*(hasSkill(s,'celestial-navigation')?1.15:1);
+export const fleetBaseSpeed = s => s.ships.length?Math.min(...s.ships.map(a=>shipStats(a).speed))*(s.morale<30?0.7:1)*(hasSkill(s,'celestial-navigation')?1.15:1):0;
+export const sailingHeading = s => s.heading||(s.route[0]?{x:s.route[0].x-s.position.x,y:s.route[0].y-s.position.y}:null);
+export const currentWind = s => windAt(s.position,s.day,s.weatherSeed??(s.seed>>>0));
+export const fleetSpeed = (s,heading=sailingHeading(s)) => fleetBaseSpeed(s)*sailingFactor(currentWind(s),heading);
+
+export function sailingRoute(s,target){
+  // Keep local courses on precise coastal routes; seasonal detours matter over longer passages.
+  return distance(s.position,target)<60?findRoute(s.position,target):findRoute(s.position,target,{cost:prevailingCost(s.day),minCost:1/1.4});
+}
+
+export function estimatedPassage(s,route=s.route){
+  const base=fleetBaseSpeed(s);if(!base)return 0;
+  let elapsed=0,previous=s.position;
+  for(const point of route){
+    const heading={x:point.x-previous.x,y:point.y-previous.y},length=distance(previous,point),steps=Math.max(1,Math.ceil(length/3));
+    for(let i=0;i<steps;i++){
+      const position={x:previous.x+heading.x*(i+.5)/steps,y:previous.y+heading.y*(i+.5)/steps};
+      elapsed+=length/steps/base/sailingFactor(prevailingWindAt(position,s.day+elapsed),heading);
+    }
+    previous=point;
+  }
+  return elapsed;
+}
 export const portById = id => ports.find(p=>p.id===id);
 export const inSight = (s,p) => distance(s.position,p)<=SIGHT_RADIUS;
 export const visiblePirates = s => pirates(s).filter(p=>inSight(s,p));
@@ -61,13 +84,13 @@ export function plotCourse(s,target) {
   if(!p)return {ok:false,message:'That harbor is not on your chart.'};
   if(p.id===s.port)return {ok:false,message:'You are already in this harbor.'};
   if(onLand(p.x,p.y))return {ok:false,message:'That is dry land. Set a course in open water.'};
-  const path=clearPassage(s.position,p)?[{x:p.x,y:p.y}]:findRoute(s.position,p);
+  const path=sailingRoute(s,p);
   if(!path.length)return {ok:false,message:'No navigable route was found.'};
   if(s.port)s.departureDay=s.day;
   s.route=path;s.heading=null;s.departedFrom=null;s.destination=p.id||p.enemy||null;s.port=null;s.paused=false;
-  const days=Math.ceil(routeLength(s)/fleetSpeed(s));
+  const days=Math.ceil(estimatedPassage(s));
   log(s,'Under sail',`Course set ${p.name?'for '+p.name:'into open water'}. Estimated passage: ${days} days.`);
-  return {ok:true,days,message:`Course set. ${days} days at sea.`};
+  return {ok:true,days,message:`Course set. About ${days} days at sea.`};
 }
 export function routeLength(s) {let n=0,p=s.position;for(const q of s.route){n+=distance(p,q);p=q;}return n;}
 export function cancelCourse(s) {s.route=[];s.heading=null;s.destination=null;s.paused=true;log(s,'Heave to','The fleet has stopped. Supplies are consumed only when time is running.');}
@@ -132,7 +155,7 @@ export function collectShip(s,id){
 }
 export function waitInPort(s,days=nextMonthDay(s.day)-Math.floor(s.day)){
   if(!s.port||s.battle||s.lost||!Number.isInteger(days)||days<1||days>365)return {ok:false,message:'Wait for a whole number of days in harbor.'};
-  const before=s.day;s.day=Math.floor(s.day)+days;s.paused=true;s.wind=Math.sin(s.day/15)*1.1;
+  const before=s.day;s.day=Math.floor(s.day)+days;s.paused=true;const wind=currentWind(s);s.wind=Math.atan2(wind.y,wind.x);
   const updates=settleDevelopment(s,before,s.day);for(const text of updates)log(s,'Port development',text,'world');
   log(s,'Shore leave',`${days} days passed in ${portById(s.port).name}. Ship stores were kept aboard.`);
   return {ok:true,message:updates.length?updates.join(' '):`${days} days passed in harbor.`};
@@ -218,16 +241,20 @@ export function advance(s,days) {
     for(const text of settleDevelopment(s,before,s.day))log(s,'Port development',text,'world');
     const rate=rationRate(s);s.food=Math.max(0,s.food-rate*dt);s.water=Math.max(0,s.water-rate*dt);
     if(!s.food||!s.water){s.morale=Math.max(0,s.morale-4*dt);for(const ship of s.ships)ship.hull-=2*dt;sinkShips(s);if(s.lost)break;}
-    s.wind=Math.sin(s.day/15)*1.1;
-    let movement=fleetSpeed(s)*dt;
+    const wind=currentWind(s);s.wind=Math.atan2(wind.y,wind.x);
     if(s.heading){
+      const movement=fleetSpeed(s)*dt;
       const next={x:s.position.x+s.heading.x*movement,y:s.position.y+s.heading.y*movement};
       if(next.x<0||next.x>WORLD.width||next.y<1||next.y>WORLD.height-1||onLand(next.x,next.y)||!clearPassage(s.position,next)){
         s.paused=true;s.heading=null;log(s,'Land ahead!','The helmsman holds position before the shallows. Choose another heading.');
       }else{s.position=next;if(s.departedFrom&&distance(s.position,portById(s.departedFrom))>2)s.departedFrom=null;const harbor=ports.find(p=>p.id!==s.departedFrom&&distance(p,s.position)<.8);if(harbor){s.route=[];s.destination=harbor.id;arrive(s);}}
-      movement=0;
     }
-    while(movement>0&&s.route.length){const p=s.route[0],d=distance(s.position,p);if(d<=movement){s.position={...p};s.route.shift();movement-=d;}else{s.position.x+=(p.x-s.position.x)/d*movement;s.position.y+=(p.y-s.position.y)/d*movement;movement=0;}}
+    let sailingTime=s.heading?0:dt;
+    while(sailingTime>0&&s.route.length){
+      const p=s.route[0],d=distance(s.position,p),speed=fleetSpeed(s),time=d/speed;
+      if(time<=sailingTime){s.position={...p};s.route.shift();sailingTime-=time;}
+      else{const movement=speed*sailingTime;s.position.x+=(p.x-s.position.x)/d*movement;s.position.y+=(p.y-s.position.y)/d*movement;sailingTime=0;}
+    }
     reveal(s);
     if(!s.route.length&&!s.heading){if(!s.paused)arrive(s);checkMilestones(s);break;}
     if(supplyDays(s)<=10&&!s.supplyWarned){s.supplyWarned=true;s.paused=true;log(s,'Provisions running low','Ten days or fewer remain. Time is paused. Find a harbor, or resume at your own risk.','danger');}
@@ -250,6 +277,8 @@ export function validateSave(s) {
   if(!s||![1,2,3,4].includes(s.version)||!Array.isArray(s.ships)||s.ships.length>(s.version<3?5:MAX_FLEET)||(!s.lost&&!s.ships.length))return false;
   for(const k of ['day','gold','fame','food','water','morale','seed','wind','speed','lastEvent'])if(!Number.isFinite(s[k]))return false;
   if(s.day<0||s.gold<0||s.food<0||s.water<0||s.morale<0||s.morale>100||s.fame<0||![1,4,16].includes(s.speed))return false;
+  if(s.weatherSeed!=null&&(!Number.isInteger(s.weatherSeed)||s.weatherSeed<0||s.weatherSeed>4294967295))return false;
+  if(s.windRevision!=null&&s.windRevision!==1)return false;
   const point=p=>p&&Number.isFinite(p.x)&&Number.isFinite(p.y)&&p.x>=0&&p.x<=WORLD.width&&p.y>=0&&p.y<=WORLD.height;
   if(!point(s.position)||!Array.isArray(s.route)||!s.route.every(point)||!s.ships.every(a=>validShip(a,s.version<3)))return false;
   for(const k of ['known','visited','found','seen','defeated','rewards','events'])if(!Array.isArray(s[k]))return false;
@@ -278,6 +307,7 @@ export function validateSave(s) {
 }
 export function migrateSave(s) {
   if(!validateSave(s))return null;
+  s.weatherSeed??=s.seed>>>0;
   if(s.version===1){s.seen=[];s.heading=null;delete s.mapRevision;}
   if(s.version<3){
     for(const ship of s.ships){const t=legacyShipTypes[ship.type];Object.assign(ship,{legacy:true,material:'beech',berths:t.crew,guns:t.guns});}
@@ -290,14 +320,19 @@ export function migrateSave(s) {
   const upgradeExpedition=s.version<4;
   if(upgradeExpedition){s.expedition=createExpedition(s.seen.length,s.found);s.version=4;}
   if(s.port){const p=portById(s.port);s.position={x:p.x,y:p.y};}
-  if(s.mapRevision!==MAP_REVISION){
+  const mapChanged=s.mapRevision!==MAP_REVISION;
+  if(mapChanged){
     s.position=nearestWater(s.position);
     if(s.route.length){
       const target=portById(s.destination)||s.route.at(-1);
-      s.route=onLand(target.x,target.y)?[]:findRoute(s.position,target);
+      s.route=onLand(target.x,target.y)?[]:sailingRoute(s,target);
       if(!s.route.length)s.destination=null;
     }
     s.mapRevision=MAP_REVISION;
+  }
+  if(s.windRevision!==1){
+    if(!mapChanged&&s.route.length){const target=portById(s.destination)||s.route.at(-1);s.route=sailingRoute(s,target);if(!s.route.length)s.destination=null;}
+    s.windRevision=1;
   }
   s.songbook=Array.isArray(s.songbook)?[...new Set(s.songbook.filter(id=>tuneById(id)))]:[];
   s.paused=true;reveal(s);if(upgradeExpedition)s.expedition.charted=s.seen.length;return s;

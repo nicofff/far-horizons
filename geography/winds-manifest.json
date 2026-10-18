@@ -1,0 +1,36 @@
+{
+  "sources": {
+    "uwnd": {
+      "url": "https://downloads.psl.noaa.gov/Datasets/ncep.reanalysis.derived/surface_gauss/uwnd.10m.mon.ltm.1991-2020.nc",
+      "sha256": "45b9eadc8181b29cb9ebcbcc21503867bc69ec1272ac925d9dcf7f3b1cc18875",
+      "name": "NCEP-NCAR Reanalysis 1",
+      "variable": "Long Term Mean Monthly Mean of U-Wind",
+      "period": "1991/01/01 - 2020/12/31"
+    },
+    "vwnd": {
+      "url": "https://downloads.psl.noaa.gov/Datasets/ncep.reanalysis.derived/surface_gauss/vwnd.10m.mon.ltm.1991-2020.nc",
+      "sha256": "78130fd7e5c6f5dcec0ce0009d93639afd9645d77ace60d14c13581ac763fd0b",
+      "name": "NCEP-NCAR Reanalysis 1",
+      "variable": "Long Term Mean Monthly Mean V wind at 10 m",
+      "period": "1991/01/01 - 2020/12/31"
+    }
+  },
+  "documentation": "https://psl.noaa.gov/data/gridded/data.ncep.reanalysis.html",
+  "acknowledgement": "NCEP/NCAR Reanalysis 1 data provided by NOAA PSL, Boulder, Colorado, USA, https://psl.noaa.gov",
+  "raster": [
+    144,
+    73
+  ],
+  "months": 12,
+  "degreesPerCell": 2.5,
+  "worldUnitsPerCell": 12.5,
+  "longitudeOrigin": 0,
+  "latitudeOrigin": 90,
+  "encoding": "Month, latitude, longitude, component. Signed int8 eastward and southward vectors in 0.25 m/s steps.",
+  "assetSha256": "bf647fe094d74163e5ff2f557894731e0e1dedec68bda7087d2a0c8e5e774e7f",
+  "adaptations": [
+    "Bilinear resampling from the Gaussian source grid with longitude wrapping and nearest pole values.",
+    "Monthly vector means describe broad prevailing patterns, not individual storms or historical weather in 1522.",
+    "The game adds seeded smooth weather variation and an abstract sailing-speed response."
+  ]
+}

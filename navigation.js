@@ -37,9 +37,10 @@ function neighbors(id){
 }
 const costs=new Float64Array(nodes.length),previous=new Int32Array(nodes.length),visits=new Uint32Array(nodes.length),closed=new Uint32Array(nodes.length);
 let search=0;
-export function findRoute(start,end){
+export function findRoute(start,end,options={}){
+  const travelCost=options.cost,minCost=options.minCost||1;
   if(onLand(start.x,start.y)||onLand(end.x,end.y))return [];
-  if(clearPassage(start,end))return [{x:end.x,y:end.y}];
+  if(!travelCost&&clearPassage(start,end))return [{x:end.x,y:end.y}];
   const from=nodeAt(Math.floor(start.x/C),Math.floor(start.y/C)),to=nodeAt(Math.floor(end.x/C),Math.floor(end.y/C));
   if(from<0||to<0)return [];
   search++;const heap=[];
@@ -49,8 +50,11 @@ export function findRoute(start,end){
   while(heap.length){
     const id=pop();if(closed[id]===search)continue;if(id===to)break;closed[id]=search;
     for(const neighbor of neighbors(id)){
-      const n=neighbor.id;if(closed[n]===search)continue;const cost=costs[id]+neighbor.cost;
-      if(visits[n]!==search||cost<costs[n]){visits[n]=search;costs[n]=cost;previous[n]=id;push(n,cost+Math.hypot(nodes[n].cx-nodes[to].cx,nodes[n].cy-nodes[to].cy));}
+      const n=neighbor.id;if(closed[n]===search)continue;
+      let stepCost=neighbor.cost;
+      if(travelCost){const a={x:nodes[id].cx,y:nodes[id].cy},b={x:nodes[n].cx,y:nodes[n].cy};stepCost=travelCost(a,neighbor.portal)+travelCost(neighbor.portal,b);}
+      const cost=costs[id]+stepCost;
+      if(visits[n]!==search||cost<costs[n]){visits[n]=search;costs[n]=cost;previous[n]=id;push(n,cost+Math.hypot(nodes[n].cx-nodes[to].cx,nodes[n].cy-nodes[to].cy)*minCost);}
     }
   }
   if(visits[to]!==search)return [];
@@ -58,8 +62,17 @@ export function findRoute(start,end){
   const path=[start,{x:nodes[from].cx,y:nodes[from].cy}];
   for(let i=1;i<chain.length;i++){const edge=neighbors(chain[i-1]).find(n=>n.id===chain[i]);path.push(edge.portal,{x:nodes[chain[i]].cx,y:nodes[chain[i]].cy});}
   path.push({x:end.x,y:end.y});
+  const prefix=[0];if(travelCost)for(let i=1;i<path.length;i++)prefix.push(prefix.at(-1)+travelCost(path[i-1],path[i]));
   const route=[];let cursor=0;
-  while(cursor<path.length-1){let next=Math.min(path.length-1,cursor+64);while(next>cursor+1&&!clearPassage(path[cursor],path[next]))next--;route.push(path[next]);cursor=next;}
+  while(cursor<path.length-1){
+    let next=Math.min(path.length-1,cursor+64);
+    while(next>cursor+1&&(!clearPassage(path[cursor],path[next])||travelCost&&travelCost(path[cursor],path[next])>(prefix[next]-prefix[cursor])*1.03))next--;
+    route.push(path[next]);cursor=next;
+  }
+  if(travelCost&&clearPassage(start,end)){
+    let cost=0,p=start;for(const q of route){cost+=travelCost(p,q);p=q;}
+    if(travelCost(start,end)<=cost*1.01)return [{x:end.x,y:end.y}];
+  }
   return route;
 }
 export function navigationStats(){return {nodes:nodes.length,cachedNodes:adjacency.size};}

@@ -1,11 +1,13 @@
 import { ports, discoveries } from './data.js';
-import { onLand, inSight, visiblePirates, supplyDays, SIGHT_RADIUS, CHART_CELL, CHART_COLS, distance } from './engine.js';
+import { onLand, inSight, visiblePirates, supplyDays, SIGHT_RADIUS, CHART_CELL, CHART_COLS, distance, currentWind, sailingHeading } from './engine.js';
 import { text, wrapText, panel, palette as P, drawShip, drawTown } from './pixel.js';
 import { createDisplay } from './display.js';
 import { biomeStyleAt } from './biomes.js';
 import { createSeaBackground, SURF_STEP } from './sea-background.js';
 import { drawLandmark, landmarkPoint } from './landmarks.js';
 import { calendarAt, daylightAt, drawDaylight } from './world-time.js';
+import { prevailingSampler } from './wind.js';
+import { drawWindGauge, drawWindArrow } from './wind-display.js';
 
 export const SCREEN={width:512,height:384};
 export const SEA_VIEW={x:0,y:0,width:512,height:384,scale:40};
@@ -62,11 +64,16 @@ export function createChart(canvas,getState,actions){
     c.strokeStyle='#35405a';c.lineWidth=1;for(let x=-v.height;x<v.width;x+=12){c.beginPath();c.moveTo(x,0);c.lineTo(x+v.height,v.height);c.stroke();}c.fillStyle='#35405a';for(let x=v.x;x<v.x+v.width;x+=24)c.fillRect(x,v.y,1,v.height);for(let y=v.y;y<v.y+v.height;y+=24)c.fillRect(v.x,y,v.width,1);
     for(const id of s.seen){const wx=(id%CHART_COLS)*CHART_CELL,wy=Math.floor(id/CHART_COLS)*CHART_CELL,p=toScreen({x:wx,y:wy});if(p.x<v.x-CHART_CELL*chartZoom||p.x>v.x+v.width||p.y<v.y-CHART_CELL*chartZoom||p.y>v.y+v.height)continue;
       const step=Math.max(.5,2/chartZoom);for(let dy=0;dy<CHART_CELL;dy+=step)for(let dx=0;dx<CHART_CELL;dx+=step){const q=toScreen({x:wx+dx,y:wy+dy});c.fillStyle=onLand(wx+dx,wy+dy)?biomeStyleAt(wx+dx,wy+dy).chart:'#2a6888';c.fillRect(Math.floor(q.x),Math.floor(q.y),Math.ceil(step*chartZoom),Math.ceil(step*chartZoom));}}
+    const wind=prevailingSampler(s.day),seen=new Set(s.seen),spacing=48/chartZoom;
+    for(let y=Math.floor((center.y-v.height/2/chartZoom)/spacing)*spacing;y<center.y+v.height/2/chartZoom;y+=spacing)for(let x=Math.floor((center.x-v.width/2/chartZoom)/spacing)*spacing;x<center.x+v.width/2/chartZoom;x+=spacing){
+      if(!seen.has(Math.floor(y/CHART_CELL)*CHART_COLS+Math.floor(x/CHART_CELL))||onLand(x,y))continue;
+      const q=toScreen({x,y});drawWindArrow(c,q.x,q.y,wind({x,y}),'#8ca8ab',6);
+    }
     if(s.route.length){c.strokeStyle=P.gold;c.lineWidth=1;c.setLineDash([2,3]);c.beginPath();const p=toScreen(s.position);c.moveTo(p.x,p.y);for(const target of s.route){const q=toScreen(target);c.lineTo(q.x,q.y);}c.stroke();c.setLineDash([]);}
     for(const d of discoveries.filter(d=>s.found.includes(d.id))){const q=toScreen(d);c.fillStyle=P.gold;c.fillRect(Math.round(q.x),Math.round(q.y)-3,1,7);c.fillRect(Math.round(q.x)-3,Math.round(q.y),7,1);}
     for(const p of ports.filter(p=>s.known.includes(p.id))){const q=toScreen(p);if(q.x<v.x+8||q.x>v.x+v.width-8||q.y<v.y+8||q.y>v.y+v.height-8)continue;c.fillStyle=s.visited.includes(p.id)?P.gold:P.white;c.fillRect(Math.round(q.x)-2,Math.round(q.y)-2,5,5);const labelX=Math.min(v.x+v.width-p.name.length*6-5,q.x+6);text(c,p.name,labelX,q.y-3,P.white);}
     const p=toScreen(s.position);drawShip(c,p.x,p.y,{small:true});c.restore();text(c,'RECORDED COASTS ONLY',v.x+9,v.y+9,P.gold);
-    c.fillStyle='#202450';c.fillRect(v.x+5,v.y+v.height-19,350,14);text(c,'DRAG TO PAN',v.x+10,v.y+v.height-16,P.muted);for(const [label,color,x]of [['LAND','#91a878',102],['SEA','#2a6888',151],['UNKNOWN','#35405a',194]]){c.fillStyle=color;c.fillRect(x,368,6,6);text(c,label,x+10,368,P.muted);}
+    c.fillStyle='#202450';c.fillRect(v.x+5,v.y+v.height-19,350,14);text(c,'DRAG TO PAN',v.x+10,v.y+v.height-16,P.muted);for(const [label,color,x]of [['LAND','#91a878',102],['SEA','#2a6888',151],['UNKNOWN','#35405a',194]]){c.fillStyle=color;c.fillRect(x,368,6,6);text(c,label,x+10,368,P.muted);}text(c,'ARROWS: WIND',263,368,P.muted);
   }
   function draw(time){
     animationId=null;if(document.hidden)return;
@@ -75,6 +82,7 @@ export function createChart(canvas,getState,actions){
     const date=calendarAt(s.day),months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
     c.fillStyle='#182c69';c.fillRect(417,6,89,25);text(c,String(date.getUTCFullYear()),475,9,P.gold);text(c,`${months[date.getUTCMonth()]} ${date.getUTCDate()}`,432,21,P.white);
     if(mode==='sea'){
+      drawWindGauge(c,currentWind(s),sailingHeading(s));
       const days=supplyDays(s),label=`${days} ${days===1?'DAY':'DAYS'}`;
       c.fillStyle='#182c69';c.fillRect(417,34,89,25);text(c,'SUPPLIES',423,37,P.gold);text(c,label,500-label.length*6,49,days<=10?P.red:P.white);
       c.fillStyle='#182c69';c.fillRect(417,62,89,12);text(c,`${lighting.phase} ${lighting.season}`,422,65,P.muted);

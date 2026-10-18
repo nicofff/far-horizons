@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { ports, xy } from '../data.js';
 import { terrainMask, rasterWidth, onLand, clearPassage } from '../terrain.js';
 import { findRoute } from '../navigation.js';
-import { createGame, portById, plotCourse, advance, steer, distance, migrateSave, MAP_REVISION } from '../engine.js';
+import { createGame, portById, plotCourse, advance, steer, distance, fleetSpeed, migrateSave, MAP_REVISION } from '../engine.js';
 
 const islands={Honshu:[138,36],Hokkaido:[142,43],Kyushu:[130.75,32.75],Shikoku:[133.5,33.75],Awaji:[134.825,34.325]};
 const circuits={
@@ -77,7 +77,7 @@ test('manual sailing crosses the Akashi and Kitan straits without catching on ra
     [[134.875,34.625],[135.175,34.525]],
     [[135.075,34.375],[135.075,34.075]],
   ])for(const[start,end]of[[xy(...a),xy(...b)],[xy(...b),xy(...a)]]){
-    const s=createGame();s.port=null;s.position={...start};steer(s,end.x-start.x,end.y-start.y);advance(s,.15);
+    const s=createGame();s.port=null;s.position={...start};steer(s,end.x-start.x,end.y-start.y);advance(s,distance(start,end)/fleetSpeed(s)*1.1);
     assert.equal(s.paused,false);assert.equal(onLand(s.position.x,s.position.y),false);
     assert.ok((s.position.x-end.x)*(end.x-start.x)+(s.position.y-end.y)*(end.y-start.y)>0);
   }

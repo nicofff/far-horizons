@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { clearPassage } from '../terrain.js';
 import { ports, pirateTemplates, shipTypes, xy } from '../data.js';
-import { createGame, validateSave, migrateSave, findRoute, onLand, plotCourse, advance, resupply, supplyDays, trade, maxBuyQuantity, fillHold, price, portById, createShip, shipStats, startBattle, battleAction, cargoUsed, capacity, repair, distance, SIGHT_RADIUS, visiblePirates, inSight, reveal, steer, recorded } from '../engine.js';
+import { createGame, validateSave, migrateSave, findRoute, onLand, plotCourse, advance, resupply, supplyDays, trade, maxBuyQuantity, fillHold, price, portById, createShip, shipStats, startBattle, battleAction, cargoUsed, capacity, repair, distance, fleetSpeed, SIGHT_RADIUS, visiblePirates, inSight, reveal, steer, recorded } from '../engine.js';
 
 test('all harbors are offshore and reachable from Lisbon',()=>{
   for(const port of ports){assert.equal(onLand(port.x,port.y),false,port.id);const path=findRoute(ports[0],port);assert.ok(path.length,port.id);assert.ok(path.every(p=>!onLand(p.x,p.y)),port.id);}
@@ -116,14 +116,16 @@ test('manual steering leaves port, advances supplies, and stops before land',()=
   const coastal=createGame(8);steer(coastal,1,0);advance(coastal,1);assert.equal(coastal.paused,true);assert.equal(onLand(coastal.position.x,coastal.position.y),false);assert.ok(coastal.events.some(e=>e.title==='Land ahead!'));
 });
 
-test('diagonal steering moves on both axes at the same speed as cardinal steering',()=>{
+test('diagonal steering normalizes its heading without an extra speed boost',()=>{
   for(const [dx,dy] of [[-1,-1],[-1,1],[1,-1],[1,1]]){
     const diagonal=createGame(8),cardinal=createGame(8);
     diagonal.position={x:700,y:300};cardinal.position={...diagonal.position};diagonal.port=null;cardinal.port=null;
     const start={...diagonal.position};steer(diagonal,dx,dy);steer(cardinal,dx,0);
-    advance(diagonal,.2);advance(cardinal,.2);
+    const diagonalSpeed=fleetSpeed(diagonal),cardinalSpeed=fleetSpeed(cardinal);
+    advance(diagonal,.02);advance(cardinal,.02);
     assert.equal(Math.sign(diagonal.position.x-start.x),dx);assert.equal(Math.sign(diagonal.position.y-start.y),dy);
-    assert.ok(Math.abs(distance(start,diagonal.position)-distance(start,cardinal.position))<1e-8);
+    assert.ok(Math.abs(distance(start,diagonal.position)/diagonalSpeed/.02-1)<.01);
+    assert.ok(Math.abs(distance(start,cardinal.position)/cardinalSpeed/.02-1)<.01);
   }
 });
 

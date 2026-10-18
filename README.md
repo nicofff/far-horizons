@@ -37,6 +37,12 @@ English shipyards at Bristol and Dublin unlock the Sloop at 850 Industry, then t
 
 The economy uses the original game's regional goods and shipyard catalog from documented fan references. See [the economy notes](economy/README.md) for sources, exact fields, save compatibility, and prototype pricing and simulation rules. Milestones still reward the first Madeira passage, an Atlantic crossing, a three-ship fleet, and arrival in India.
 
+## Wind and passages
+
+Prevailing winds follow [NOAA PSL monthly surface-wind normals](https://psl.noaa.gov/data/gridded/data.ncep.reanalysis.html), including the trade winds, westerlies, and reversing Indian Ocean monsoons. Smooth local weather adds variation over a few voyage days. Fair winds speed the fleet, headwinds slow it, and light air reduces progress. The crew handles tacking and keeps your chosen heading, so a headwind cannot trap you in a strait. Longer Auto sail passages weigh seasonal wind costs, and passage estimates account for winds along the route.
+
+The sailing gauge shows where the wind comes from, strength in knots, and its effect on speed. Its arrow points downwind. The recorded chart adds muted prevailing-wind arrows over recorded waters; Sail data shows current conditions and the remaining passage estimate. Winds follow the voyage clock and survive saves and fast travel without rerolling. See [wind sources and gameplay rules](geography/WINDS.md).
+
 ## Local awareness and charting
 
 The Paraná is navigable from the Río de la Plata near Montevideo to the lower Iguazú, ending below Iguazú Falls. Follow the river inland to record the falls and return to a collector for the report reward.

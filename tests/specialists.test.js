@@ -72,7 +72,7 @@ test('collector rumours persist as clues, reveal no map cells, and do not spam r
 });
 
 test('Celestial Navigation is taught in Naples and increases fleet sailing speed by 15 percent',()=>{
-  const s=createGame(),before=fleetSpeed(s);unchanged(s,()=>learnSkill(s,'juliano'));dock(s,'naples');const gold=s.gold;
+  const s=createGame();unchanged(s,()=>learnSkill(s,'juliano'));dock(s,'naples');const gold=s.gold,before=fleetSpeed(s);
   assert.ok(learnSkill(s,'juliano').ok);assert.equal(s.gold,gold-2000);assert.ok(Math.abs(fleetSpeed(s)/before-1.15)<1e-10);unchanged(s,()=>learnSkill(s,'juliano'));assert.ok(validateSave(s));
 });
 
