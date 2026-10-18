@@ -20,6 +20,18 @@ export const SIGHT_RADIUS = 8;
 export const CHART_CELL = 2;
 export const CHART_COLS = WORLD.width / CHART_CELL;
 export const MAP_REVISION = 10;
+const chartIndexes=new WeakMap();
+
+function chartIndex(s){
+  let index=chartIndexes.get(s.seen);
+  if(!index||index.length!==s.seen.length){
+    const cells=new Uint8Array(CHART_COLS*450);let duplicates=false;
+    for(const id of s.seen){if(cells[id])duplicates=true;cells[id]=1;}
+    if(duplicates)s.seen=[...new Set(s.seen)];
+    index={cells,length:s.seen.length};chartIndexes.set(s.seen,index);
+  }
+  return index;
+}
 
 export function createShip(type,name,options={}) {
   if(shipTypes[type].legacyOnly){const t=legacyShipTypes[type];return {id:globalThis.crypto?.randomUUID?.()||Math.random().toString(36),type,name,hull:t.hull,crew:t.crew,legacy:true,material:'beech',berths:t.crew,guns:t.guns};}
@@ -65,15 +77,16 @@ export const acceptGuildJob=(s,kind)=>acceptAssignment(s,kind,guildPassage(s));
 export const portById = id => ports.find(p=>p.id===id);
 export const inSight = (s,p) => distance(s.position,p)<=SIGHT_RADIUS;
 export const visiblePirates = s => pirates(s).filter(p=>inSight(s,p));
-export const recorded = (s,p) => s.seen.includes(Math.floor(p.y/CHART_CELL)*CHART_COLS+Math.floor(wrapX(p.x)/CHART_CELL));
+export const recorded = (s,p) => chartIndex(s).cells[Math.floor(p.y/CHART_CELL)*CHART_COLS+Math.floor(wrapX(p.x)/CHART_CELL)]===1;
 export function reveal(s) {
-  const seen=new Set(s.seen);
+  const index=chartIndex(s);
   const cx=Math.floor(s.position.x/CHART_CELL),cy=Math.floor(s.position.y/CHART_CELL);
   for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++){
-    const x=(cx+dx+CHART_COLS)%CHART_COLS,y=cy+dy;
-    if(y>=0&&y<450&&distance(s.position,{x:(x+.5)*CHART_CELL,y:(y+.5)*CHART_CELL})<=SIGHT_RADIUS)seen.add(y*CHART_COLS+x);
+    const x=(cx+dx+CHART_COLS)%CHART_COLS,y=cy+dy,id=y*CHART_COLS+x;
+    if(y>=0&&y<450&&!index.cells[id]&&distance(s.position,{x:(x+.5)*CHART_CELL,y:(y+.5)*CHART_CELL})<=SIGHT_RADIUS){index.cells[id]=1;s.seen.push(id);}
   }
-  s.seen=[...seen];
+  // Cartographer payments use the order of this log, so append without rebuilding its prefix.
+  index.length=s.seen.length;
   for(const p of ports) if(!s.known.includes(p.id)&&inSight(s,p)){s.known.push(p.id);log(s,'Land on the horizon',`Your lookout has charted ${p.name}.`,'discovery');}
   for(const d of discoveries) if(!s.found.includes(d.id)&&distance(s.position,d)<(d.discoveryRadius||1.8)){s.found.push(d.id);s.fame+=10;log(s,d.name,`${d.description} +10 renown. Your observations are ready to report to a collector.`,'discovery');}
 }

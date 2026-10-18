@@ -71,6 +71,8 @@ This is a pixel renderer with a WebGPU presentation backend. Terrain and sprite 
 
 Terrain and scenery use a bounded cache of 32 tiles, each covering 256 × 256 pixels with a 32-pixel margin for trees crossing tile boundaries. Sailing reuses these tiles as the camera scrolls, and the sight mask is drawn once. The sea renders at up to 30 FPS while sailing; at anchor, it wakes only for sprite animation changes. The paused chart repaints on input or notice expiry, menus stop background animation, and hidden tabs stop the render and simulation loops. Paused simulation checks run at four per second, with steering and other commands waking it immediately.
 
+Chart memory keeps a derived lookup of recorded squares and appends only new observations. Movement never rebuilds or copies the full exploration history. The saved record keeps its original order for cartographer payments, and importing a voyage rebuilds its lookup once. Run `node scripts/benchmark-sailing.mjs` to compare simulation cost with 100 to 100,000 charted squares.
+
 Coastal surf rolls from the shallows toward shore in eight steps, advancing every 300 milliseconds. Each tile caches the foam positions for all eight steps when it is built, and reuses a transparent overlay between steps. Animating the surf updates only those small water patches, without resampling terrain or regenerating scenery. The waves stay anchored to the coast as the camera moves; sailing and collision use the same geographic terrain as before.
 
 The font is checked in at `assets/far-horizons.ttf`. To regenerate it from the shared bitmap alphabet, run the dependency-declared script with [uv](https://docs.astral.sh/uv/):
