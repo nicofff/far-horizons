@@ -30,6 +30,8 @@ Old version 4 saves remain valid. On their first load, they receive a stable wea
 
 ## Rebuild and checks
 
+The [full world overview](../world-map.html) uses the same prevailing sampler at each month's midpoint, without synthetic weather. Its month selector and one-second yearly playback show seasonal changes; adaptive ocean arrows point downwind, with length and color indicating knots. Click the sea or select a location to compare all twelve months, January and July directions, and the annual strength range. The Indian Ocean preset starts at an Arabian Sea probe where the monsoon reverses. Hemisphere season labels use meteorological seasons. These are geographic planning aids, independent of the active voyage date and save. The map redraws only on interaction, resizing, or a playback month change, and stops playback when hidden.
+
 Run `uv run scripts/build-winds.py` to regenerate the wind asset with its dependency-declared isolated environment. Cached source files live under `tmp/winds/`. A changed source checksum stops the rebuild.
 
 The wind tests cover sourced circulation and monsoon direction, weather continuity, reproducible save roundtrips, independence from combat randomness, bounded sailing speeds, directional passage times and provision costs, optimized Atlantic routes, and migration of active voyages. Strait tests calculate manual crossing time from the current wind-adjusted speed instead of assuming every heading has the same fixed speed. Geometry and clearance assertions remain in place.

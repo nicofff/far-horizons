@@ -85,7 +85,7 @@ uv run scripts/build-pixel-font.py
 
 The world uses a 7,200 × 3,600 raster generated from [Natural Earth coastlines](https://www.naturalearthdata.com/downloads/10m-physical-vectors/10m-land/) and geographic city coordinates. Sailing, charts, collision, and navigation share that terrain. All 100 trading ports and 30 supply ports from the [original-game roster](https://unchartedwatersnewhorizons.com/?p=36) are playable, alongside the prototype's Azores and Cape Verde anchorages. Inland river ports use sourced river channels. Regional labels and inland cities with coastal gateways have explicit location notes in [the geography documentation](geography/README.md).
 
-[Open the full map](http://localhost:5173/world-map.html) and choose Mediterranean or Baltic Sea to inspect the coastline and ports. The in-game chart continues to show only recorded terrain and known ports. Diagonal hatching marks unknown areas.
+[Open the full map](http://localhost:5173/world-map.html) to inspect coastlines, ports, and monthly prevailing winds. Choose a month or Play year to watch seasonal changes; arrows point downwind and their color and length indicate strength. Click the sea or select a harbor for twelve monthly readings and a January–July comparison. The Indian Ocean preset highlights the monsoon reversal. Wind and location labels have separate toggles. The in-game chart continues to show only recorded terrain and known ports. Diagonal hatching marks unknown areas.
 
 ## Regional scenery
 
