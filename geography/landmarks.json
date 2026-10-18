@@ -27,7 +27,11 @@
     "description": "A pale stone fortress guards Alexandria's harbor, built on the site of the ancient lighthouse.",
     "clue": "At Alexandria, look for the fortress guarding the western harbor. Sail close to the old Pharos shore.",
     "source": "https://egymonuments.gov.eg/en/monuments/qaitbay-fort/",
-    "history": "Built 1477–1479; the ancient lighthouse no longer stands in 1522."
+    "history": "Built 1477–1479; the ancient lighthouse no longer stands in 1522.",
+    "drawOffset": [
+      -52,
+      36
+    ]
   },
   {
     "id": "leptis",

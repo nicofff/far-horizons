@@ -1,8 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createSeaBackground, SURF_STEP } from '../sea-background.js';
-import { createChart, SEA_VIEW } from '../chart.js';
+import { createChart, SEA_VIEW, seaPoint } from '../chart.js';
 import { createGame } from '../engine.js';
+import { ports, landmarks } from '../data.js';
+import { landmarkPoint } from '../landmarks.js';
 
 function canvasFactory(){
   const images=[];
@@ -77,7 +79,8 @@ test('cached scenery renders above every water layer and keeps its tile-edge pad
 
 test('chart sleeps when static, wakes for input, and cancels rendering in a hidden tab',async t=>{
   const factory=canvasFactory(),canvas=factory.create(),events={},hostEvents={},raf=new Map(),timers=new Map();let id=0;
-  const dialog={open:false},host={dataset:{},style:{},querySelector:selector=>selector==='dialog'?dialog:canvas,addEventListener:(name,fn)=>{hostEvents[name]=fn;}};
+  const dialog={open:false},host={dataset:{},style:{},querySelector:selector=>selector==='dialog'?dialog:canvas,addEventListener:(name,fn)=>{hostEvents[name]=fn;},hasPointerCapture:()=>false};
+  canvas.getBoundingClientRect=()=>({left:0,top:0,width:512,height:384});
   canvas.parentElement=host;
   const document={hidden:false,createElement:factory.create,addEventListener:(name,fn)=>{events[name]=fn;}};
   const globals={document,location:{search:'?renderer=canvas'},requestAnimationFrame:fn=>{raf.set(++id,fn);return id;},cancelAnimationFrame:id=>raf.delete(id),setTimeout:(fn,delay)=>{timers.set(++id,{fn,delay});return id;},clearTimeout:id=>timers.delete(id)};
@@ -85,7 +88,7 @@ test('chart sleeps when static, wakes for input, and cancels rendering in a hidd
     const old=Object.getOwnPropertyDescriptor(globalThis,key);Object.defineProperty(globalThis,key,{value,writable:true,configurable:true});
     t.after(()=>old?Object.defineProperty(globalThis,key,old):delete globalThis[key]);
   }
-  const s=createGame(7),chart=createChart(canvas,()=>s,{});
+  const selected=[],s=createGame(7),chart=createChart(canvas,()=>s,{select:id=>selected.push(id),landmark:id=>selected.push(id)});
   await Promise.resolve();
   const step=time=>{const callbacks=[...raf.values()];raf.clear();for(const fn of callbacks)fn(time);};
   step(1000);assert.equal(raf.size,0);assert.equal(timers.size,1,'paused sea only wakes for sprite animation');
@@ -101,4 +104,15 @@ test('chart sleeps when static, wakes for input, and cancels rendering in a hidd
   chart.refresh();assert.equal(raf.size,0,'hidden input cannot restart rendering');
   document.hidden=false;events.visibilitychange();assert.equal(raf.size,1,'returning to the tab repaints it');
   step(1700);const before=factory.images.length;s.position.x+=.01;chart.refresh();step(1800);assert.equal(factory.images.length,before,'ship motion reuses scenery tiles');
+  await t.test('nearby towns, landmarks and their labels select their own destinations',()=>{
+    for(const [portId,landmarkId] of [['alexandria','qaitbay'],['naples','vesuvius']]){
+      const port=ports.find(p=>p.id===portId),site=landmarks.find(d=>d.id===landmarkId);
+      s.position={x:port.x,y:port.y-1};s.found.push(site.id);
+      const town=seaPoint(s.position,port.town),marker=landmarkPoint(site,seaPoint(s.position,site));
+      for(const [point,id] of [[town,port.id],[{x:town.x,y:town.y+23},port.id],[marker,site.id],[{x:marker.x,y:marker.y+16},site.id],[seaPoint(s.position,port),port.id]]){
+        hostEvents.pointerup({clientX:point.x,clientY:point.y,pointerId:1});
+        assert.equal(selected.at(-1),id,`${port.id} / ${site.id} at ${point.x}, ${point.y}`);
+      }
+    }
+  });
 });

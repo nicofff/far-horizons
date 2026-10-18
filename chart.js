@@ -33,15 +33,15 @@ export function createChart(canvas,getState,actions){
       const p=landmarkPoint(d,seaPoint(s.position,d)),found=s.found.includes(d.id);
       if(d.sprite)drawLandmark(c,d,p.x,p.y);
       else{c.fillStyle=found?P.gold:'#e8eff0';c.fillRect(p.x-2,p.y-2,5,5);if(!found&&Math.floor(time/600)%2===0){c.fillRect(p.x,p.y-7,1,3);c.fillRect(p.x-7,p.y,3,1);}}
-      if(found&&d.id!=='qaitbay'){
+      if(found){
         const label=d.label||'DISCOVERY',x=Math.max(4,Math.min(508-label.length*6,p.x-label.length*3));
         c.fillStyle='#142441';c.fillRect(x-2,p.y+11,label.length*6+3,11);text(c,label,x,p.y+13,P.gold);
       }
     }
     for(const p of ports.filter(p=>inSight(s,p))){
       const q=seaPoint(s.position,p),town=p.town?seaPoint(s.position,p.town):{x:q.x+15,y:q.y-15};
-      if(p.id!=='alexandria')drawTown(c,Math.round(town.x),Math.round(town.y));
-      const name=p.name.toUpperCase(),label=p.id==='alexandria'?q:town,x=Math.min(v.x+v.width-name.length*6-4,Math.max(v.x+4,label.x-name.length*3));
+      drawTown(c,Math.round(town.x),Math.round(town.y));
+      const name=p.name.toUpperCase(),label=town,x=Math.min(v.x+v.width-name.length*6-4,Math.max(v.x+4,label.x-name.length*3));
       c.fillStyle='#142441';c.fillRect(x-3,label.y+17,name.length*6+5,12);text(c,name,x,label.y+20,P.gold);
     }
     for(const enemy of visiblePirates(s)){const p=seaPoint(s.position,enemy);drawShip(c,p.x,p.y,{enemy:true,bob:Math.floor(time/500)%2});text(c,'!',p.x-2,p.y-21,P.red);}
@@ -90,9 +90,18 @@ export function createChart(canvas,getState,actions){
   function inside(p){const v=SEA_VIEW;return p.x>=v.x&&p.x<v.x+v.width&&p.y>=v.y&&p.y<v.y+v.height;}
   function world(p){const v=SEA_VIEW,s=getState(),scale=mode==='sea'?v.scale:chartZoom,center=mode==='sea'?s.position:chartCenter||s.position;return {x:center.x+(p.x-v.x-v.width/2)/scale,y:center.y+(p.y-v.y-v.height/2)/scale};}
   function target(p){const s=getState(),candidates=mode==='chart'?ports.filter(p=>s.known.includes(p.id)):ports.filter(p=>inSight(s,p)),scale=mode==='chart'?chartZoom:SEA_VIEW.scale,w=world(p);
-    const port=candidates.find(q=>distance(q,w)<Math.max(mode==='chart'?3:.9,12/scale)||mode==='sea'&&q.town&&distance(q.town,w)<.9);
+    const port=candidates.find(q=>{
+      if(distance(q,w)<Math.max(mode==='chart'?3:.9,12/scale))return true;
+      if(mode!=='sea')return false;
+      const harbor=seaPoint(s.position,q),town=q.town?seaPoint(s.position,q.town):{x:harbor.x+15,y:harbor.y-15},labelX=Math.min(SEA_VIEW.width-q.name.length*6-4,Math.max(4,town.x-q.name.length*3));
+      return Math.abs(p.x-town.x)<30&&p.y>=town.y-26&&p.y<town.y+17||p.x>=labelX-3&&p.x<labelX+q.name.length*6+2&&p.y>=town.y+17&&p.y<town.y+29;
+    });
     if(mode==='chart'&&port)return {kind:'port',data:port};
-    const landmark=discoveries.filter(d=>d.sprite&&(mode==='chart'?s.found.includes(d.id):inSight(s,d))).find(d=>{const q=landmarkPoint(d,seaPoint(s.position,d));return mode==='chart'?distance(d,w)<3:Math.abs(p.x-q.x)<36&&p.y>q.y-38&&p.y<q.y+10;});
+    const landmark=discoveries.filter(d=>d.sprite&&(mode==='chart'?s.found.includes(d.id):inSight(s,d))).find(d=>{
+      if(mode==='chart')return distance(d,w)<3;
+      const q=landmarkPoint(d,seaPoint(s.position,d)),label=d.label||'DISCOVERY',labelX=Math.max(4,Math.min(508-label.length*6,q.x-label.length*3));
+      return Math.abs(p.x-q.x)<22&&p.y>=q.y-19&&p.y<q.y+6||s.found.includes(d.id)&&p.x>=labelX-2&&p.x<labelX+label.length*6+1&&p.y>=q.y+11&&p.y<q.y+22;
+    });
     if(landmark)return {kind:'landmark',data:landmark};
     if(port)return {kind:'port',data:port};if(mode==='sea'){const enemy=visiblePirates(s).find(q=>distance(q,w)<.8);if(enemy)return {kind:'enemy',data:enemy};}return null;}
   function bindCanvas(){host.querySelector('canvas').setAttribute('aria-label','Retro sailing game. Arrow keys or WASD steer. M opens the recorded chart. Harbors open automatically on arrival. P reopens the harbor menu. F opens the fleet. Space pauses.');}
