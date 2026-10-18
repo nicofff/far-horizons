@@ -11,6 +11,8 @@ import { MAX_FLEET, makeShip, shipStats, shipQuote, shipyardCatalog, portDevelop
 import { tuneById } from './music-score.js';
 import { windAt, prevailingWindAt, prevailingCost, sailingFactor } from './wind.js';
 import { wrapX, longitudeDelta, worldDistance } from './world.js';
+import { createGuild, checkGuildDeadline, guildJobs as listGuildJobs, acceptGuildJob as acceptAssignment, validGuild, guildPirate, recordGuildPurchase, recordGuildVictory } from './guild.js';
+export { completeGuildJob, collectGuildDebt, abandonGuildJob } from './guild.js';
 export { MAX_FLEET, shipStats, shipQuote, shipyardCatalog, portDevelopment, marketGoods, price, invest, marketCatalog, investmentLimit, nextMonthDay, formatDate } from './economy.js';
 
 export const distance = worldDistance;
@@ -25,7 +27,7 @@ export function createShip(type,name,options={}) {
 }
 export function createGame(seed=1530) {
   const home=ports[0];
-  const s={version:4,mapRevision:MAP_REVISION,windRevision:1,weatherSeed:seed>>>0,seed,day:0,gold:7200,fame:0,food:120,water:140,morale:95,ships:[createShip('caravela-latina','Santa Clara')],cargo:{},position:{x:home.x,y:home.y},port:'lisbon',route:[],heading:null,destination:null,known:[...initialKnown],visited:['lisbon'],found:[],seen:[],investments:{},development:{},shipOrders:[],expedition:createExpedition(),songbook:[],defeated:[],battle:null,lost:false,won:false,rewards:[],events:[],lastEvent:-20,supplyWarned:false,wind:0.4,speed:1,paused:true};
+  const s={version:4,mapRevision:MAP_REVISION,windRevision:1,weatherSeed:seed>>>0,seed,day:0,gold:7200,fame:0,food:120,water:140,morale:95,ships:[createShip('caravela-latina','Santa Clara')],cargo:{},position:{x:home.x,y:home.y},port:'lisbon',route:[],heading:null,destination:null,known:[...initialKnown],visited:['lisbon'],found:[],seen:[],investments:{},development:{},shipOrders:[],expedition:createExpedition(),guild:createGuild(),songbook:[],defeated:[],battle:null,lost:false,won:false,rewards:[],events:[],lastEvent:-20,supplyWarned:false,wind:0.4,speed:1,paused:true};
   log(s,'A letter of passage','The chart ends at the horizon. Your voyage begins in Lisbon. Butler Marco at the Franco residence is looking for discovery reports. Visit him before you sail.','discovery');reveal(s);s.expedition.charted=s.seen.length;return s;
 }
 export function random(s) {s.seed=(Math.imul(s.seed,1664525)+1013904223)>>>0;return s.seed/4294967296;}
@@ -57,6 +59,9 @@ export function estimatedPassage(s,route=s.route){
   }
   return elapsed;
 }
+function guildPassage(s){return (start,end)=>{const route=findRoute(start,end);return {route,days:route.length?estimatedPassage({...s,position:start},route):Infinity};};}
+export const availableGuildJobs=s=>listGuildJobs(s,guildPassage(s));
+export const acceptGuildJob=(s,kind)=>acceptAssignment(s,kind,guildPassage(s));
 export const portById = id => ports.find(p=>p.id===id);
 export const inSight = (s,p) => distance(s.position,p)<=SIGHT_RADIUS;
 export const visiblePirates = s => pirates(s).filter(p=>inSight(s,p));
@@ -111,7 +116,7 @@ export function trade(s,id,amount,buy) {
   if(p.supplyOnly)return {ok:false,message:'This anchorage offers supplies only.'};
   if(buy&&!marketGoods(s,p).includes(id))return {ok:false,message:'This good is not available in this market.'};
   const unit=price(s,p,id,buy),total=unit*amount;
-  if(buy){if(s.gold<total)return {ok:false,message:'Not enough gold.'};if(cargoUsed(s)+amount>capacity(s))return {ok:false,message:'Your cargo holds are full.'};s.gold-=total;s.cargo[id]=(s.cargo[id]||0)+amount;}
+  if(buy){if(s.gold<total)return {ok:false,message:'Not enough gold.'};if(cargoUsed(s)+amount>capacity(s))return {ok:false,message:'Your cargo holds are full.'};s.gold-=total;s.cargo[id]=(s.cargo[id]||0)+amount;recordGuildPurchase(s,id,amount);}
   else {if((s.cargo[id]||0)<amount)return {ok:false,message:'You do not have that much cargo.'};s.cargo[id]-=amount;s.gold+=total;}
   return {ok:true,message:`${buy?'Bought':'Sold'} ${amount} ${goods[id].name.toLowerCase()} for ${total} gold.`};
 }
@@ -157,10 +162,10 @@ export function collectShip(s,id){
 }
 export function waitInPort(s,days=nextMonthDay(s.day)-Math.floor(s.day)){
   if(!s.port||s.battle||s.lost||!Number.isInteger(days)||days<1||days>365)return {ok:false,message:'Wait for a whole number of days in harbor.'};
-  const before=s.day;s.day=Math.floor(s.day)+days;s.paused=true;const wind=currentWind(s);s.wind=Math.atan2(wind.y,wind.x);
-  const updates=settleDevelopment(s,before,s.day);for(const text of updates)log(s,'Port development',text,'world');
+  const before=s.day,contract=s.guild?.active;s.day=Math.floor(s.day)+days;s.paused=true;const wind=currentWind(s);s.wind=Math.atan2(wind.y,wind.x);
+  checkGuildDeadline(s);const updates=settleDevelopment(s,before,s.day);for(const text of updates)log(s,'Port development',text,'world');
   log(s,'Shore leave',`${days} days passed in ${portById(s.port).name}. Ship stores were kept aboard.`);
-  return {ok:true,message:updates.length?updates.join(' '):`${days} days passed in harbor.`};
+  return {ok:true,message:(updates.length?updates.join(' '):`${days} days passed in harbor.`)+(contract&&!s.guild.active?' Your guild assignment expired.':'')};
 }
 export function refitQuote(s,id,options={}){
   const p=portById(s.port),ship=s.ships.find(a=>a.id===id);if(!p?.shipyard||!ship)return {ok:false,message:'Refit a fleet ship at a shipyard.'};
@@ -181,7 +186,7 @@ export function refitShip(s,id,options={}){
   s.gold-=quote.cost;ship.material=quote.material;ship.berths=quote.berths;ship.guns=quote.guns;ship.crew=Math.min(ship.crew,quote.berths);ship.hull=Math.max(1,Math.round(quote.maxHull*condition));
   return {ok:true,message:`${ship.name} refitted for ${quote.cost.toLocaleString('en-US')} gold. Recruit crew and check provisions.`};
 }
-export function pirates(s) {return pirateTemplates.filter(e=>!s.defeated.includes(e.id)).map((e,i)=>({...e,x:wrapX(e.x+Math.sin(s.day/10+i)*15),y:e.y+Math.cos(s.day/13+i)*10}));}
+export function pirates(s) {return pirateTemplates.filter(e=>!s.defeated.includes(e.id)).map((e,i)=>({...e,x:wrapX(e.x+Math.sin(s.day/10+i)*15),y:e.y+Math.cos(s.day/13+i)*10})).concat(guildPirate(s)||[]);}
 export function startBattle(s,enemy) {
   if(s.battle||s.lost||!enemy)return false;
   const t=shipTypes[enemy.type];s.battle={enemy:{...enemy,hull:Math.round(t.hull*enemy.power),maxHull:Math.round(t.hull*enemy.power),crew:t.crew,guns:t.guns},round:0,messages:[`${enemy.name} closes in. The gun ports open.`]};s.paused=true;s.route=[];s.heading=null;s.destination=null;
@@ -201,16 +206,17 @@ export function battleAction(s,action) {
   } else if(action==='board') {
     const chance=Math.min(0.9,Math.max(0.1,crewCount(s)/(e.crew*2)*(1-e.hull/e.maxHull*0.65)));
     if(random(s)<chance) {
-      s.gold+=e.reward;s.fame+=40;s.defeated.push(e.id);
+      s.gold+=e.reward;s.fame+=40;if(!e.id.startsWith('guild:'))s.defeated.push(e.id);recordGuildVictory(s,e.id);
       if(s.ships.length+s.shipOrders.length<MAX_FLEET){const ship=createShip(e.type,e.name.replace(/^The /,''));ship.hull=Math.max(1,Math.round(shipStats(ship).maxHull*0.45));ship.crew=Math.max(1,Math.round(ship.crew*0.55));s.ships.push(ship);text=`You captured ${e.name}! The ship joins your fleet. Take on provisions for the extra crew.`;}
       else {s.gold+=1000;text=`You captured ${e.name}. Your fleet is full, so the prize is sold for 1,000 gold.`;}
-      log(s,'A prize taken',`${text} Bounty: ${e.reward} gold. +40 renown.`,'combat');s.battle=null;checkMilestones(s);return {ok:true,message:text};
+      const reward=e.id.startsWith('guild:')?`Report to the ${portById(s.guild.active.origin).name} guild for your bounty.`:`Bounty: ${e.reward} gold.`;
+      log(s,'A prize taken',`${text} ${reward} +40 renown.`,'combat');s.battle=null;checkMilestones(s);return {ok:true,message:`${text} ${reward}`};
     }
     const casualties=Math.min(crewCount(s)-1,2+Math.floor(random(s)*4));s.ships[0].crew=Math.max(1,s.ships[0].crew-casualties);text=`The boarding party is driven back. ${casualties} sailors lost.`;
   } else if(action==='fire') {
     const guns=s.ships.reduce((n,a)=>n+shipStats(a).guns*(a.hull/shipStats(a).maxHull)*Math.max(0.25,a.crew/shipStats(a).berths),0);
     const damage=Math.round(guns*(1.1+random(s)*0.85)*(hasSkill(s,'gunnery')?1.25:1));e.hull=Math.max(0,e.hull-damage);e.crew=Math.max(4,e.crew-Math.floor(damage/8));text=`Your broadside deals ${damage} hull damage.`;
-    if(e.hull<=0){s.gold+=e.reward;s.fame+=30;s.defeated.push(e.id);log(s,'Victory at sea',`${e.name} is defeated. Salvage earns ${e.reward} gold and 30 renown.`,'combat');s.battle=null;return {ok:true,message:'Victory! The sea is yours again.'};}
+    if(e.hull<=0){s.gold+=e.reward;s.fame+=30;if(!e.id.startsWith('guild:'))s.defeated.push(e.id);recordGuildVictory(s,e.id);const reward=e.id.startsWith('guild:')?`Report to the ${portById(s.guild.active.origin).name} guild for your bounty.`:`Salvage earns ${e.reward} gold.`;log(s,'Victory at sea',`${e.name} is defeated. ${reward} +30 renown.`,'combat');s.battle=null;return {ok:true,message:`Victory! ${reward}`};}
   } else return {ok:false,message:'Choose a combat action.'};
   const target=s.ships[Math.floor(random(s)*s.ships.length)],damage=Math.round(e.guns*(0.55+random(s)*0.8));target.hull-=damage;
   b.messages.unshift(`${text} ${target.name} takes ${damage} damage.`);b.messages=b.messages.slice(0,5);sinkShips(s);
@@ -239,7 +245,7 @@ export function advance(s,days) {
   if(s.paused||s.battle||s.lost)return;
   let remaining=days;
   while(remaining>0&&!s.paused&&!s.battle&&!s.lost) {
-    const dt=Math.min(remaining,0.025),before=s.day;remaining-=dt;s.day+=dt;
+    const dt=Math.min(remaining,0.025),before=s.day;remaining-=dt;s.day+=dt;checkGuildDeadline(s);if(s.paused)break;
     for(const text of settleDevelopment(s,before,s.day))log(s,'Port development',text,'world');
     const rate=rationRate(s);s.food=Math.max(0,s.food-rate*dt);s.water=Math.max(0,s.water-rate*dt);
     if(!s.food||!s.water){s.morale=Math.max(0,s.morale-4*dt);for(const ship of s.ships)ship.hull-=2*dt;sinkShips(s);if(s.lost)break;}
@@ -300,10 +306,10 @@ export function validateSave(s) {
     if(!s.shipOrders.every(o=>o&&portById(o.port)?.shipyard&&Number.isInteger(o.readyDay)&&o.readyDay>=0&&!o.ship?.legacy&&validShip(o.ship)))return false;
     const ids=[...s.ships,...s.shipOrders.map(o=>o.ship)].map(a=>a.id);if(new Set(ids).size!==ids.length)return false;
   }
-  if(s.version===4&&!validExpedition(s))return false;
+  if((s.version===4&&!validExpedition(s))||!validGuild(s))return false;
   if(s.port!==null&&!portById(s.port))return false;
-  if(s.destination!==null&&!portById(s.destination)&&!pirateTemplates.some(e=>e.id===s.destination))return false;
-  if(s.battle){const b=s.battle;if(!b.enemy||!pirateTemplates.some(e=>e.id===b.enemy.id)||!shipTypes[b.enemy.type]||typeof b.enemy.name!=='string'||!Number.isFinite(b.enemy.hull)||b.enemy.hull<0||!Number.isFinite(b.enemy.maxHull)||b.enemy.maxHull<=0||!Number.isFinite(b.enemy.crew)||b.enemy.crew<0||!Number.isFinite(b.enemy.guns)||b.enemy.guns<0||!Number.isFinite(b.enemy.reward)||b.enemy.reward<0||!Array.isArray(b.messages)||!b.messages.every(m=>typeof m==='string'))return false;}
+  if(s.destination!==null&&!portById(s.destination)&&!pirateTemplates.some(e=>e.id===s.destination)&&guildPirate(s)?.id!==s.destination)return false;
+  if(s.battle){const b=s.battle;if(!b.enemy||(!pirateTemplates.some(e=>e.id===b.enemy.id)&&guildPirate(s)?.id!==b.enemy.id)||!shipTypes[b.enemy.type]||typeof b.enemy.name!=='string'||!Number.isFinite(b.enemy.hull)||b.enemy.hull<0||!Number.isFinite(b.enemy.maxHull)||b.enemy.maxHull<=0||!Number.isFinite(b.enemy.crew)||b.enemy.crew<0||!Number.isFinite(b.enemy.guns)||b.enemy.guns<0||!Number.isFinite(b.enemy.reward)||b.enemy.reward<0||!Array.isArray(b.messages)||!b.messages.every(m=>typeof m==='string'))return false;}
   if(s.songbook!=null&&!Array.isArray(s.songbook))return false;
   return s.events.every(e=>typeof e.title==='string'&&typeof e.text==='string'&&Number.isFinite(e.day));
 }
@@ -337,5 +343,5 @@ export function migrateSave(s) {
     s.windRevision=1;
   }
   s.songbook=Array.isArray(s.songbook)?[...new Set(s.songbook.filter(id=>tuneById(id)))]:[];
-  s.paused=true;reveal(s);if(upgradeExpedition)s.expedition.charted=s.seen.length;return s;
+  checkGuildDeadline(s);s.paused=true;reveal(s);if(upgradeExpedition)s.expedition.charted=s.seen.length;return s;
 }

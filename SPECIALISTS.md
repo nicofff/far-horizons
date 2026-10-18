@@ -51,7 +51,7 @@ New voyages use save version 4. Versions 1, 2, and 3 migrate automatically. Exis
 - [Eastpolar's walkthrough](https://gamefaqs.gamespot.com/snes/588823-new-horizons/faqs/9311) and the [character reference](https://koeitecmo.wiki/wiki/Uncharted_Waters:_New_Horizons) identify Professor Mordes in Bordeaux and Ranajame in Alexandria.
 - The [Market/Shipyard FAQ](https://gamefaqs.gamespot.com/snes/588823-new-horizons/faqs/62703) and [Trading Data](https://koeitecmo.wiki/wiki/Uncharted_Waters:_New_Horizons/Trading_Data) supply Bordeaux's market and development data.
 
-Names, home ports, and specialist roles follow those references. Portraits, dialogue, introductions between residents, landmark clues, fixed lesson fees, reporting rates, and mechanical bonuses are original adaptations. The current game retains a single renown score, rather than separate Adventure, Trade, and Piracy fame. No original portraits or ROM assets are used. Named recruitable officers, equipment shops, guild commissions, and full character story campaigns remain future work.
+Names, home ports, and specialist roles follow those references. Portraits, dialogue, introductions between residents, landmark clues, fixed lesson fees, reporting rates, and mechanical bonuses are original adaptations. The current game retains a single renown score, rather than separate Adventure, Trade, and Piracy fame. No original portraits or ROM assets are used. Named recruitable officers, equipment shops, and full character story campaigns remain future work. The five [guild assignment types](GUILDS.md) are available independently of specialist contracts.
 
 ## Validation
 

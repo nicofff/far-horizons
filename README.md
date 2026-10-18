@@ -37,6 +37,10 @@ English shipyards at Bristol and Dublin unlock the Sloop at 850 Industry, then t
 
 The economy uses the original game's regional goods and shipyard catalog from documented fan references. See [the economy notes](economy/README.md) for sources, exact fields, save compatibility, and prototype pricing and simulation rules. Milestones still reward the first Madeira passage, an Atlantic crossing, a three-ship fleet, and arrival in India.
 
+## Guild work
+
+Visit Guild / Assignments in any trading port for letter delivery, goods procurement, cargo transport, debt collection, and pirate bounties. Carry one contract at a time. Commands and fleet menus open the Guild quest log with your next stop, deadline, and contract record. Cargo jobs include a quoted purchase allowance; debts and bounties require a return to the issuing guild. Deadlines include shore leave, and failure or abandonment costs renown. See [guild rules and sources](GUILDS.md).
+
 ## Wind and passages
 
 Prevailing winds follow [NOAA PSL monthly surface-wind normals](https://psl.noaa.gov/data/gridded/data.ncep.reanalysis.html), including the trade winds, westerlies, and reversing Indian Ocean monsoons. Smooth local weather adds variation over a few voyage days. Fair winds speed the fleet, headwinds slow it, and light air reduces progress. The crew handles tacking and keeps your chosen heading, so a headwind cannot trap you in a strait. Longer Auto sail passages weigh seasonal wind costs, and passage estimates account for winds along the route.
