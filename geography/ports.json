@@ -1,0 +1,769 @@
+[
+  {
+    "id": "lisbon",
+    "place": "Lisbon",
+    "country": "Portugal",
+    "rosterName": "Lisbon"
+  },
+  {
+    "id": "seville",
+    "place": "Seville",
+    "country": "Spain",
+    "rosterName": "Seville"
+  },
+  {
+    "id": "madeira",
+    "place": "Funchal",
+    "rosterName": "Madeira"
+  },
+  {
+    "id": "azores",
+    "place": "Ponta Delgada"
+  },
+  {
+    "id": "london",
+    "place": "London",
+    "country": "United Kingdom",
+    "townBank": "north",
+    "rosterName": "London"
+  },
+  {
+    "id": "amsterdam",
+    "place": "Amsterdam",
+    "rosterName": "Amsterdam"
+  },
+  {
+    "id": "cape-verde",
+    "place": "Praia"
+  },
+  {
+    "id": "elmina",
+    "place": "Elmina",
+    "coordinates": {
+      "lon": -1.35093,
+      "lat": 5.0847
+    },
+    "source": "https://www.geodatos.net/en/coordinates/ghana/elmina",
+    "rosterName": "San Jorge"
+  },
+  {
+    "id": "havana",
+    "place": "Havana",
+    "rosterName": "Havana"
+  },
+  {
+    "id": "santo-domingo",
+    "place": "Santo Domingo",
+    "country": "Dominican Republic",
+    "rosterName": "Santo Domingo"
+  },
+  {
+    "id": "pernambuco",
+    "place": "Recife",
+    "rosterName": "Pernambuco"
+  },
+  {
+    "id": "cape-town",
+    "place": "Cape Town",
+    "rosterName": "Cape Town"
+  },
+  {
+    "id": "mozambique",
+    "place": "Island of Mozambique",
+    "coordinates": {
+      "lon": 40.734,
+      "lat": -15.0363
+    },
+    "source": "https://ilhademocambique.co.mz/sites/default/files/2023-05/plano_de_gestao_e_conservacao_nov.2010.pdf",
+    "rosterName": "Mozambique"
+  },
+  {
+    "id": "goa",
+    "place": "Panaji",
+    "rosterName": "Goa"
+  },
+  {
+    "id": "calicut",
+    "place": "Kozhikode",
+    "rosterName": "Calicut"
+  },
+  {
+    "id": "malacca",
+    "place": "Malacca",
+    "coordinates": {
+      "lon": 102.2405,
+      "lat": 2.196
+    },
+    "source": "https://www.geonames.org/1734759/malacca.html",
+    "rosterName": "Malacca"
+  },
+  {
+    "id": "macau",
+    "place": "Macau",
+    "rosterName": "Macao"
+  },
+  {
+    "id": "nagasaki",
+    "place": "Nagasaki",
+    "rosterName": "Nagasaki"
+  },
+  {
+    "id": "barcelona",
+    "place": "Barcelona",
+    "country": "Spain",
+    "rosterName": "Barcelona"
+  },
+  {
+    "id": "valencia",
+    "place": "Valencia",
+    "country": "Spain",
+    "rosterName": "Valencia"
+  },
+  {
+    "id": "marseille",
+    "place": "Marseille",
+    "rosterName": "Marseille"
+  },
+  {
+    "id": "genoa",
+    "place": "Genoa",
+    "rosterName": "Genoa"
+  },
+  {
+    "id": "pisa",
+    "place": "Pisa",
+    "rosterName": "Pisa"
+  },
+  {
+    "id": "naples",
+    "place": "Naples",
+    "country": "Italy",
+    "rosterName": "Naples"
+  },
+  {
+    "id": "syracuse",
+    "place": "Siracusa",
+    "rosterName": "Syracuse"
+  },
+  {
+    "id": "palma",
+    "place": "Palma",
+    "rosterName": "Palma"
+  },
+  {
+    "id": "ragusa",
+    "place": "Dubrovnik",
+    "rosterName": "Ragusa"
+  },
+  {
+    "id": "venice",
+    "place": "Venice",
+    "rosterName": "Venice"
+  },
+  {
+    "id": "athens",
+    "place": "Athens",
+    "country": "Greece",
+    "rosterName": "Athens"
+  },
+  {
+    "id": "candia",
+    "place": "Iraklio",
+    "rosterName": "Candia"
+  },
+  {
+    "id": "ceuta",
+    "place": "Ceuta",
+    "rosterName": "Ceuta"
+  },
+  {
+    "id": "algiers",
+    "place": "Algiers",
+    "rosterName": "Algiers"
+  },
+  {
+    "id": "tunis",
+    "place": "Tunis",
+    "rosterName": "Tunis"
+  },
+  {
+    "id": "tripoli",
+    "place": "Tripoli",
+    "country": "Libya",
+    "rosterName": "Tripoli"
+  },
+  {
+    "id": "alexandria",
+    "place": "Alexandria",
+    "country": "Egypt",
+    "rosterName": "Alexandria"
+  },
+  {
+    "id": "beirut",
+    "place": "Beirut",
+    "rosterName": "Beirut"
+  },
+  {
+    "id": "istanbul",
+    "place": "Istanbul",
+    "rosterName": "Istanbul"
+  },
+  {
+    "id": "salonika",
+    "place": "Thessaloniki",
+    "rosterName": "Salonika"
+  },
+  {
+    "id": "bristol",
+    "place": "Bristol",
+    "rosterName": "Bristol"
+  },
+  {
+    "id": "dublin",
+    "place": "Dublin",
+    "rosterName": "Dublin"
+  },
+  {
+    "id": "antwerp",
+    "place": "Antwerpen",
+    "rosterName": "Antwerp"
+  },
+  {
+    "id": "hamburg",
+    "place": "Hamburg",
+    "rosterName": "Hamburg"
+  },
+  {
+    "id": "sakai",
+    "place": "Sakai",
+    "coordinates": {
+      "lon": 135.46653,
+      "lat": 34.58216
+    },
+    "source": "https://www.geonames.org/advanced-search.html?q=osaka%2C+japan&startRow=0",
+    "rosterName": "Sakai"
+  },
+  {
+    "id": "bordeaux",
+    "place": "Bordeaux",
+    "rosterName": "Bordeaux"
+  },
+  {
+    "id": "copenhagen",
+    "place": "Kobenhavn",
+    "rosterName": "Copenhagen"
+  },
+  {
+    "id": "lubeck",
+    "place": "Lubeck",
+    "rosterName": "Lubeck"
+  },
+  {
+    "id": "danzig",
+    "place": "Gdansk",
+    "rosterName": "Danzig"
+  },
+  {
+    "id": "riga",
+    "place": "Riga",
+    "rosterName": "Riga"
+  },
+  {
+    "id": "stockholm",
+    "place": "Stockholm",
+    "rosterName": "Stockholm"
+  },
+  {
+    "id": "narvik",
+    "place": "Narvik",
+    "rosterName": "Narvik"
+  },
+  {
+    "id": "bergen",
+    "place": "Bergen",
+    "rosterName": "Bergen"
+  },
+  {
+    "id": "oslo",
+    "place": "Oslo",
+    "rosterName": "Oslo"
+  },
+  {
+    "id": "hekla",
+    "place": "Reykjavik",
+    "rosterName": "Hekla",
+    "locationNote": "The Iceland supply label uses Reykjavik as a regional anchorage, not the inland volcano."
+  },
+  {
+    "id": "nantes",
+    "place": "Nantes",
+    "rosterName": "Nantes"
+  },
+  {
+    "id": "nicosia",
+    "place": "Kyrenia",
+    "coordinates": {
+      "lon": 33.31729,
+      "lat": 35.33634
+    },
+    "source": "https://www.geodatos.net/en/coordinates/cyprus/kyrenia",
+    "rosterName": "Nicosia",
+    "locationNote": "Nicosia is inland. The game uses its nearby maritime gateway at Kyrenia."
+  },
+  {
+    "id": "santa-cruz",
+    "place": "Santa Cruz de Tenerife",
+    "rosterName": "Santa Cruz"
+  },
+  {
+    "id": "argin",
+    "place": "Arguin",
+    "coordinates": {
+      "lon": -16.461389,
+      "lat": 20.603333
+    },
+    "source": "https://fr.wikipedia.org/wiki/%C3%8Ele_d%27Arguin",
+    "rosterName": "Argin"
+  },
+  {
+    "id": "bathurst",
+    "place": "Banjul",
+    "rosterName": "Bathurst"
+  },
+  {
+    "id": "bissau",
+    "place": "Bissau",
+    "rosterName": "Bissau"
+  },
+  {
+    "id": "timbuktu",
+    "place": "Timbuktu",
+    "rosterName": "Timbuktu"
+  },
+  {
+    "id": "abidjan",
+    "place": "Abidjan",
+    "rosterName": "Abidjan"
+  },
+  {
+    "id": "luanda",
+    "place": "Luanda",
+    "rosterName": "Luanda"
+  },
+  {
+    "id": "sofala",
+    "place": "Nova Sofala",
+    "coordinates": {
+      "lon": 34.731667,
+      "lat": -20.155
+    },
+    "source": "https://geographic.org/geographic_names/name.php?c=mozambique&fid=4189&uni=-507165",
+    "rosterName": "Sofala"
+  },
+  {
+    "id": "quelimane",
+    "place": "Quelimane",
+    "rosterName": "Quelimane"
+  },
+  {
+    "id": "tamatave",
+    "place": "Toamasina",
+    "rosterName": "Tamatave"
+  },
+  {
+    "id": "malindi",
+    "place": "Malindi",
+    "rosterName": "Malindi"
+  },
+  {
+    "id": "mombasa",
+    "place": "Mombasa",
+    "rosterName": "Mombasa"
+  },
+  {
+    "id": "mogadishu",
+    "place": "Mogadishu",
+    "rosterName": "Mogadishu"
+  },
+  {
+    "id": "jaffa",
+    "place": "Tel Aviv",
+    "rosterName": "Jaffa"
+  },
+  {
+    "id": "belgrade",
+    "place": "Belgrade",
+    "rosterName": "Belgrade"
+  },
+  {
+    "id": "trebizond",
+    "place": "Trabzon",
+    "rosterName": "Trebizond"
+  },
+  {
+    "id": "kaffa",
+    "place": "Feodosia",
+    "coordinates": {
+      "lon": 35.382435,
+      "lat": 45.031933
+    },
+    "source": "https://www.latlong.net/place/feodosia-crimea-ukraine-10007.html",
+    "rosterName": "Kaffa"
+  },
+  {
+    "id": "azov",
+    "place": "Azov",
+    "coordinates": {
+      "lon": 39.41806,
+      "lat": 47.10833
+    },
+    "source": "https://en.wikipedia.org/wiki/Azov",
+    "rosterName": "Azov"
+  },
+  {
+    "id": "aden",
+    "place": "Aden",
+    "rosterName": "Aden"
+  },
+  {
+    "id": "massawa",
+    "place": "Massawa",
+    "rosterName": "Massawa(Aksum)"
+  },
+  {
+    "id": "mecca",
+    "place": "Jeddah",
+    "rosterName": "Mecca",
+    "locationNote": "Mecca is served by its historical Red Sea gateway at Jeddah."
+  },
+  {
+    "id": "cairo",
+    "place": "Suez",
+    "rosterName": "Cairo",
+    "locationNote": "Cairo is represented by Suez, preserving the original Red Sea approach without opening a canal."
+  },
+  {
+    "id": "muscat",
+    "place": "Muscat",
+    "rosterName": "Muscat"
+  },
+  {
+    "id": "hormuz",
+    "place": "Bandar-e-Abbas",
+    "rosterName": "Hormuz",
+    "locationNote": "The original label uses the Bandar Abbas harbor region."
+  },
+  {
+    "id": "shiraz",
+    "place": "Bandar Lengeh",
+    "coordinates": {
+      "lon": 54.8808333,
+      "lat": 26.5561111
+    },
+    "source": "https://fr.wikipedia.org/wiki/Bandar_Lengueh",
+    "rosterName": "Shiraz",
+    "locationNote": "The reference roster identifies this label with Bandar Lengeh, not inland Shiraz."
+  },
+  {
+    "id": "quatar",
+    "place": "Doha",
+    "rosterName": "Quatar"
+  },
+  {
+    "id": "basra",
+    "place": "Basra",
+    "rosterName": "Basra"
+  },
+  {
+    "id": "diu",
+    "place": "Diu",
+    "rosterName": "Diu",
+    "locationNote": "Diu uses the named Indian harbor rather than the fan list's Karachi identification."
+  },
+  {
+    "id": "cochin",
+    "place": "Kochi",
+    "country": "India",
+    "rosterName": "Cochin"
+  },
+  {
+    "id": "ceylon",
+    "place": "Colombo",
+    "rosterName": "Ceylon",
+    "locationNote": "The island label uses Colombo as its harbor."
+  },
+  {
+    "id": "pasei",
+    "place": "Singkil",
+    "coordinates": {
+      "lon": 97.7972,
+      "lat": 2.2828
+    },
+    "source": "https://mapcarta.com/Singkil",
+    "rosterName": "Pasei",
+    "locationNote": "The reference roster identifies this port with Singkil."
+  },
+  {
+    "id": "bankao",
+    "place": "Pangkalpinang",
+    "rosterName": "Bankao",
+    "locationNote": "Bankao is represented by Pangkalpinang on Bangka. This is a regional interpretation of the original label."
+  },
+  {
+    "id": "sunda",
+    "place": "Jakarta",
+    "rosterName": "Sunda"
+  },
+  {
+    "id": "dili",
+    "place": "Dili",
+    "rosterName": "Dili"
+  },
+  {
+    "id": "banda",
+    "place": "Banda Neira",
+    "coordinates": {
+      "lon": 129.897473,
+      "lat": -4.525827
+    },
+    "source": "https://fr.wikipedia.org/wiki/Banda_Neira_(ville)",
+    "rosterName": "Banda"
+  },
+  {
+    "id": "amboa",
+    "place": "Ambon",
+    "rosterName": "Amboa"
+  },
+  {
+    "id": "ternate",
+    "place": "Ternate",
+    "rosterName": "Ternate"
+  },
+  {
+    "id": "mindanao",
+    "place": "Davao",
+    "rosterName": "Mindanao"
+  },
+  {
+    "id": "moresby",
+    "place": "Port Moresby",
+    "rosterName": "Moresby"
+  },
+  {
+    "id": "hanoi",
+    "place": "Hanoi",
+    "rosterName": "Hanoi"
+  },
+  {
+    "id": "zeiton",
+    "place": "Quanzhou",
+    "rosterName": "Zeiton",
+    "locationNote": "Zeiton uses Quanzhou, the historical Zayton port, rather than the fan list's Fuzhou identification."
+  },
+  {
+    "id": "changan",
+    "place": "Xian",
+    "rosterName": "Changan"
+  },
+  {
+    "id": "ezo",
+    "place": "Hakodate",
+    "rosterName": "Ezo"
+  },
+  {
+    "id": "lushun",
+    "place": "Dalian",
+    "rosterName": "Lushun"
+  },
+  {
+    "id": "guam",
+    "place": "Agana",
+    "rosterName": "Guam"
+  },
+  {
+    "id": "dikson",
+    "place": "Dikson",
+    "rosterName": "Dikson"
+  },
+  {
+    "id": "tiksi",
+    "place": "Tiksi",
+    "rosterName": "Tiksi"
+  },
+  {
+    "id": "korf",
+    "place": "Korf",
+    "rosterName": "Korf"
+  },
+  {
+    "id": "leveque",
+    "place": "Cape Leveque",
+    "coordinates": {
+      "lon": 122.92528,
+      "lat": -16.38861
+    },
+    "source": "https://unstats.un.org/UNSD/geoinfo/UNGEGN/docs/9th-uncsgn-docs/bill-watt-cd-docs/reg-gazetteer-alphabetical.pdf",
+    "rosterName": "Leveque"
+  },
+  {
+    "id": "geelong",
+    "place": "Geelong",
+    "rosterName": "Geelong"
+  },
+  {
+    "id": "wanganui",
+    "place": "Whanganui",
+    "rosterName": "Wanagunui"
+  },
+  {
+    "id": "suva",
+    "place": "Suva",
+    "rosterName": "Suva"
+  },
+  {
+    "id": "tahiti",
+    "place": "Papeete",
+    "rosterName": "Tahiti"
+  },
+  {
+    "id": "nome",
+    "place": "Nome",
+    "rosterName": "Nome"
+  },
+  {
+    "id": "coppermine",
+    "place": "Kugluktuk",
+    "rosterName": "Coppermine"
+  },
+  {
+    "id": "churchill",
+    "place": "Churchill",
+    "rosterName": "Churchill"
+  },
+  {
+    "id": "forel",
+    "place": "Timmiarmiut",
+    "rosterName": "Forel",
+    "locationNote": "The eastern Greenland supply label uses Timmiarmiut as a regional anchorage."
+  },
+  {
+    "id": "juneau",
+    "place": "Juneau",
+    "rosterName": "Juneau"
+  },
+  {
+    "id": "naalehu",
+    "place": "Naalehu",
+    "coordinates": {
+      "lon": -155.57984,
+      "lat": 19.06759
+    },
+    "source": "https://digital.library.unt.edu/explore/locations/p19621/",
+    "rosterName": "Naalehu",
+    "locationNote": "The supply label uses Naalehu on Hawaii, rather than the fan list's Honolulu identification."
+  },
+  {
+    "id": "cape-cod",
+    "place": "Provincetown",
+    "coordinates": {
+      "lon": -70.1864,
+      "lat": 42.05295
+    },
+    "source": "https://www.geonames.org/4948087/provincetown.html",
+    "rosterName": "Cape Cod"
+  },
+  {
+    "id": "santa-barbara",
+    "place": "Santa Barbara",
+    "country": "United States of America",
+    "rosterName": "Santa Barbara"
+  },
+  {
+    "id": "guatemala",
+    "place": "San Jose",
+    "country": "Guatemala",
+    "rosterName": "Guatemala",
+    "locationNote": "The inland country/city label uses Puerto San Jose on the Pacific coast."
+  },
+  {
+    "id": "panama",
+    "place": "Panama City",
+    "country": "Panama",
+    "rosterName": "Panama"
+  },
+  {
+    "id": "veracruz",
+    "place": "Veracruz",
+    "rosterName": "Veracruz"
+  },
+  {
+    "id": "santiago",
+    "place": "Santiago de Cuba",
+    "rosterName": "Santiago"
+  },
+  {
+    "id": "porto-velho",
+    "place": "Colon",
+    "country": "Panama",
+    "rosterName": "Porto Velho",
+    "locationNote": "The reference roster identifies this label with Colon on the Caribbean side of Panama."
+  },
+  {
+    "id": "cartegena",
+    "place": "Cartagena",
+    "country": "Colombia",
+    "rosterName": "Cartegena"
+  },
+  {
+    "id": "maracaibo",
+    "place": "Maracaibo",
+    "rosterName": "Maracaibo"
+  },
+  {
+    "id": "caracas",
+    "place": "Caracas",
+    "rosterName": "Caracas"
+  },
+  {
+    "id": "margarita",
+    "place": "Porlamar",
+    "rosterName": "Margarita"
+  },
+  {
+    "id": "jamaica",
+    "place": "Kingston",
+    "country": "Jamaica",
+    "rosterName": "Jamaica"
+  },
+  {
+    "id": "cayenne",
+    "place": "Cayenne",
+    "rosterName": "Cayenne"
+  },
+  {
+    "id": "rio-de-janeiro",
+    "place": "Rio de Janeiro",
+    "rosterName": "Rio de Janiero"
+  },
+  {
+    "id": "montevideo",
+    "place": "Montevideo",
+    "rosterName": "Montevideo"
+  },
+  {
+    "id": "valparaiso",
+    "place": "Valparaiso",
+    "country": "Chile",
+    "rosterName": "Valparaiso"
+  },
+  {
+    "id": "mollendo",
+    "place": "Mollendo",
+    "rosterName": "Mollendo"
+  },
+  {
+    "id": "callao",
+    "place": "Callao",
+    "rosterName": "Callao"
+  }
+]

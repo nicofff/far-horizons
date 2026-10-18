@@ -1,0 +1,22 @@
+{
+  "source": {
+    "url": "https://storage.googleapis.com/teow2016/Ecoregions2017.zip",
+    "sha256": "be36d6209e443038d02e309f0447c6e7f2a62f5fe60c605ffe90d064952f2a60",
+    "name": "RESOLVE Ecoregions 2017, Dinerstein et al.",
+    "license": "CC-BY-4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+    "documentation": "https://developers.google.com/earth-engine/datasets/catalog/RESOLVE_ECOREGIONS_2017"
+  },
+  "raster": [
+    3600,
+    1800
+  ],
+  "degreesPerPixel": 0.1,
+  "worldUnitsPerPixel": 0.5,
+  "terrainSha256": "681a50e8a855dd655d933719e81288c5a749945871ddcff2116d1649b60c7cd0",
+  "adaptations": [
+    "Rasterized biome numbers 1\u201314; Rock and Ice mapped to 15.",
+    "Coastal gaps use the nearest sourced ecoregion.",
+    "Game colors and scenery are original interpretations; this is not a historical vegetation survey."
+  ]
+}

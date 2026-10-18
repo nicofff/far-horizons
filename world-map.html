@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Far Horizons · Full world map</title>
+<style>
+:root{color-scheme:dark light;font-family:var(--font-sans,system-ui,sans-serif);color:var(--foreground,light-dark(#20252e,#e7e6d9))}*{box-sizing:border-box}body{margin:0;background:transparent}#far-horizons-world{width:100%}.map-controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px}.map-controls select{flex:1;min-width:145px;max-width:250px}.map-controls button,.map-controls select{font:inherit;color:inherit;background:var(--secondary,light-dark(#f1eee6,#1d2938));border:1px solid var(--border,light-dark(#d0c8b4,#4a5267));padding:7px 11px;border-radius:4px}.map-controls button:focus-visible,.map-controls select:focus-visible{outline:2px solid var(--ring,#d9b870);outline-offset:2px}.map-count{color:var(--muted-foreground,light-dark(#68695f,#abb9c8));margin-left:auto}.world-canvas{width:100%;height:430px;display:block;touch-action:none;cursor:grab;image-rendering:pixelated;background:#2865ce}.world-canvas:active{cursor:grabbing}.map-legend{display:flex;gap:18px;flex-wrap:wrap;margin:12px 0;color:var(--muted-foreground,light-dark(#68695f,#abb9c8))}.map-legend span{display:flex;align-items:center;gap:7px}.map-legend i{width:9px;height:9px;display:inline-block;background:#f8cb70;box-shadow:0 0 0 1px #463c29}.map-legend .landmark{background:#e6eeef;transform:rotate(45deg)}.map-detail{min-height:44px;color:var(--foreground,light-dark(#20252e,#e7e6d9))}.map-detail span{color:var(--muted-foreground,light-dark(#68695f,#abb9c8))}.map-detail strong{font-weight:500}@media(max-width:460px){.map-count{flex-basis:100%;margin-left:0}.world-canvas{height:360px}}
+@media(min-width:1000px){.world-canvas{height:650px}}
+</style>
+</head>
+<body>
+<section id="far-horizons-world" aria-label="Full current game world map">
+  <div class="map-controls">
+    <button class="btn" type="button" id="map-fit">Full world</button>
+    <button class="btn" type="button" id="map-med">Mediterranean</button>
+    <button class="btn" type="button" id="map-baltic">Baltic Sea</button>
+    <button class="btn" type="button" id="map-in" aria-label="Zoom in">+</button>
+    <button class="btn" type="button" id="map-out" aria-label="Zoom out">−</button>
+    <select class="form-select" id="map-place" aria-label="Inspect a location"><option value="">Inspect a location…</option></select>
+    <span class="map-count">132 harbors · 16 discoveries</span>
+  </div>
+  <canvas class="world-canvas" id="world-canvas" role="img" aria-label="Full game map showing the Americas, Europe, Africa, Asia, Australia, 132 harbors, and sixteen discoveries. Use the location selector to inspect individual locations."></canvas>
+  <div class="map-legend"><span><i></i>Harbor</span><span><i class="landmark"></i>Discovery</span></div>
+  <div class="map-detail" id="map-detail" aria-live="polite">Current game geography. <span>All locations revealed for this overview. Coasts: Natural Earth. Biomes: RESOLVE Ecoregions 2017.</span></div>
+  <p class="map-detail">Biomes adapted from <a href="https://developers.google.com/earth-engine/datasets/catalog/RESOLVE_ECOREGIONS_2017">RESOLVE Ecoregions 2017, Dinerstein et al.</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Game palettes are original.</p>
+</section>
+<script type="module">
+import * as data from './data.js';
+(async()=>{
+  const root=document.getElementById('far-horizons-world');
+  const canvas=root.querySelector('#world-canvas'),ctx=canvas.getContext('2d');
+  const select=root.querySelector('#map-place'),detail=root.querySelector('#map-detail');
+  root.querySelector('.map-count').textContent=`${data.ports.length} harbors · ${data.discoveries.length} discoveries`;
+  canvas.setAttribute('aria-label',`Full game world map with ${data.ports.length} harbors and ${data.discoveries.length} landmarks. Use the location selector to inspect individual locations.`);
+  let width=728,height=430,dpr=1,zoom=1,center={x:900,y:420},drag=null,moved=false,selected=null,labels=[],hitPoints=[];
+  const base=new Image();base.src='./assets/world-biomes.png';await base.decode();
+  const fit=()=>Math.min((width-30)/1800,(height-30)/900);
+  const scale=()=>fit()*zoom;
+  const screen=p=>({x:(p.x-center.x)*scale()+width/2,y:(p.y-center.y)*scale()+height/2});
+  const world=p=>({x:(p.x-width/2)/scale()+center.x,y:(p.y-height/2)/scale()+center.y});
+  const bounds=()=>{center.x=Math.max(0,Math.min(1800,center.x));center.y=Math.max(0,Math.min(900,center.y));};
+  const intersects=(a,b)=>a.x<b.x+b.w+5&&a.x+a.w+5>b.x&&a.y<b.y+b.h+3&&a.y+a.h+3>b.y;
+  function draw(){
+    ctx.setTransform(dpr,0,0,dpr,0,0);ctx.imageSmoothingEnabled=false;ctx.fillStyle='#2865ce';ctx.fillRect(0,0,width,height);
+    const origin=screen({x:0,y:0});ctx.drawImage(base,origin.x,origin.y,1800*scale(),900*scale());
+    labels=[];hitPoints=[];
+    const places=[...data.ports.map(p=>({...p,kind:'port'})),...data.discoveries.map(p=>({...p,kind:'discovery'}))];
+    ctx.font='12px system-ui, sans-serif';ctx.textBaseline='middle';ctx.textAlign='center';
+    const oceans=[['PACIFIC',250,440],['ATLANTIC',690,410],['INDIAN OCEAN',1220,560]];
+    ctx.fillStyle='#c1d8f1';for(const [name,x,y]of oceans){const p=screen({x,y});ctx.fillText(name,p.x,p.y);}
+    for(const place of places){const p=screen(place);if(p.x<0||p.x>width||p.y<0||p.y>height)continue;
+      ctx.save();ctx.translate(Math.round(p.x),Math.round(p.y));if(place.kind==='discovery')ctx.rotate(Math.PI/4);ctx.fillStyle=place.kind==='port'?'#f8cb70':'#e6eeef';ctx.strokeStyle='#203b6b';ctx.lineWidth=1;ctx.fillRect(-3,-3,6,6);ctx.strokeRect(-3,-3,6,6);ctx.restore();
+      hitPoints.push({...place,px:p.x,py:p.y});
+    }
+    ctx.textAlign='left';
+    const ordered=[...places].sort((a,b)=>(b.id===selected)-(a.id===selected)||Number(a.kind==='discovery')-Number(b.kind==='discovery'));
+    for(const place of ordered){if(place.kind==='discovery'&&place.id!==selected&&zoom<2.5)continue;const p=screen(place);if(p.x<4||p.x>width-4||p.y<4||p.y>height-4)continue;
+      const w=ctx.measureText(place.name).width+10,h=19;let box;
+      const offsets=[[9,-10],[-w-9,-10],[9,12],[-w-9,12],[9,-30],[-w-9,-30],[9,32],[-w-9,32],[12,-52],[-w-12,-52],[12,54],[-w-12,54],[30,-75],[-w-30,-75],[30,78],[-w-30,78]];
+      for(const [dx,dy]of offsets){const candidate={x:p.x+dx,y:p.y+dy,w,h};if(candidate.x<5||candidate.x+w>width-5||candidate.y<5||candidate.y+h>height-5||labels.some(other=>intersects(candidate,other)))continue;box=candidate;break;}
+      if(!box)continue;
+      labels.push({...box,id:place.id});
+      const near={x:Math.max(box.x,Math.min(box.x+w,p.x)),y:Math.max(box.y,Math.min(box.y+h,p.y))};
+      ctx.strokeStyle='#d7d8b4';ctx.lineWidth=.7;ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(near.x,near.y);ctx.stroke();
+      ctx.fillStyle=place.id===selected?'#eee0ad':'#20385be6';ctx.fillRect(box.x,box.y,w,h);ctx.fillStyle=place.id===selected?'#292b37':'#f4e7b5';ctx.fillText(place.name,box.x+5,box.y+h/2);
+    }
+    if(selected){const place=places.find(p=>p.id===selected);if(place){const p=screen(place);ctx.strokeStyle='#fff0ad';ctx.lineWidth=1.5;ctx.strokeRect(p.x-7,p.y-7,14,14);}}
+  }
+  function resize(){width=canvas.getBoundingClientRect().width;height=canvas.getBoundingClientRect().height;dpr=Math.min(devicePixelRatio||1,2);canvas.width=width*dpr;canvas.height=height*dpr;draw();}
+  new ResizeObserver(resize).observe(canvas);resize();
+  function choose(id,focus=false){
+    const place=[...data.ports,...data.discoveries].find(p=>p.id===id);if(!place)return;selected=id;select.value=id;
+    const title=document.createElement('strong'),description=document.createElement('span');title.textContent=place.name;description.textContent=place.region?` · ${place.region} · ${place.supplyOnly?'Supply anchorage':place.specialty?'Specialty: '+data.goods[place.specialty].name:'Regional market'} · ${place.description}`:` · ${place.description}`;detail.replaceChildren(title,description);
+    if(focus){center={x:place.x,y:place.y};zoom=5;}draw();
+  }
+  for(const [label,places] of [['Harbors',data.ports],['Discoveries',data.discoveries]]){const group=document.createElement('optgroup');group.label=label;for(const place of places){const option=document.createElement('option');option.value=place.id;option.textContent=place.name;group.append(option);}select.append(group);}
+  select.onchange=()=>choose(select.value,true);
+  root.querySelector('#map-fit').onclick=()=>{center={x:900,y:450};zoom=1;selected=null;select.value='';detail.textContent='Current game geography. All locations revealed for this overview. Coasts: Natural Earth. Biomes: RESOLVE Ecoregions 2017.';draw();};
+  root.querySelector('#map-med').onclick=()=>{center={x:970,y:260};zoom=6;selected=null;select.value='';detail.textContent='Mediterranean coastline rasterized from Natural Earth. Port coordinates from geographic gazetteers.';draw();};
+  root.querySelector('#map-baltic').onclick=()=>{center=data.xy(18,57.4);zoom=14;selected=null;select.value='';detail.textContent='Danish straits and Baltic ports. Narrow waterways preserve the source coastline at higher sampling resolution.';draw();};
+  root.querySelector('#map-in').onclick=()=>{zoom=Math.min(24,zoom*1.7);draw();};root.querySelector('#map-out').onclick=()=>{zoom=Math.max(1,zoom/1.7);draw();};
+  const relative=e=>{const r=canvas.getBoundingClientRect();return {x:e.clientX-r.left,y:e.clientY-r.top};};
+  canvas.addEventListener('pointerdown',e=>{const p=relative(e);drag={...p,cx:center.x,cy:center.y};moved=false;canvas.setPointerCapture(e.pointerId);});
+  canvas.addEventListener('pointermove',e=>{if(!drag)return;const p=relative(e);if(Math.hypot(p.x-drag.x,p.y-drag.y)>4)moved=true;center={x:drag.cx-(p.x-drag.x)/scale(),y:drag.cy-(p.y-drag.y)/scale()};bounds();draw();});
+  canvas.addEventListener('pointerup',e=>{drag=null;canvas.releasePointerCapture(e.pointerId);if(moved)return;const p=relative(e),label=labels.find(b=>p.x>=b.x&&p.x<=b.x+b.w&&p.y>=b.y&&p.y<=b.y+b.h),hit=label||hitPoints.map(q=>({...q,d:Math.hypot(q.px-p.x,q.py-p.y)})).sort((a,b)=>a.d-b.d).find(q=>q.d<16);if(hit)choose(hit.id);});
+  canvas.addEventListener('pointercancel',()=>drag=null);
+  canvas.addEventListener('wheel',e=>{e.preventDefault();const p=relative(e),before=world(p);zoom=Math.max(1,Math.min(24,zoom*Math.exp(-e.deltaY*.0015)));const after=world(p);center.x+=before.x-after.x;center.y+=before.y-after.y;bounds();draw();},{passive:false});
+  console.log('World map ready:',data.ports.length,'harbors,',data.discoveries.length,'discoveries');
+})();
+</script>
+</body>
+</html>

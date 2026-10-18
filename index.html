@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#080b19">
+  <meta name="description" content="A local-view, retro seafaring adventure inspired by Uncharted Waters: New Horizons.">
+  <title>Far Horizons</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="console" aria-label="Far Horizons game">
+    <div class="screen" id="screen"><canvas id="chart" width="512" height="384" tabindex="0"></canvas><dialog id="modal" aria-labelledby="menu-title"><div id="modal-content"></div></dialog></div>
+    <nav class="controller" aria-label="Game controls">
+      <span class="direction-pad"><button data-steer="-1,0" aria-label="Sail west">◀</button><span><button data-steer="0,-1" aria-label="Sail north">▲</button><button data-steer="0,1" aria-label="Sail south">▼</button></span><button data-steer="1,0" aria-label="Sail east">▶</button></span>
+      <button id="commands-button">ENTER <small>COMMANDS</small></button><button id="chart-button">M <small>CHART</small></button><button id="fleet-button">F <small>FLEET</small></button><button id="sail-data-button">R <small>SAIL DATA</small></button><button id="pause-button">SPACE <small>PAUSE</small></button><button id="speed-button">1X <small>SPEED</small></button>
+    </nav>
+    <p class="keyboard-hint">ARROWS / WASD TO STEER · ENTER TO ACT · ESC TO RETURN</p>
+    <p class="sr-only" id="status" role="status" aria-live="polite"></p>
+  </main>
+  <input type="file" id="import-file" accept="application/json" hidden>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

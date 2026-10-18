@@ -1,0 +1,17 @@
+{
+  "1":{"name":"Tropical rainforest","ground":["#337c41","#398647","#2d713b"],"shore":["#b6ad6c","#929852"],"leaves":["#155b38","#226c3d","#459349"],"feature":"jungle","density":0.86,"chart":"#4b8159"},
+  "2":{"name":"Tropical dry forest","ground":["#8f9d4e","#9ca75c","#829247"],"shore":["#d1be7c","#b0a465"],"leaves":["#476e38","#5d8541","#91a255"],"feature":"broadleaf","density":0.42,"chart":"#88995c"},
+  "3":{"name":"Tropical conifer forest","ground":["#6e914b","#7b9a53","#638442"],"shore":["#c7b77b","#a59e65"],"leaves":["#355c39","#487342","#759250"],"feature":"pine","density":0.64,"chart":"#72895a"},
+  "4":{"name":"Temperate woodland","ground":["#64984d","#71a356","#598b45"],"shore":["#cfbf81","#aa9f68"],"leaves":["#2d593a","#3f7341","#70a154"],"feature":"broadleaf","density":0.46,"chart":"#8ba477"},
+  "5":{"name":"Temperate conifer forest","ground":["#587f52","#668d5d","#4e744a"],"shore":["#adae88","#8d9473"],"leaves":["#2c4e3d","#3b6449","#66875c"],"feature":"pine","density":0.7,"chart":"#718b73"},
+  "6":{"name":"Boreal forest","ground":["#57745c","#638266","#4d6953"],"shore":["#a2ac97","#859482"],"leaves":["#294b41","#3b6050","#6b8c71"],"feature":"pine","density":0.67,"chart":"#708a7c"},
+  "7":{"name":"Savanna","ground":["#b3a85e","#c0b46b","#a49b50"],"shore":["#d6c381","#b8aa65"],"leaves":["#4d6737","#698344","#97a25b"],"feature":"acacia","density":0.23,"chart":"#b3ac75"},
+  "8":{"name":"Temperate grassland","ground":["#9aa95e","#a8b66d","#8d9d54"],"shore":["#c7bd86","#aaa571"],"leaves":["#657d43","#7e9251","#b5bf78"],"feature":"grass","density":0.35,"chart":"#a0ad7a"},
+  "9":{"name":"Flooded grassland","ground":["#789d62","#85ab6f","#6b9157"],"shore":["#9b9e68","#7e8955"],"leaves":["#4e724b","#668c51","#a0b575"],"feature":"reeds","density":0.5,"chart":"#829d77"},
+  "10":{"name":"Highland scrub","ground":["#959777","#a6a68a","#85876a"],"shore":["#bbba9b","#999b82"],"leaves":["#596b4c","#758563","#9fa886"],"feature":"rock","density":0.4,"chart":"#9d9e88"},
+  "11":{"name":"Tundra","ground":["#a9b2a1","#bac2b1","#96a18f"],"shore":["#cbd2c2","#a4b4aa"],"leaves":["#61715f","#819078","#bec7af"],"feature":"tundra","density":0.36,"chart":"#b0bfb0"},
+  "12":{"name":"Mediterranean scrub","ground":["#a5a369","#b3b17a","#96975c"],"shore":["#d6c28d","#b3a374"],"leaves":["#526b43","#748551","#a1a86b"],"feature":"olive","density":0.26,"chart":"#aaa97b"},
+  "13":{"name":"Desert","ground":["#d3b675","#dfc487","#c8aa69"],"shore":["#e6ce96","#c3aa70"],"leaves":["#807d45","#999354","#bab074"],"feature":"dune","density":0.55,"chart":"#cfb982"},
+  "14":{"name":"Mangrove coast","ground":["#527e49","#608d52","#477141"],"shore":["#939569","#727f55"],"leaves":["#25583d","#377044","#6b9a57"],"feature":"mangrove","density":0.83,"chart":"#688e68"},
+  "15":{"name":"Rock and ice","ground":["#d8e4df","#e8efe7","#bfd3d0"],"shore":["#e3eeea","#a9c5c6"],"leaves":["#8aa9aa","#afc9c8","#f1f4eb"],"feature":"ice","density":0.4,"chart":"#d0e1dc"}
+}

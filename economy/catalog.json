@@ -1,0 +1,3221 @@
+{
+  "sources": {
+    "faq": "https://gamefaqs.gamespot.com/snes/588823-new-horizons/faqs/62703",
+    "trading": "https://koeitecmo.wiki/wiki/Uncharted_Waters:_New_Horizons/Trading_Data",
+    "portInfo": "https://unchartedwatersnewhorizons.com/files/portsinfo.zip"
+  },
+  "goods": {
+    "clove": {
+      "name": "Clove",
+      "sell": {
+        "a": 140,
+        "b": 160,
+        "c": 150,
+        "d": 145,
+        "e": 110,
+        "f": 45,
+        "i": 25,
+        "j": 30,
+        "k": 12,
+        "l": 3,
+        "m": 30,
+        "g": 55,
+        "h": 50
+      },
+      "base": 25,
+      "color": "#cfb17b"
+    },
+    "cinnamon": {
+      "name": "Cinnamon",
+      "sell": {
+        "a": 120,
+        "b": 130,
+        "c": 120,
+        "d": 110,
+        "e": 150,
+        "f": 40,
+        "i": 20,
+        "j": 28,
+        "k": 10,
+        "l": 2,
+        "m": 40,
+        "g": 45,
+        "h": 50
+      },
+      "base": 150,
+      "color": "#cfb17b"
+    },
+    "pepper": {
+      "name": "Pepper",
+      "sell": {
+        "a": 80,
+        "b": 140,
+        "c": 120,
+        "d": 100,
+        "e": 75,
+        "f": 40,
+        "i": 20,
+        "j": 23,
+        "k": 5,
+        "l": 2,
+        "m": 50,
+        "g": 30,
+        "h": 35
+      },
+      "base": 3,
+      "color": "#cfb17b"
+    },
+    "nutmeg": {
+      "name": "Nutmeg",
+      "sell": {
+        "a": 95,
+        "b": 110,
+        "c": 100,
+        "d": 95,
+        "e": 90,
+        "f": 45,
+        "i": 25,
+        "j": 18,
+        "k": 13,
+        "l": 3,
+        "m": 45,
+        "g": 40,
+        "h": 45
+      },
+      "base": 110,
+      "color": "#cfb17b"
+    },
+    "pimento": {
+      "name": "Pimento",
+      "sell": {
+        "a": 60,
+        "b": 55,
+        "c": 70,
+        "d": 65,
+        "e": 60,
+        "f": 45,
+        "i": 20,
+        "j": 40,
+        "k": 15,
+        "l": 2,
+        "m": 3,
+        "g": 5,
+        "h": 6
+      },
+      "base": 20,
+      "color": "#cfb17b"
+    },
+    "ginger": {
+      "name": "Ginger",
+      "sell": {
+        "a": 55,
+        "b": 70,
+        "c": 65,
+        "d": 60,
+        "e": 65,
+        "f": 40,
+        "i": 20,
+        "j": 35,
+        "k": 13,
+        "l": 2,
+        "m": 10,
+        "g": 30,
+        "h": 25
+      },
+      "base": 3,
+      "color": "#cfb17b"
+    },
+    "vanilla": {
+      "name": "Vanilla",
+      "sell": {
+        "a": 220,
+        "b": 250,
+        "c": 200,
+        "d": 180,
+        "e": 280,
+        "f": 10,
+        "i": 10,
+        "j": 15,
+        "k": 12,
+        "l": 12,
+        "m": 320,
+        "g": 70,
+        "h": 70
+      },
+      "base": 320,
+      "color": "#cfb17b"
+    },
+    "tea": {
+      "name": "Tea",
+      "sell": {
+        "a": 200,
+        "b": 220,
+        "c": 200,
+        "d": 180,
+        "e": 160,
+        "f": 20,
+        "i": 15,
+        "j": 90,
+        "k": 8,
+        "l": 6,
+        "m": 8,
+        "g": 25,
+        "h": 30
+      },
+      "base": 20,
+      "color": "#cfb17b"
+    },
+    "coffee": {
+      "name": "Coffee",
+      "sell": {
+        "a": 5,
+        "b": 4,
+        "c": 5,
+        "d": 320,
+        "e": 340,
+        "f": 15,
+        "i": 12,
+        "j": 15,
+        "k": 6,
+        "l": 5,
+        "m": 5,
+        "g": 30,
+        "h": 20
+      },
+      "base": 35,
+      "color": "#cfb17b"
+    },
+    "cacao": {
+      "name": "Cacao",
+      "sell": {
+        "a": 105,
+        "b": 110,
+        "c": 95,
+        "d": 75,
+        "e": 85,
+        "f": 10,
+        "i": 10,
+        "j": 5,
+        "k": 5,
+        "l": 5,
+        "m": 5,
+        "g": 20,
+        "h": 15
+      },
+      "base": 50,
+      "color": "#cfb17b"
+    },
+    "sugar": {
+      "name": "Sugar",
+      "sell": {
+        "a": 45,
+        "b": 49,
+        "c": 48,
+        "d": 50,
+        "e": 50,
+        "f": 60,
+        "i": 65,
+        "j": 50,
+        "k": 70,
+        "l": 70,
+        "m": 90,
+        "g": 80,
+        "h": 85
+      },
+      "base": 90,
+      "color": "#cfb17b"
+    },
+    "cheese": {
+      "name": "Cheese",
+      "sell": {
+        "a": 20,
+        "b": 15,
+        "c": 40,
+        "d": 35,
+        "e": 15,
+        "f": 45,
+        "i": 45,
+        "j": 35,
+        "k": 15,
+        "l": 12,
+        "m": 20,
+        "g": 45,
+        "h": 50
+      },
+      "base": 25,
+      "color": "#cfb17b"
+    },
+    "fish": {
+      "name": "Fish",
+      "sell": {
+        "a": 10,
+        "b": 10,
+        "c": 10,
+        "d": 10,
+        "e": 35,
+        "f": 5,
+        "i": 7,
+        "j": 20,
+        "k": 15,
+        "l": 5,
+        "m": 2,
+        "g": 7,
+        "h": 10
+      },
+      "base": 10,
+      "color": "#cfb17b"
+    },
+    "grain": {
+      "name": "Grain",
+      "sell": {
+        "a": 32,
+        "b": 8,
+        "c": 8,
+        "d": 25,
+        "e": 7,
+        "f": 50,
+        "i": 55,
+        "j": 15,
+        "k": 4,
+        "l": 4,
+        "m": 5,
+        "g": 35,
+        "h": 15
+      },
+      "base": 12,
+      "color": "#cfb17b"
+    },
+    "olive-oil": {
+      "name": "Olive Oil",
+      "sell": {
+        "a": 10,
+        "b": 38,
+        "c": 15,
+        "d": 12,
+        "e": 42,
+        "f": 60,
+        "i": 15,
+        "j": 5,
+        "k": 8,
+        "l": 10,
+        "m": 7,
+        "g": 30,
+        "h": 25
+      },
+      "base": 10,
+      "color": "#cfb17b"
+    },
+    "raisins": {
+      "name": "Raisins",
+      "sell": {
+        "a": 22,
+        "b": 58,
+        "c": 20,
+        "d": 40,
+        "e": 15,
+        "f": 30,
+        "i": 35,
+        "j": 10,
+        "k": 45,
+        "l": 45,
+        "m": 70,
+        "g": 35,
+        "h": 30
+      },
+      "base": 36,
+      "color": "#cfb17b"
+    },
+    "rock-salt": {
+      "name": "Rock Salt",
+      "sell": {
+        "a": 65,
+        "b": 65,
+        "c": 65,
+        "d": 45,
+        "e": 20,
+        "f": 22,
+        "i": 6,
+        "j": 12,
+        "k": 5,
+        "l": 6,
+        "m": 5,
+        "g": 15,
+        "h": 50
+      },
+      "base": 18,
+      "color": "#cfb17b"
+    },
+    "silk": {
+      "name": "Silk",
+      "sell": {
+        "a": 180,
+        "b": 240,
+        "c": 160,
+        "d": 110,
+        "e": 140,
+        "f": 37,
+        "i": 27,
+        "j": 100,
+        "k": 75,
+        "l": 40,
+        "m": 50,
+        "g": 40,
+        "h": 37
+      },
+      "base": 25,
+      "color": "#cfb17b"
+    },
+    "cotton": {
+      "name": "Cotton",
+      "sell": {
+        "a": 50,
+        "b": 20,
+        "c": 15,
+        "d": 40,
+        "e": 40,
+        "f": 45,
+        "i": 55,
+        "j": 5,
+        "k": 10,
+        "l": 16,
+        "m": 18,
+        "g": 50,
+        "h": 50
+      },
+      "base": 15,
+      "color": "#cfb17b"
+    },
+    "wool": {
+      "name": "Wool",
+      "sell": {
+        "a": 75,
+        "b": 60,
+        "c": 25,
+        "d": 30,
+        "e": 60,
+        "f": 10,
+        "i": 8,
+        "j": 15,
+        "k": 20,
+        "l": 18,
+        "m": 23,
+        "g": 15,
+        "h": 12
+      },
+      "base": 30,
+      "color": "#cfb17b"
+    },
+    "flax": {
+      "name": "Flax",
+      "sell": {
+        "a": 40,
+        "b": 40,
+        "c": 42,
+        "d": 10,
+        "e": 30,
+        "f": 14,
+        "i": 10,
+        "j": 30,
+        "k": 3,
+        "l": 20,
+        "m": 14,
+        "g": 20,
+        "h": 25
+      },
+      "base": 8,
+      "color": "#cfb17b"
+    },
+    "cotton-cloth": {
+      "name": "Cotton Cloth",
+      "sell": {
+        "a": 40,
+        "b": 35,
+        "c": 65,
+        "d": 65,
+        "e": 60,
+        "f": 75,
+        "i": 80,
+        "j": 14,
+        "k": 30,
+        "l": 38,
+        "m": 40,
+        "g": 85,
+        "h": 83
+      },
+      "base": 32,
+      "color": "#cfb17b"
+    },
+    "silk-cloth": {
+      "name": "Silk Cloth",
+      "sell": {
+        "a": 220,
+        "b": 260,
+        "c": 200,
+        "d": 120,
+        "e": 180,
+        "f": 80,
+        "i": 80,
+        "j": 110,
+        "k": 85,
+        "l": 42,
+        "m": 30,
+        "g": 90,
+        "h": 88
+      },
+      "base": 260,
+      "color": "#cfb17b"
+    },
+    "wool-cloth": {
+      "name": "Wool Cloth",
+      "sell": {
+        "a": 70,
+        "b": 90,
+        "c": 65,
+        "d": 45,
+        "e": 90,
+        "f": 15,
+        "i": 20,
+        "j": 22,
+        "k": 60,
+        "l": 42,
+        "m": 70,
+        "g": 20,
+        "h": 18
+      },
+      "base": 45,
+      "color": "#cfb17b"
+    },
+    "velvet": {
+      "name": "Velvet",
+      "sell": {
+        "a": 50,
+        "b": 90,
+        "c": 75,
+        "d": 65,
+        "e": 95,
+        "f": 85,
+        "i": 80,
+        "j": 115,
+        "k": 220,
+        "l": 40,
+        "m": 310,
+        "g": 70,
+        "h": 68
+      },
+      "base": 80,
+      "color": "#cfb17b"
+    },
+    "linen-cloth": {
+      "name": "Linen Cloth",
+      "sell": {
+        "a": 25,
+        "b": 65,
+        "c": 30,
+        "d": 35,
+        "e": 60,
+        "f": 17,
+        "i": 70,
+        "j": 65,
+        "k": 18,
+        "l": 32,
+        "m": 15,
+        "g": 65,
+        "h": 67
+      },
+      "base": 25,
+      "color": "#cfb17b"
+    },
+    "coral": {
+      "name": "Coral",
+      "sell": {
+        "a": 280,
+        "b": 285,
+        "c": 265,
+        "d": 270,
+        "e": 300,
+        "f": 80,
+        "i": 60,
+        "j": 80,
+        "k": 70,
+        "l": 20,
+        "m": 55,
+        "g": 70,
+        "h": 100
+      },
+      "base": 50,
+      "color": "#cfb17b"
+    },
+    "amber": {
+      "name": "Amber",
+      "sell": {
+        "a": 300,
+        "b": 305,
+        "c": 320,
+        "d": 300,
+        "e": 300,
+        "f": 90,
+        "i": 120,
+        "j": 310,
+        "k": 290,
+        "l": 210,
+        "m": 250,
+        "g": 280,
+        "h": 270
+      },
+      "base": 220,
+      "color": "#cfb17b"
+    },
+    "ivory": {
+      "name": "Ivory",
+      "sell": {
+        "a": 280,
+        "b": 290,
+        "c": 280,
+        "d": 260,
+        "e": 290,
+        "f": 45,
+        "i": 40,
+        "j": 70,
+        "k": 90,
+        "l": 120,
+        "m": 300,
+        "g": 120,
+        "h": 110
+      },
+      "base": 300,
+      "color": "#cfb17b"
+    },
+    "pearl": {
+      "name": "Pearl",
+      "sell": {
+        "a": 310,
+        "b": 320,
+        "c": 300,
+        "d": 270,
+        "e": 240,
+        "f": 70,
+        "i": 75,
+        "j": 60,
+        "k": 40,
+        "l": 35,
+        "m": 30,
+        "g": 105,
+        "h": 95
+      },
+      "base": 60,
+      "color": "#cfb17b"
+    },
+    "tortoise-shell": {
+      "name": "Tortoise Shell",
+      "sell": {
+        "a": 120,
+        "b": 130,
+        "c": 110,
+        "d": 80,
+        "e": 85,
+        "f": 15,
+        "i": 50,
+        "j": 65,
+        "k": 20,
+        "l": 10,
+        "m": 20,
+        "g": 40,
+        "h": 30
+      },
+      "base": 30,
+      "color": "#cfb17b"
+    },
+    "gold": {
+      "name": "Gold",
+      "sell": {
+        "a": 1000,
+        "b": 1100,
+        "c": 1000,
+        "d": 900,
+        "e": 1000,
+        "f": 300,
+        "i": 150,
+        "j": 950,
+        "k": 1050,
+        "l": 1020,
+        "m": 900,
+        "g": 250,
+        "h": 270
+      },
+      "base": 550,
+      "color": "#cfb17b"
+    },
+    "silver": {
+      "name": "Silver",
+      "sell": {
+        "a": 240,
+        "b": 260,
+        "c": 240,
+        "d": 240,
+        "e": 200,
+        "f": 180,
+        "i": 170,
+        "j": 170,
+        "k": 180,
+        "l": 190,
+        "m": 200,
+        "g": 140,
+        "h": 100
+      },
+      "base": 150,
+      "color": "#cfb17b"
+    },
+    "copper-ore": {
+      "name": "Copper Ore",
+      "sell": {
+        "a": 180,
+        "b": 170,
+        "c": 175,
+        "d": 160,
+        "e": 60,
+        "f": 30,
+        "i": 40,
+        "j": 75,
+        "k": 30,
+        "l": 70,
+        "m": 50,
+        "g": 40,
+        "h": 42
+      },
+      "base": 60,
+      "color": "#cfb17b"
+    },
+    "tin-ore": {
+      "name": "Tin Ore",
+      "sell": {
+        "a": 100,
+        "b": 110,
+        "c": 90,
+        "d": 95,
+        "e": 100,
+        "f": 20,
+        "i": 25,
+        "j": 60,
+        "k": 55,
+        "l": 25,
+        "m": 35,
+        "g": 22,
+        "h": 22
+      },
+      "base": 45,
+      "color": "#cfb17b"
+    },
+    "iron-ore": {
+      "name": "Iron Ore",
+      "sell": {
+        "a": 190,
+        "b": 70,
+        "c": 185,
+        "d": 170,
+        "e": 190,
+        "f": 35,
+        "i": 35,
+        "j": 120,
+        "k": 130,
+        "l": 50,
+        "m": 140,
+        "g": 35,
+        "h": 30
+      },
+      "base": 90,
+      "color": "#cfb17b"
+    },
+    "art": {
+      "name": "Art",
+      "sell": {
+        "a": 400,
+        "b": 400,
+        "c": 400,
+        "d": 300,
+        "e": 400,
+        "f": 80,
+        "i": 70,
+        "j": 320,
+        "k": 200,
+        "l": 100,
+        "m": 80,
+        "g": 120,
+        "h": 130
+      },
+      "base": 120,
+      "color": "#cfb17b"
+    },
+    "carpet": {
+      "name": "Carpet",
+      "sell": {
+        "a": 300,
+        "b": 350,
+        "c": 300,
+        "d": 170,
+        "e": 150,
+        "f": 110,
+        "i": 120,
+        "j": 30,
+        "k": 35,
+        "l": 45,
+        "m": 52,
+        "g": 105,
+        "h": 100
+      },
+      "base": 75,
+      "color": "#cfb17b"
+    },
+    "musk": {
+      "name": "Musk",
+      "sell": {
+        "a": 120,
+        "b": 130,
+        "c": 120,
+        "d": 100,
+        "e": 140,
+        "f": 60,
+        "i": 55,
+        "j": 120,
+        "k": 130,
+        "l": 65,
+        "m": 140,
+        "g": 35,
+        "h": 43
+      },
+      "base": 140,
+      "color": "#cfb17b"
+    },
+    "perfume": {
+      "name": "Perfume",
+      "sell": {
+        "a": 110,
+        "b": 130,
+        "c": 100,
+        "d": 120,
+        "e": 120,
+        "f": 90,
+        "i": 95,
+        "j": 28,
+        "k": 135,
+        "l": 35,
+        "m": 160,
+        "g": 50,
+        "h": 62
+      },
+      "base": 50,
+      "color": "#cfb17b"
+    },
+    "glass-beads": {
+      "name": "Glass Beads",
+      "sell": {
+        "a": 2,
+        "b": 2,
+        "c": 2,
+        "d": 2,
+        "e": 2,
+        "f": 50,
+        "i": 100,
+        "j": 2,
+        "k": 2,
+        "l": 2,
+        "m": 2,
+        "g": 2,
+        "h": 2
+      },
+      "base": 3,
+      "color": "#cfb17b"
+    },
+    "dye": {
+      "name": "Dye",
+      "sell": {
+        "a": 50,
+        "b": 130,
+        "c": 125,
+        "d": 100,
+        "e": 50,
+        "f": 60,
+        "i": 20,
+        "j": 120,
+        "k": 140,
+        "l": 20,
+        "m": 200,
+        "g": 15,
+        "h": 20
+      },
+      "base": 35,
+      "color": "#cfb17b"
+    },
+    "porcelain": {
+      "name": "Porcelain",
+      "sell": {
+        "a": 120,
+        "b": 55,
+        "c": 130,
+        "d": 110,
+        "e": 100,
+        "f": 40,
+        "i": 30,
+        "j": 35,
+        "k": 200,
+        "l": 40,
+        "m": 12,
+        "g": 50,
+        "h": 50
+      },
+      "base": 30,
+      "color": "#cfb17b"
+    },
+    "glassware": {
+      "name": "Glassware",
+      "sell": {
+        "a": 230,
+        "b": 220,
+        "c": 230,
+        "d": 230,
+        "e": 230,
+        "f": 50,
+        "i": 105,
+        "j": 35,
+        "k": 300,
+        "l": 95,
+        "m": 450,
+        "g": 50,
+        "h": 50
+      },
+      "base": 450,
+      "color": "#cfb17b"
+    },
+    "arms": {
+      "name": "Arms",
+      "sell": {
+        "a": 100,
+        "b": 100,
+        "c": 100,
+        "d": 100,
+        "e": 100,
+        "f": 140,
+        "i": 160,
+        "j": 240,
+        "k": 230,
+        "l": 190,
+        "m": 70,
+        "g": 180,
+        "h": 170
+      },
+      "base": 120,
+      "color": "#cfb17b"
+    },
+    "wood": {
+      "name": "Wood",
+      "sell": {
+        "a": 130,
+        "b": 100,
+        "c": 125,
+        "d": 100,
+        "e": 40,
+        "f": 20,
+        "i": 25,
+        "j": 120,
+        "k": 22,
+        "l": 18,
+        "m": 15,
+        "g": 28,
+        "h": 30
+      },
+      "base": 70,
+      "color": "#cfb17b"
+    },
+    "wine": {
+      "name": "Wine",
+      "base": 48,
+      "legacy": true,
+      "color": "#cfb17b"
+    },
+    "cloth": {
+      "name": "Cloth",
+      "base": 65,
+      "legacy": true,
+      "color": "#cfb17b"
+    },
+    "spices": {
+      "name": "Spices",
+      "base": 200,
+      "legacy": true,
+      "color": "#cfb17b"
+    },
+    "tobacco": {
+      "name": "Tobacco",
+      "base": 125,
+      "legacy": true,
+      "color": "#cfb17b"
+    },
+    "salt": {
+      "name": "Salt",
+      "base": 34,
+      "legacy": true,
+      "color": "#cfb17b"
+    },
+    "fine-silk": {
+      "name": "Fine Silk",
+      "base": 260,
+      "legacy": true,
+      "color": "#cfb17b"
+    }
+  },
+  "markets": {
+    "a": [
+      {
+        "good": "cheese",
+        "economy": 0,
+        "price": 30
+      },
+      {
+        "good": "fish",
+        "economy": 0,
+        "price": 20
+      },
+      {
+        "good": "olive-oil",
+        "economy": 0,
+        "price": 28
+      },
+      {
+        "good": "raisins",
+        "economy": 300,
+        "price": 36
+      },
+      {
+        "good": "cotton-cloth",
+        "economy": 0,
+        "price": 70
+      },
+      {
+        "good": "velvet",
+        "economy": 500,
+        "price": 80
+      },
+      {
+        "good": "linen-cloth",
+        "economy": 0,
+        "price": 50
+      },
+      {
+        "good": "dye",
+        "economy": 600,
+        "price": 120
+      },
+      {
+        "good": "arms",
+        "economy": 750,
+        "price": 120
+      }
+    ],
+    "b": [
+      {
+        "good": "cheese",
+        "economy": 0,
+        "price": 25
+      },
+      {
+        "good": "fish",
+        "economy": 0,
+        "price": 20
+      },
+      {
+        "good": "grain",
+        "economy": 0,
+        "price": 20
+      },
+      {
+        "good": "cotton",
+        "economy": 0,
+        "price": 45
+      },
+      {
+        "good": "cotton-cloth",
+        "economy": 400,
+        "price": 60
+      },
+      {
+        "good": "iron-ore",
+        "economy": 700,
+        "price": 110
+      },
+      {
+        "good": "porcelain",
+        "economy": 750,
+        "price": 90
+      }
+    ],
+    "c": [
+      {
+        "good": "fish",
+        "economy": 0,
+        "price": 25
+      },
+      {
+        "good": "grain",
+        "economy": 0,
+        "price": 18
+      },
+      {
+        "good": "olive-oil",
+        "economy": 0,
+        "price": 30
+      },
+      {
+        "good": "raisins",
+        "economy": 300,
+        "price": 40
+      },
+      {
+        "good": "cotton",
+        "economy": 0,
+        "price": 38
+      },
+      {
+        "good": "wool",
+        "economy": 600,
+        "price": 65
+      },
+      {
+        "good": "linen-cloth",
+        "economy": 0,
+        "price": 50
+      },
+      {
+        "good": "glass-beads",
+        "economy": 400,
+        "price": 3
+      }
+    ],
+    "d": [
+      {
+        "good": "fish",
+        "economy": 0,
+        "price": 25
+      },
+      {
+        "good": "olive-oil",
+        "economy": 0,
+        "price": 35
+      },
+      {
+        "good": "rock-salt",
+        "economy": 300,
+        "price": 60
+      },
+      {
+        "good": "wool",
+        "economy": 400,
+        "price": 70
+      },
+      {
+        "good": "flax",
+        "economy": 0,
+        "price": 35
+      },
+      {
+        "good": "linen-cloth",
+        "economy": 400,
+        "price": 50
+      }
+    ],
+    "e": [
+      {
+        "good": "cheese",
+        "economy": 0,
+        "price": 30
+      },
+      {
+        "good": "grain",
+        "economy": 0,
+        "price": 14
+      },
+      {
+        "good": "rock-salt",
+        "economy": 300,
+        "price": 55
+      },
+      {
+        "good": "cotton",
+        "economy": 200,
+        "price": 65
+      },
+      {
+        "good": "wool",
+        "economy": 400,
+        "price": 60
+      },
+      {
+        "good": "copper-ore",
+        "economy": 500,
+        "price": 100
+      },
+      {
+        "good": "dye",
+        "economy": 400,
+        "price": 115
+      },
+      {
+        "good": "wood",
+        "economy": 300,
+        "price": 70
+      }
+    ],
+    "f": [
+      {
+        "good": "cacao",
+        "economy": 300,
+        "price": 50
+      },
+      {
+        "good": "fish",
+        "economy": 0,
+        "price": 25
+      },
+      {
+        "good": "flax",
+        "economy": 0,
+        "price": 35
+      },
+      {
+        "good": "linen-cloth",
+        "economy": 300,
+        "price": 45
+      },
+      {
+        "good": "amber",
+        "economy": 300,
+        "price": 220
+      },
+      {
+        "good": "gold",
+        "economy": 400,
+        "price": 700
+      }
+    ],
+    "g": [
+      {
+        "good": "pimento",
+        "economy": 200,
+        "price": 20
+      },
+      {
+        "good": "fish",
+        "economy": 0,
+        "price": 15
+      },
+      {
+        "good": "rock-salt",
+        "economy": 300,
+        "price": 40
+      },
+      {
+        "good": "coral",
+        "economy": 100,
+        "price": 120
+      },
+      {
+        "good": "tortoise-shell",
+        "economy": 350,
+        "price": 60
+      },
+      {
+        "good": "dye",
+        "economy": 200,
+        "price": 35
+      }
+    ],
+    "h": [
+      {
+        "good": "pimento",
+        "economy": 150,
+        "price": 20
+      },
+      {
+        "good": "grain",
+        "economy": 0,
+        "price": 25
+      },
+      {
+        "good": "tortoise-shell",
+        "economy": 150,
+        "price": 55
+      },
+      {
+        "good": "silver",
+        "economy": 250,
+        "price": 150
+      },
+      {
+        "good": "iron-ore",
+        "economy": 300,
+        "price": 90
+      }
+    ],
+    "i": [
+      {
+        "good": "fish",
+        "economy": 0,
+        "price": 20
+      },
+      {
+        "good": "rock-salt",
+        "economy": 200,
+        "price": 18
+      },
+      {
+        "good": "flax",
+        "economy": 150,
+        "price": 30
+      },
+      {
+        "good": "coral",
+        "economy": 0,
+        "price": 120
+      },
+      {
+        "good": "gold",
+        "economy": 300,
+        "price": 550
+      },
+      {
+        "good": "copper-ore",
+        "economy": 300,
+        "price": 80
+      },
+      {
+        "good": "dye",
+        "economy": 250,
+        "price": 40
+      }
+    ],
+    "j": [
+      {
+        "good": "coffee",
+        "economy": 150,
+        "price": 35
+      },
+      {
+        "good": "olive-oil",
+        "economy": 0,
+        "price": 10
+      },
+      {
+        "good": "rock-salt",
+        "economy": 300,
+        "price": 20
+      },
+      {
+        "good": "cotton",
+        "economy": 0,
+        "price": 15
+      },
+      {
+        "good": "wool",
+        "economy": 0,
+        "price": 30
+      },
+      {
+        "good": "cotton-cloth",
+        "economy": 200,
+        "price": 32
+      },
+      {
+        "good": "wool-cloth",
+        "economy": 200,
+        "price": 45
+      },
+      {
+        "good": "carpet",
+        "economy": 400,
+        "price": 75
+      },
+      {
+        "good": "perfume",
+        "economy": 400,
+        "price": 50
+      }
+    ],
+    "k": [
+      {
+        "good": "clove",
+        "economy": 200,
+        "price": 25
+      },
+      {
+        "good": "pepper",
+        "economy": 100,
+        "price": 15
+      },
+      {
+        "good": "tea",
+        "economy": 0,
+        "price": 20
+      },
+      {
+        "good": "grain",
+        "economy": 0,
+        "price": 12
+      },
+      {
+        "good": "cotton",
+        "economy": 0,
+        "price": 25
+      },
+      {
+        "good": "flax",
+        "economy": 0,
+        "price": 8
+      },
+      {
+        "good": "linen-cloth",
+        "economy": 150,
+        "price": 30
+      },
+      {
+        "good": "copper-ore",
+        "economy": 300,
+        "price": 60
+      }
+    ],
+    "l": [
+      {
+        "good": "pepper",
+        "economy": 0,
+        "price": 3
+      },
+      {
+        "good": "ginger",
+        "economy": 0,
+        "price": 3
+      },
+      {
+        "good": "fish",
+        "economy": 0,
+        "price": 15
+      },
+      {
+        "good": "coral",
+        "economy": 150,
+        "price": 50
+      },
+      {
+        "good": "tortoise-shell",
+        "economy": 200,
+        "price": 30
+      },
+      {
+        "good": "tin-ore",
+        "economy": 300,
+        "price": 45
+      }
+    ],
+    "m": [
+      {
+        "good": "ginger",
+        "economy": 0,
+        "price": 20
+      },
+      {
+        "good": "tea",
+        "economy": 0,
+        "price": 20
+      },
+      {
+        "good": "fish",
+        "economy": 0,
+        "price": 10
+      },
+      {
+        "good": "linen-cloth",
+        "economy": 100,
+        "price": 25
+      },
+      {
+        "good": "pearl",
+        "economy": 100,
+        "price": 60
+      },
+      {
+        "good": "art",
+        "economy": 400,
+        "price": 120
+      },
+      {
+        "good": "porcelain",
+        "economy": 300,
+        "price": 30
+      }
+    ]
+  },
+  "ports": {
+    "lisbon": {
+      "economy": 780,
+      "industry": 770,
+      "market": "a",
+      "shipyard": "A",
+      "specialty": "rock-salt",
+      "specialtyEconomy": 100,
+      "specialtyPrice": 38,
+      "capital": true,
+      "originalIndex": 0
+    },
+    "seville": {
+      "economy": 770,
+      "industry": 810,
+      "market": "a",
+      "shipyard": "A",
+      "specialty": "porcelain",
+      "specialtyEconomy": 100,
+      "specialtyPrice": 100,
+      "capital": true,
+      "originalIndex": 1
+    },
+    "madeira": {
+      "economy": 240,
+      "industry": 230,
+      "market": "f",
+      "shipyard": "H",
+      "specialty": "sugar",
+      "specialtyEconomy": 100,
+      "specialtyPrice": 12,
+      "capital": false,
+      "originalIndex": 57
+    },
+    "azores": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "london": {
+      "economy": 720,
+      "industry": 740,
+      "market": "b",
+      "shipyard": "B",
+      "specialty": "wool",
+      "specialtyEconomy": 100,
+      "specialtyPrice": 45,
+      "capital": true,
+      "originalIndex": 29
+    },
+    "amsterdam": {
+      "economy": 700,
+      "industry": 730,
+      "market": "b",
+      "shipyard": "C",
+      "specialty": "glass-beads",
+      "specialtyEconomy": 100,
+      "specialtyPrice": 3,
+      "capital": true,
+      "originalIndex": 33
+    },
+    "cape-verde": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "elmina": {
+      "economy": 210,
+      "industry": 190,
+      "market": "f",
+      "shipyard": "H",
+      "specialty": "ivory",
+      "specialtyEconomy": 200,
+      "specialtyPrice": 100,
+      "capital": false,
+      "originalIndex": 59
+    },
+    "havana": {
+      "economy": 210,
+      "industry": 220,
+      "market": "g",
+      "shipyard": "K",
+      "specialty": "vanilla",
+      "specialtyEconomy": 200,
+      "specialtyPrice": 35,
+      "capital": false,
+      "originalIndex": 44
+    },
+    "santo-domingo": {
+      "economy": 150,
+      "industry": 160,
+      "market": "g",
+      "shipyard": "K",
+      "specialty": "sugar",
+      "specialtyEconomy": 200,
+      "specialtyPrice": 18,
+      "capital": false,
+      "originalIndex": 48
+    },
+    "pernambuco": {
+      "economy": 215,
+      "industry": 240,
+      "market": "h",
+      "shipyard": "K",
+      "specialty": "dye",
+      "specialtyEconomy": 250,
+      "specialtyPrice": 35,
+      "capital": false,
+      "originalIndex": 52
+    },
+    "cape-town": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "mozambique": {
+      "economy": 180,
+      "industry": 160,
+      "market": "i",
+      "shipyard": "H",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 70
+    },
+    "goa": {
+      "economy": 540,
+      "industry": 560,
+      "market": "k",
+      "shipyard": "G",
+      "specialty": "ginger",
+      "specialtyEconomy": 200,
+      "specialtyPrice": 10,
+      "capital": false,
+      "originalIndex": 85
+    },
+    "calicut": {
+      "economy": 530,
+      "industry": 560,
+      "market": "k",
+      "shipyard": "G",
+      "specialty": "nutmeg",
+      "specialtyEconomy": 250,
+      "specialtyPrice": 15,
+      "capital": false,
+      "originalIndex": 92
+    },
+    "malacca": {
+      "economy": 90,
+      "industry": 95,
+      "market": "l",
+      "shipyard": "G",
+      "specialty": "cinnamon",
+      "specialtyEconomy": 50,
+      "specialtyPrice": 3,
+      "capital": false,
+      "originalIndex": 86
+    },
+    "macau": {
+      "economy": 480,
+      "industry": 490,
+      "market": "m",
+      "shipyard": "I",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 95
+    },
+    "nagasaki": {
+      "economy": 210,
+      "industry": 220,
+      "market": "m",
+      "shipyard": "J",
+      "specialty": "silver",
+      "specialtyEconomy": 150,
+      "specialtyPrice": 35,
+      "capital": false,
+      "originalIndex": 99
+    },
+    "barcelona": {
+      "economy": 590,
+      "industry": 540,
+      "market": "a",
+      "shipyard": "A",
+      "specialty": "rock-salt",
+      "specialtyEconomy": 100,
+      "specialtyPrice": 45,
+      "capital": false,
+      "originalIndex": 3
+    },
+    "valencia": {
+      "economy": 320,
+      "industry": 300,
+      "market": "a",
+      "shipyard": "A",
+      "specialty": "wool-cloth",
+      "specialtyEconomy": 200,
+      "specialtyPrice": 56,
+      "capital": false,
+      "originalIndex": 6
+    },
+    "marseille": {
+      "economy": 350,
+      "industry": 290,
+      "market": "c",
+      "shipyard": "D",
+      "specialty": "perfume",
+      "specialtyEconomy": 200,
+      "specialtyPrice": 105,
+      "capital": false,
+      "originalIndex": 7
+    },
+    "genoa": {
+      "economy": 750,
+      "industry": 760,
+      "market": "c",
+      "shipyard": "E",
+      "specialty": "silver",
+      "specialtyEconomy": 300,
+      "specialtyPrice": 190,
+      "capital": true,
+      "originalIndex": 8
+    },
+    "pisa": {
+      "economy": 620,
+      "industry": 540,
+      "market": "c",
+      "shipyard": "E",
+      "specialty": "silk-cloth",
+      "specialtyEconomy": 400,
+      "specialtyPrice": 170,
+      "capital": false,
+      "originalIndex": 9
+    },
+    "naples": {
+      "economy": 630,
+      "industry": 640,
+      "market": "c",
+      "shipyard": "E",
+      "specialty": "wool-cloth",
+      "specialtyEconomy": 200,
+      "specialtyPrice": 68,
+      "capital": false,
+      "originalIndex": 10
+    },
+    "syracuse": {
+      "economy": 240,
+      "industry": 220,
+      "market": "c",
+      "shipyard": "E",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 11
+    },
+    "palma": {
+      "economy": 290,
+      "industry": 285,
+      "market": "c",
+      "shipyard": "A",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 12
+    },
+    "ragusa": {
+      "economy": 150,
+      "industry": 140,
+      "market": "c",
+      "shipyard": "E",
+      "specialty": "dye",
+      "specialtyEconomy": 200,
+      "specialtyPrice": 92,
+      "capital": false,
+      "originalIndex": 14
+    },
+    "venice": {
+      "economy": 740,
+      "industry": 730,
+      "market": "c",
+      "shipyard": "E",
+      "specialty": "glassware",
+      "specialtyEconomy": 300,
+      "specialtyPrice": 180,
+      "capital": false,
+      "originalIndex": 13
+    },
+    "athens": {
+      "economy": 640,
+      "industry": 540,
+      "market": "c",
+      "shipyard": "E",
+      "specialty": "art",
+      "specialtyEconomy": 300,
+      "specialtyPrice": 310,
+      "capital": false,
+      "originalIndex": 16
+    },
+    "candia": {
+      "economy": 180,
+      "industry": 160,
+      "market": "c",
+      "shipyard": "E",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 15
+    },
+    "ceuta": {
+      "economy": 85,
+      "industry": 90,
+      "market": "d",
+      "shipyard": "A",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 26
+    },
+    "algiers": {
+      "economy": 160,
+      "industry": 180,
+      "market": "d",
+      "shipyard": "F",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 4
+    },
+    "tunis": {
+      "economy": 130,
+      "industry": 160,
+      "market": "d",
+      "shipyard": "F",
+      "specialty": "iron-ore",
+      "specialtyEconomy": 600,
+      "specialtyPrice": 90,
+      "capital": false,
+      "originalIndex": 5
+    },
+    "tripoli": {
+      "economy": 420,
+      "industry": 400,
+      "market": "d",
+      "shipyard": "F",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 22
+    },
+    "alexandria": {
+      "economy": 720,
+      "industry": 700,
+      "market": "e",
+      "shipyard": "F",
+      "specialty": "cotton-cloth",
+      "specialtyEconomy": 200,
+      "specialtyPrice": 25,
+      "capital": false,
+      "originalIndex": 18
+    },
+    "beirut": {
+      "economy": 270,
+      "industry": 250,
+      "market": "e",
+      "shipyard": "F",
+      "specialty": "carpet",
+      "specialtyEconomy": 300,
+      "specialtyPrice": 210,
+      "capital": false,
+      "originalIndex": 20
+    },
+    "istanbul": {
+      "economy": 810,
+      "industry": 720,
+      "market": "e",
+      "shipyard": "F",
+      "specialty": "carpet",
+      "specialtyEconomy": 100,
+      "specialtyPrice": 210,
+      "capital": true,
+      "originalIndex": 2
+    },
+    "salonika": {
+      "economy": 110,
+      "industry": 120,
+      "market": "e",
+      "shipyard": "E",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 17
+    },
+    "bristol": {
+      "economy": 320,
+      "industry": 380,
+      "market": "b",
+      "shipyard": "B",
+      "specialty": "tin-ore",
+      "specialtyEconomy": 350,
+      "specialtyPrice": 75,
+      "capital": false,
+      "originalIndex": 30
+    },
+    "dublin": {
+      "economy": 370,
+      "industry": 350,
+      "market": "b",
+      "shipyard": "B",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 31
+    },
+    "antwerp": {
+      "economy": 660,
+      "industry": 670,
+      "market": "b",
+      "shipyard": "C",
+      "specialty": "wool-cloth",
+      "specialtyEconomy": 300,
+      "specialtyPrice": 52,
+      "capital": false,
+      "originalIndex": 32
+    },
+    "hamburg": {
+      "economy": 600,
+      "industry": 620,
+      "market": "b",
+      "shipyard": "C",
+      "specialty": "dye",
+      "specialtyEconomy": 400,
+      "specialtyPrice": 85,
+      "capital": false,
+      "originalIndex": 35
+    },
+    "sakai": {
+      "economy": 420,
+      "industry": 410,
+      "market": "m",
+      "shipyard": "J",
+      "specialty": "silk-cloth",
+      "specialtyEconomy": 400,
+      "specialtyPrice": 15,
+      "capital": false,
+      "originalIndex": 98
+    },
+    "bordeaux": {
+      "economy": 600,
+      "industry": 580,
+      "market": "b",
+      "shipyard": "D",
+      "specialty": "raisins",
+      "specialtyEconomy": 200,
+      "specialtyPrice": 32,
+      "capital": false,
+      "originalIndex": 27
+    },
+    "copenhagen": {
+      "economy": 530,
+      "industry": 510,
+      "market": "b",
+      "shipyard": "D",
+      "specialty": "glassware",
+      "specialtyEconomy": 450,
+      "specialtyPrice": 190,
+      "capital": false,
+      "originalIndex": 34
+    },
+    "lubeck": {
+      "economy": 320,
+      "industry": 300,
+      "market": "b",
+      "shipyard": "D",
+      "specialty": "silver",
+      "specialtyEconomy": 500,
+      "specialtyPrice": 170,
+      "capital": false,
+      "originalIndex": 38
+    },
+    "danzig": {
+      "economy": 370,
+      "industry": 280,
+      "market": "b",
+      "shipyard": "D",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 39
+    },
+    "riga": {
+      "economy": 150,
+      "industry": 160,
+      "market": "b",
+      "shipyard": "D",
+      "specialty": "wood",
+      "specialtyEconomy": 100,
+      "specialtyPrice": 80,
+      "capital": false,
+      "originalIndex": 40
+    },
+    "stockholm": {
+      "economy": 480,
+      "industry": 470,
+      "market": "b",
+      "shipyard": "D",
+      "specialty": "copper-ore",
+      "specialtyEconomy": 500,
+      "specialtyPrice": 80,
+      "capital": false,
+      "originalIndex": 37
+    },
+    "narvik": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "bergen": {
+      "economy": 145,
+      "industry": 150,
+      "market": "b",
+      "shipyard": "D",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 41
+    },
+    "oslo": {
+      "economy": 190,
+      "industry": 185,
+      "market": "b",
+      "shipyard": "D",
+      "specialty": "wood",
+      "specialtyEconomy": 100,
+      "specialtyPrice": 82,
+      "capital": false,
+      "originalIndex": 36
+    },
+    "hekla": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "nantes": {
+      "economy": 560,
+      "industry": 570,
+      "market": "b",
+      "shipyard": "D",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 28
+    },
+    "nicosia": {
+      "economy": 150,
+      "industry": 160,
+      "market": "c",
+      "shipyard": "F",
+      "specialty": "copper-ore",
+      "specialtyEconomy": 400,
+      "specialtyPrice": 88,
+      "capital": false,
+      "originalIndex": 21
+    },
+    "santa-cruz": {
+      "economy": 90,
+      "industry": 80,
+      "market": "f",
+      "shipyard": "H",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 58
+    },
+    "argin": {
+      "economy": 200,
+      "industry": 185,
+      "market": "f",
+      "shipyard": "H",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 62
+    },
+    "bathurst": {
+      "economy": 75,
+      "industry": 60,
+      "market": "f",
+      "shipyard": "H",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 63
+    },
+    "bissau": {
+      "economy": 85,
+      "industry": 100,
+      "market": "f",
+      "shipyard": "H",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 60
+    },
+    "timbuktu": {
+      "economy": 430,
+      "industry": 35,
+      "market": "f",
+      "shipyard": "H",
+      "specialty": "ivory",
+      "specialtyEconomy": 100,
+      "specialtyPrice": 60,
+      "capital": false,
+      "originalIndex": 64
+    },
+    "abidjan": {
+      "economy": 90,
+      "industry": 75,
+      "market": "f",
+      "shipyard": "H",
+      "specialty": "musk",
+      "specialtyEconomy": 200,
+      "specialtyPrice": 80,
+      "capital": false,
+      "originalIndex": 65
+    },
+    "luanda": {
+      "economy": 90,
+      "industry": 75,
+      "market": "f",
+      "shipyard": "H",
+      "specialty": "coral",
+      "specialtyEconomy": 100,
+      "specialtyPrice": 120,
+      "capital": false,
+      "originalIndex": 61
+    },
+    "sofala": {
+      "economy": 390,
+      "industry": 400,
+      "market": "i",
+      "shipyard": "H",
+      "specialty": "ivory",
+      "specialtyEconomy": 100,
+      "specialtyPrice": 90,
+      "capital": false,
+      "originalIndex": 66
+    },
+    "quelimane": {
+      "economy": 60,
+      "industry": 60,
+      "market": "i",
+      "shipyard": "H",
+      "specialty": "tortoise-shell",
+      "specialtyEconomy": 200,
+      "specialtyPrice": 45,
+      "capital": false,
+      "originalIndex": 71
+    },
+    "tamatave": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "malindi": {
+      "economy": 370,
+      "industry": 360,
+      "market": "i",
+      "shipyard": "H",
+      "specialty": "musk",
+      "specialtyEconomy": 150,
+      "specialtyPrice": 70,
+      "capital": false,
+      "originalIndex": 67
+    },
+    "mombasa": {
+      "economy": 380,
+      "industry": 390,
+      "market": "i",
+      "shipyard": "H",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 69
+    },
+    "mogadishu": {
+      "economy": 90,
+      "industry": 70,
+      "market": "i",
+      "shipyard": "H",
+      "specialty": "ivory",
+      "specialtyEconomy": 150,
+      "specialtyPrice": 85,
+      "capital": false,
+      "originalIndex": 68
+    },
+    "jaffa": {
+      "economy": 140,
+      "industry": 150,
+      "market": "e",
+      "shipyard": "F",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 19
+    },
+    "belgrade": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "trebizond": {
+      "economy": 360,
+      "industry": 370,
+      "market": "e",
+      "shipyard": "F",
+      "specialty": "cotton-cloth",
+      "specialtyEconomy": 100,
+      "specialtyPrice": 58,
+      "capital": false,
+      "originalIndex": 25
+    },
+    "kaffa": {
+      "economy": 340,
+      "industry": 350,
+      "market": "e",
+      "shipyard": "F",
+      "specialty": "iron-ore",
+      "specialtyEconomy": 400,
+      "specialtyPrice": 85,
+      "capital": false,
+      "originalIndex": 23
+    },
+    "azov": {
+      "economy": 110,
+      "industry": 115,
+      "market": "e",
+      "shipyard": "F",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 24
+    },
+    "aden": {
+      "economy": 210,
+      "industry": 260,
+      "market": "j",
+      "shipyard": "G",
+      "specialty": "amber",
+      "specialtyEconomy": 250,
+      "specialtyPrice": 110,
+      "capital": false,
+      "originalIndex": 72
+    },
+    "massawa": {
+      "economy": 90,
+      "industry": 85,
+      "market": "j",
+      "shipyard": "G",
+      "specialty": "pimento",
+      "specialtyEconomy": 300,
+      "specialtyPrice": 25,
+      "capital": false,
+      "originalIndex": 74
+    },
+    "mecca": {
+      "economy": 500,
+      "industry": 80,
+      "market": "j",
+      "shipyard": "G",
+      "specialty": "musk",
+      "specialtyEconomy": 200,
+      "specialtyPrice": 50,
+      "capital": false,
+      "originalIndex": 77
+    },
+    "cairo": {
+      "economy": 510,
+      "industry": 480,
+      "market": "j",
+      "shipyard": "F",
+      "specialty": "art",
+      "specialtyEconomy": 400,
+      "specialtyPrice": 190,
+      "capital": false,
+      "originalIndex": 75
+    },
+    "muscat": {
+      "economy": 180,
+      "industry": 230,
+      "market": "j",
+      "shipyard": "G",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 80
+    },
+    "hormuz": {
+      "economy": 100,
+      "industry": 90,
+      "market": "j",
+      "shipyard": "G",
+      "specialty": "ginger",
+      "specialtyEconomy": 300,
+      "specialtyPrice": 25,
+      "capital": false,
+      "originalIndex": 73
+    },
+    "shiraz": {
+      "economy": 70,
+      "industry": 80,
+      "market": "j",
+      "shipyard": "G",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 79
+    },
+    "quatar": {
+      "economy": 130,
+      "industry": 160,
+      "market": "j",
+      "shipyard": "G",
+      "specialty": "tortoise-shell",
+      "specialtyEconomy": 150,
+      "specialtyPrice": 35,
+      "capital": false,
+      "originalIndex": 78
+    },
+    "basra": {
+      "economy": 480,
+      "industry": 500,
+      "market": "j",
+      "shipyard": "G",
+      "specialty": "cheese",
+      "specialtyEconomy": 50,
+      "specialtyPrice": 10,
+      "capital": false,
+      "originalIndex": 76
+    },
+    "diu": {
+      "economy": 75,
+      "industry": 80,
+      "market": "k",
+      "shipyard": "G",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 81
+    },
+    "cochin": {
+      "economy": 130,
+      "industry": 120,
+      "market": "k",
+      "shipyard": "G",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 82
+    },
+    "ceylon": {
+      "economy": 180,
+      "industry": 210,
+      "market": "k",
+      "shipyard": "G",
+      "specialty": "cinnamon",
+      "specialtyEconomy": 50,
+      "specialtyPrice": 4,
+      "capital": false,
+      "originalIndex": 83
+    },
+    "pasei": {
+      "economy": 35,
+      "industry": 40,
+      "market": "l",
+      "shipyard": "G",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 90
+    },
+    "bankao": {
+      "economy": 50,
+      "industry": 45,
+      "market": "l",
+      "shipyard": "G",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 93
+    },
+    "sunda": {
+      "economy": 40,
+      "industry": 55,
+      "market": "l",
+      "shipyard": "G",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 91
+    },
+    "dili": {
+      "economy": 40,
+      "industry": 45,
+      "market": "l",
+      "shipyard": "G",
+      "specialty": "clove",
+      "specialtyEconomy": 50,
+      "specialtyPrice": 4,
+      "capital": false,
+      "originalIndex": 89
+    },
+    "banda": {
+      "economy": 45,
+      "industry": 40,
+      "market": "l",
+      "shipyard": "G",
+      "specialty": "nutmeg",
+      "specialtyEconomy": 30,
+      "specialtyPrice": 3,
+      "capital": false,
+      "originalIndex": 88
+    },
+    "amboa": {
+      "economy": 50,
+      "industry": 50,
+      "market": "l",
+      "shipyard": "G",
+      "specialty": "nutmeg",
+      "specialtyEconomy": 70,
+      "specialtyPrice": 5,
+      "capital": false,
+      "originalIndex": 84
+    },
+    "ternate": {
+      "economy": 80,
+      "industry": 85,
+      "market": "l",
+      "shipyard": "G",
+      "specialty": "clove",
+      "specialtyEconomy": 80,
+      "specialtyPrice": 4,
+      "capital": false,
+      "originalIndex": 87
+    },
+    "mindanao": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "moresby": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "hanoi": {
+      "economy": 300,
+      "industry": 340,
+      "market": "m",
+      "shipyard": "G",
+      "specialty": "coral",
+      "specialtyEconomy": 300,
+      "specialtyPrice": 70,
+      "capital": false,
+      "originalIndex": 96
+    },
+    "zeiton": {
+      "economy": 520,
+      "industry": 570,
+      "market": "m",
+      "shipyard": "I",
+      "specialty": "silk",
+      "specialtyEconomy": 300,
+      "specialtyPrice": 25,
+      "capital": false,
+      "originalIndex": 94
+    },
+    "changan": {
+      "economy": 580,
+      "industry": 280,
+      "market": "m",
+      "shipyard": "I",
+      "specialty": "silk-cloth",
+      "specialtyEconomy": 400,
+      "specialtyPrice": 20,
+      "capital": false,
+      "originalIndex": 97
+    },
+    "ezo": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "lushun": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "guam": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "dikson": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "tiksi": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "korf": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "leveque": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "geelong": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "wanganui": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "suva": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "tahiti": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "nome": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "coppermine": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "churchill": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "forel": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "juneau": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "naalehu": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "cape-cod": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "santa-barbara": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "guatemala": {
+      "economy": 70,
+      "industry": 65,
+      "market": "g",
+      "shipyard": "K",
+      "specialty": "grain",
+      "specialtyEconomy": 90,
+      "specialtyPrice": 10,
+      "capital": false,
+      "originalIndex": 51
+    },
+    "panama": {
+      "economy": 160,
+      "industry": 190,
+      "market": "g",
+      "shipyard": "K",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 46
+    },
+    "veracruz": {
+      "economy": 80,
+      "industry": 75,
+      "market": "g",
+      "shipyard": "K",
+      "specialty": "gold",
+      "specialtyEconomy": 400,
+      "specialtyPrice": 400,
+      "capital": false,
+      "originalIndex": 49
+    },
+    "santiago": {
+      "economy": 80,
+      "industry": 105,
+      "market": "g",
+      "shipyard": "K",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 55
+    },
+    "porto-velho": {
+      "economy": 60,
+      "industry": 75,
+      "market": "g",
+      "shipyard": "K",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 47
+    },
+    "cartegena": {
+      "economy": 190,
+      "industry": 130,
+      "market": "h",
+      "shipyard": "K",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 43
+    },
+    "maracaibo": {
+      "economy": 120,
+      "industry": 105,
+      "market": "h",
+      "shipyard": "K",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 54
+    },
+    "caracas": {
+      "economy": 220,
+      "industry": 210,
+      "market": "h",
+      "shipyard": "K",
+      "specialty": "vanilla",
+      "specialtyEconomy": 200,
+      "specialtyPrice": 40,
+      "capital": false,
+      "originalIndex": 42
+    },
+    "margarita": {
+      "economy": 40,
+      "industry": 45,
+      "market": "h",
+      "shipyard": "K",
+      "specialty": null,
+      "specialtyEconomy": null,
+      "specialtyPrice": null,
+      "capital": false,
+      "originalIndex": 45
+    },
+    "jamaica": {
+      "economy": 60,
+      "industry": 80,
+      "market": "g",
+      "shipyard": "K",
+      "specialty": "sugar",
+      "specialtyEconomy": 200,
+      "specialtyPrice": 18,
+      "capital": false,
+      "originalIndex": 50
+    },
+    "cayenne": {
+      "economy": 70,
+      "industry": 65,
+      "market": "h",
+      "shipyard": "K",
+      "specialty": "wood",
+      "specialtyEconomy": 100,
+      "specialtyPrice": 60,
+      "capital": false,
+      "originalIndex": 56
+    },
+    "rio-de-janeiro": {
+      "economy": 45,
+      "industry": 50,
+      "market": "h",
+      "shipyard": "K",
+      "specialty": "gold",
+      "specialtyEconomy": 450,
+      "specialtyPrice": 380,
+      "capital": false,
+      "originalIndex": 53
+    },
+    "montevideo": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "valparaiso": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "mollendo": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    },
+    "callao": {
+      "supplyOnly": true,
+      "economy": 0,
+      "industry": 0,
+      "market": null,
+      "shipyard": null,
+      "specialty": null
+    }
+  },
+  "ships": {
+    "balsa": {
+      "name": "Balsa",
+      "cost": 1200,
+      "shipyards": "A",
+      "industry": 100,
+      "hull": 30,
+      "tacking": 70,
+      "power": 80,
+      "capacity": 50,
+      "minCrew": 5,
+      "maxCrew": 20,
+      "guns": 10,
+      "windClass": "B",
+      "oars": false
+    },
+    "hansa-cog": {
+      "name": "Hansa Cog",
+      "cost": 1300,
+      "shipyards": "CD",
+      "industry": 100,
+      "hull": 20,
+      "tacking": 65,
+      "power": 85,
+      "capacity": 60,
+      "minCrew": 5,
+      "maxCrew": 20,
+      "guns": 10,
+      "windClass": "B",
+      "oars": false
+    },
+    "light-galley": {
+      "name": "Light Galley",
+      "cost": 1400,
+      "shipyards": "ADEFGH",
+      "industry": 100,
+      "hull": 40,
+      "tacking": 100,
+      "power": 85,
+      "capacity": 120,
+      "minCrew": 5,
+      "maxCrew": 20,
+      "guns": 10,
+      "windClass": "A",
+      "oars": true
+    },
+    "tallette": {
+      "name": "Tallette",
+      "cost": 1400,
+      "shipyards": "E",
+      "industry": 200,
+      "hull": 20,
+      "tacking": 70,
+      "power": 95,
+      "capacity": 80,
+      "minCrew": 5,
+      "maxCrew": 20,
+      "guns": 15,
+      "windClass": "B",
+      "oars": false
+    },
+    "dhow": {
+      "name": "Dhow",
+      "cost": 1800,
+      "shipyards": "G",
+      "industry": 300,
+      "hull": 30,
+      "tacking": 90,
+      "power": 75,
+      "capacity": 70,
+      "minCrew": 5,
+      "maxCrew": 20,
+      "guns": 15,
+      "windClass": "B",
+      "oars": false
+    },
+    "caravela-latina": {
+      "name": "Caravela Latina",
+      "cost": 2400,
+      "shipyards": "ACEF",
+      "industry": 200,
+      "hull": 30,
+      "tacking": 90,
+      "power": 75,
+      "capacity": 120,
+      "minCrew": 10,
+      "maxCrew": 40,
+      "guns": 20,
+      "windClass": "A",
+      "oars": false
+    },
+    "caravela-redonda": {
+      "name": "Caravela Redonda",
+      "cost": 2400,
+      "shipyards": "BDH",
+      "industry": 200,
+      "hull": 30,
+      "tacking": 70,
+      "power": 90,
+      "capacity": 120,
+      "minCrew": 10,
+      "maxCrew": 40,
+      "guns": 20,
+      "windClass": "B",
+      "oars": false
+    },
+    "buss": {
+      "name": "Buss",
+      "cost": 20000,
+      "shipyards": "E",
+      "industry": 700,
+      "hull": 70,
+      "tacking": 50,
+      "power": 60,
+      "capacity": 500,
+      "minCrew": 50,
+      "maxCrew": 200,
+      "guns": 40,
+      "windClass": "E",
+      "oars": false
+    },
+    "brigantine": {
+      "name": "Brigantine",
+      "cost": 10000,
+      "shipyards": "AK",
+      "industry": 400,
+      "hull": 40,
+      "tacking": 90,
+      "power": 70,
+      "capacity": 180,
+      "minCrew": 15,
+      "maxCrew": 60,
+      "guns": 20,
+      "windClass": "A",
+      "oars": false
+    },
+    "flemish-galleon": {
+      "name": "Flemish Galleon",
+      "cost": 34000,
+      "shipyards": "ADEF",
+      "industry": 400,
+      "hull": 80,
+      "tacking": 75,
+      "power": 80,
+      "capacity": 500,
+      "minCrew": 40,
+      "maxCrew": 200,
+      "guns": 30,
+      "windClass": "D",
+      "oars": true
+    },
+    "nao": {
+      "name": "Nao",
+      "cost": 30000,
+      "shipyards": "ABCDEFHK",
+      "industry": 500,
+      "hull": 50,
+      "tacking": 65,
+      "power": 85,
+      "capacity": 450,
+      "minCrew": 25,
+      "maxCrew": 120,
+      "guns": 40,
+      "windClass": "C",
+      "oars": false
+    },
+    "xebec": {
+      "name": "Xebec",
+      "cost": 44000,
+      "shipyards": "FG",
+      "industry": 500,
+      "hull": 70,
+      "tacking": 80,
+      "power": 70,
+      "capacity": 600,
+      "minCrew": 25,
+      "maxCrew": 300,
+      "guns": 40,
+      "windClass": "B",
+      "oars": false
+    },
+    "venetian-galeass": {
+      "name": "Venetian Galeass",
+      "cost": 64000,
+      "shipyards": "EF",
+      "industry": 500,
+      "hull": 90,
+      "tacking": 70,
+      "power": 70,
+      "capacity": 950,
+      "minCrew": 60,
+      "maxCrew": 400,
+      "guns": 50,
+      "windClass": "D",
+      "oars": true
+    },
+    "carrack": {
+      "name": "Carrack",
+      "cost": 40000,
+      "shipyards": "ABCEFHK",
+      "industry": 600,
+      "hull": 50,
+      "tacking": 60,
+      "power": 80,
+      "capacity": 600,
+      "minCrew": 30,
+      "maxCrew": 160,
+      "guns": 50,
+      "windClass": "C",
+      "oars": false
+    },
+    "pinnace": {
+      "name": "Pinnace",
+      "cost": 6000,
+      "shipyards": "DK",
+      "industry": 550,
+      "hull": 40,
+      "tacking": 95,
+      "power": 85,
+      "capacity": 150,
+      "minCrew": 5,
+      "maxCrew": 60,
+      "guns": 20,
+      "windClass": "A",
+      "oars": false
+    },
+    "la-reale": {
+      "name": "La Reale",
+      "cost": 40000,
+      "shipyards": "D",
+      "industry": 600,
+      "hull": 60,
+      "tacking": 95,
+      "power": 100,
+      "capacity": 450,
+      "minCrew": 30,
+      "maxCrew": 250,
+      "guns": 40,
+      "windClass": "B",
+      "oars": true
+    },
+    "galleon": {
+      "name": "Galleon",
+      "cost": 60000,
+      "shipyards": "ABCDK",
+      "industry": 800,
+      "hull": 80,
+      "tacking": 60,
+      "power": 65,
+      "capacity": 800,
+      "minCrew": 45,
+      "maxCrew": 200,
+      "guns": 70,
+      "windClass": "E",
+      "oars": false
+    },
+    "sloop": {
+      "name": "Sloop",
+      "cost": 16000,
+      "shipyards": "B",
+      "industry": 850,
+      "hull": 50,
+      "tacking": 95,
+      "power": 85,
+      "capacity": 250,
+      "minCrew": 5,
+      "maxCrew": 60,
+      "guns": 40,
+      "windClass": "A",
+      "oars": false
+    },
+    "frigate": {
+      "name": "Frigate",
+      "cost": 224000,
+      "shipyards": "BC",
+      "industry": 1000,
+      "hull": 80,
+      "tacking": 60,
+      "power": 85,
+      "capacity": 650,
+      "minCrew": 20,
+      "maxCrew": 300,
+      "guns": 70,
+      "windClass": "B",
+      "oars": false
+    },
+    "barge": {
+      "name": "Barge",
+      "cost": 300000,
+      "shipyards": "B",
+      "industry": 1000,
+      "hull": 90,
+      "tacking": 50,
+      "power": 65,
+      "capacity": 1000,
+      "minCrew": 40,
+      "maxCrew": 450,
+      "guns": 120,
+      "windClass": "C",
+      "oars": false
+    },
+    "full-rigged-ship": {
+      "name": "Full-rigged Ship",
+      "cost": 320000,
+      "shipyards": "C",
+      "industry": 1000,
+      "hull": 90,
+      "tacking": 50,
+      "power": 65,
+      "capacity": 1200,
+      "minCrew": 45,
+      "maxCrew": 500,
+      "guns": 150,
+      "windClass": "C",
+      "oars": false
+    },
+    "junk": {
+      "name": "Junk",
+      "cost": 16000,
+      "shipyards": "I",
+      "industry": 300,
+      "hull": 80,
+      "tacking": 80,
+      "power": 70,
+      "capacity": 500,
+      "minCrew": 25,
+      "maxCrew": 100,
+      "guns": 40,
+      "windClass": "B",
+      "oars": false
+    },
+    "kansen": {
+      "name": "Kansen",
+      "cost": 2000,
+      "shipyards": "J",
+      "industry": 200,
+      "hull": 30,
+      "tacking": 100,
+      "power": 100,
+      "capacity": 250,
+      "minCrew": 10,
+      "maxCrew": 60,
+      "guns": 20,
+      "windClass": "A",
+      "oars": true
+    },
+    "atakabune": {
+      "name": "Atakabune",
+      "cost": 14000,
+      "shipyards": "J",
+      "industry": 400,
+      "hull": 60,
+      "tacking": 95,
+      "power": 95,
+      "capacity": 500,
+      "minCrew": 20,
+      "maxCrew": 200,
+      "guns": 40,
+      "windClass": "C",
+      "oars": true
+    },
+    "tekkousen": {
+      "name": "Tekkousen",
+      "cost": 140000,
+      "shipyards": "J",
+      "industry": 1000,
+      "hull": 90,
+      "tacking": 80,
+      "power": 85,
+      "capacity": 1100,
+      "minCrew": 45,
+      "maxCrew": 300,
+      "guns": 100,
+      "windClass": "C",
+      "oars": true
+    }
+  },
+  "materials": {
+    "teak": {
+      "name": "Teak",
+      "industry": 0,
+      "factor": 0.8
+    },
+    "cedar": {
+      "name": "Cedar",
+      "industry": 0,
+      "factor": 0.9
+    },
+    "beech": {
+      "name": "Beech",
+      "industry": 0,
+      "factor": 1
+    },
+    "oak": {
+      "name": "Oak",
+      "industry": 700,
+      "factor": 1.1
+    },
+    "copper": {
+      "name": "Copper",
+      "industry": 900,
+      "factor": 1.2
+    },
+    "steel": {
+      "name": "Steel",
+      "industry": 1000,
+      "factor": 1.4,
+      "exclusive": "tekkousen"
+    }
+  }
+}
