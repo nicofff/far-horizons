@@ -8,10 +8,11 @@ import { drawLandmark, landmarkPoint } from './landmarks.js';
 import { calendarAt, daylightAt, drawDaylight } from './world-time.js';
 import { prevailingSampler } from './wind.js';
 import { drawWindGauge, drawWindArrow } from './wind-display.js';
+import { WORLD, wrapX, longitudeDelta, longitudeBounds } from './world.js';
 
 export const SCREEN={width:512,height:384};
 export const SEA_VIEW={x:0,y:0,width:512,height:384,scale:40};
-export function seaPoint(position,p){return {x:SEA_VIEW.x+SEA_VIEW.width/2+(p.x-position.x)*SEA_VIEW.scale,y:SEA_VIEW.y+SEA_VIEW.height/2+(p.y-position.y)*SEA_VIEW.scale};}
+export function seaPoint(position,p){return {x:SEA_VIEW.x+SEA_VIEW.width/2+longitudeDelta(position.x,p.x)*SEA_VIEW.scale,y:SEA_VIEW.y+SEA_VIEW.height/2+(p.y-position.y)*SEA_VIEW.scale};}
 export function createChart(canvas,getState,actions){
   const host=canvas.parentElement,frame=document.createElement('canvas');frame.width=SCREEN.width;frame.height=SCREEN.height;
   const c=frame.getContext('2d',{alpha:false});c.imageSmoothingEnabled=false;
@@ -30,7 +31,7 @@ export function createChart(canvas,getState,actions){
     background.draw(c,s.position,time,s.day);
     const wavePhase=Math.floor(time/450)%4,minx=Math.floor(start.x),miny=Math.floor(start.y);
     for(let wy=miny;wy<start.y+v.height/v.scale;wy++)for(let wx=minx;wx<start.x+v.width/v.scale;wx++){
-      const h=hash(wx,wy);if(h%3===0||landAt(wx+.4,wy+.4))continue;const p=seaPoint(s.position,{x:wx+.2+(h%5)*.1,y:wy+.2});
+      const h=hash(wrapX(wx),wy);if(h%3===0||landAt(wx+.4,wy+.4))continue;const p=seaPoint(s.position,{x:wx+.2+(h%5)*.1,y:wy+.2});
       c.fillStyle=h%2?'#4b85e0':'#3b78dc';const shift=wavePhase===h%4?1:0;c.fillRect(Math.round(p.x),Math.round(p.y+shift),6,1);c.fillRect(Math.round(p.x-1),Math.round(p.y+1+shift),1,1);c.fillRect(Math.round(p.x+6),Math.round(p.y-1+shift),1,1);
     }
     background.drawScenery(c,s.position,s.day);
@@ -52,24 +53,32 @@ export function createChart(canvas,getState,actions){
       c.fillStyle='#142441';c.fillRect(x-3,label.y+17,name.length*6+5,12);text(c,name,x,label.y+20,P.gold);
     }
     for(const enemy of visiblePirates(s)){const p=seaPoint(s.position,enemy);drawShip(c,p.x,p.y,{enemy:true,bob:Math.floor(time/500)%2});text(c,'!',p.x-2,p.y-21,P.red);}
-    const center=seaPoint(s.position,s.position),toward=s.heading||s.route[0]&&{x:s.route[0].x-s.position.x,y:s.route[0].y-s.position.y};
+    const center=seaPoint(s.position,s.position),toward=sailingHeading(s);
     if(!s.paused){c.fillStyle='#71aeb9';for(let i=0;i<3;i++){const x=center.x-(toward?.x>0?1:-1)*(18+i*7);c.fillRect(x,center.y+10+(i%2)*2,5-i,1);}}
     drawShip(c,center.x,center.y,{flip:toward?.x<0,bob:Math.floor(time/650)%2});
     c.drawImage(fog,v.x,v.y);
     c.restore();
   }
   function recordedChart(s){
-    const v=SEA_VIEW,center=chartCenter||s.position,toScreen=p=>({x:v.x+v.width/2+(p.x-center.x)*chartZoom,y:v.y+v.height/2+(p.y-center.y)*chartZoom});
+    const v=SEA_VIEW,center=chartCenter||s.position,toScreen=p=>({x:v.x+v.width/2+longitudeDelta(center.x,p.x)*chartZoom,y:v.y+v.height/2+(p.y-center.y)*chartZoom});
     c.fillStyle='#293653';c.fillRect(v.x,v.y,v.width,v.height);c.save();c.beginPath();c.rect(v.x,v.y,v.width,v.height);c.clip();
     c.strokeStyle='#35405a';c.lineWidth=1;for(let x=-v.height;x<v.width;x+=12){c.beginPath();c.moveTo(x,0);c.lineTo(x+v.height,v.height);c.stroke();}c.fillStyle='#35405a';for(let x=v.x;x<v.x+v.width;x+=24)c.fillRect(x,v.y,1,v.height);for(let y=v.y;y<v.y+v.height;y+=24)c.fillRect(v.x,y,v.width,1);
     for(const id of s.seen){const wx=(id%CHART_COLS)*CHART_CELL,wy=Math.floor(id/CHART_COLS)*CHART_CELL,p=toScreen({x:wx,y:wy});if(p.x<v.x-CHART_CELL*chartZoom||p.x>v.x+v.width||p.y<v.y-CHART_CELL*chartZoom||p.y>v.y+v.height)continue;
       const step=Math.max(.5,2/chartZoom);for(let dy=0;dy<CHART_CELL;dy+=step)for(let dx=0;dx<CHART_CELL;dx+=step){const q=toScreen({x:wx+dx,y:wy+dy});c.fillStyle=onLand(wx+dx,wy+dy)?biomeStyleAt(wx+dx,wy+dy).chart:'#2a6888';c.fillRect(Math.floor(q.x),Math.floor(q.y),Math.ceil(step*chartZoom),Math.ceil(step*chartZoom));}}
     const wind=prevailingSampler(s.day),seen=new Set(s.seen),spacing=48/chartZoom;
     for(let y=Math.floor((center.y-v.height/2/chartZoom)/spacing)*spacing;y<center.y+v.height/2/chartZoom;y+=spacing)for(let x=Math.floor((center.x-v.width/2/chartZoom)/spacing)*spacing;x<center.x+v.width/2/chartZoom;x+=spacing){
-      if(!seen.has(Math.floor(y/CHART_CELL)*CHART_COLS+Math.floor(x/CHART_CELL))||onLand(x,y))continue;
+      if(!seen.has(Math.floor(y/CHART_CELL)*CHART_COLS+Math.floor(wrapX(x)/CHART_CELL))||onLand(x,y))continue;
       const q=toScreen({x,y});drawWindArrow(c,q.x,q.y,wind({x,y}),'#8ca8ab',6);
     }
-    if(s.route.length){c.strokeStyle=P.gold;c.lineWidth=1;c.setLineDash([2,3]);c.beginPath();const p=toScreen(s.position);c.moveTo(p.x,p.y);for(const target of s.route){const q=toScreen(target);c.lineTo(q.x,q.y);}c.stroke();c.setLineDash([]);}
+    if(s.route.length){
+      c.strokeStyle=P.gold;c.lineWidth=1;c.setLineDash([2,3]);c.beginPath();
+      for(const offset of [-WORLD.width,0,WORLD.width]){
+        let x=center.x+longitudeDelta(center.x,s.position.x)+offset,previous=s.position;
+        c.moveTo(v.x+v.width/2+(x-center.x)*chartZoom,toScreen(s.position).y);
+        for(const target of s.route){x+=longitudeDelta(previous.x,target.x);c.lineTo(v.x+v.width/2+(x-center.x)*chartZoom,toScreen(target).y);previous=target;}
+      }
+      c.stroke();c.setLineDash([]);
+    }
     for(const d of discoveries.filter(d=>s.found.includes(d.id))){const q=toScreen(d);c.fillStyle=P.gold;c.fillRect(Math.round(q.x),Math.round(q.y)-3,1,7);c.fillRect(Math.round(q.x)-3,Math.round(q.y),7,1);}
     for(const p of ports.filter(p=>s.known.includes(p.id))){const q=toScreen(p);if(q.x<v.x+8||q.x>v.x+v.width-8||q.y<v.y+8||q.y>v.y+v.height-8)continue;c.fillStyle=s.visited.includes(p.id)?P.gold:P.white;c.fillRect(Math.round(q.x)-2,Math.round(q.y)-2,5,5);const labelX=Math.min(v.x+v.width-p.name.length*6-5,q.x+6);text(c,p.name,labelX,q.y-3,P.white);}
     const p=toScreen(s.position);drawShip(c,p.x,p.y,{small:true});c.restore();text(c,'RECORDED COASTS ONLY',v.x+9,v.y+9,P.gold);
@@ -102,7 +111,7 @@ export function createChart(canvas,getState,actions){
   refresh();
   function relative(e){const rect=host.querySelector('canvas').getBoundingClientRect();return {x:(e.clientX-rect.left)*512/rect.width,y:(e.clientY-rect.top)*384/rect.height};}
   function inside(p){const v=SEA_VIEW;return p.x>=v.x&&p.x<v.x+v.width&&p.y>=v.y&&p.y<v.y+v.height;}
-  function world(p){const v=SEA_VIEW,s=getState(),scale=mode==='sea'?v.scale:chartZoom,center=mode==='sea'?s.position:chartCenter||s.position;return {x:center.x+(p.x-v.x-v.width/2)/scale,y:center.y+(p.y-v.y-v.height/2)/scale};}
+  function world(p){const v=SEA_VIEW,s=getState(),scale=mode==='sea'?v.scale:chartZoom,center=mode==='sea'?s.position:chartCenter||s.position;return {x:wrapX(center.x+(p.x-v.x-v.width/2)/scale),y:center.y+(p.y-v.y-v.height/2)/scale};}
   function target(p){const s=getState(),candidates=mode==='chart'?ports.filter(p=>s.known.includes(p.id)):ports.filter(p=>inSight(s,p)),scale=mode==='chart'?chartZoom:SEA_VIEW.scale,w=world(p);
     const port=candidates.find(q=>{
       if(distance(q,w)<Math.max(mode==='chart'?3:.9,12/scale))return true;
@@ -119,7 +128,7 @@ export function createChart(canvas,getState,actions){
     if(landmark)return {kind:'landmark',data:landmark};
     if(port)return {kind:'port',data:port};if(mode==='sea'){const enemy=visiblePirates(s).find(q=>distance(q,w)<.8);if(enemy)return {kind:'enemy',data:enemy};}return null;}
   function bindCanvas(){host.querySelector('canvas').setAttribute('aria-label','Retro sailing game. Arrow keys or WASD steer. M opens the recorded chart. Harbors open automatically on arrival. P reopens the harbor menu. F opens the fleet. Space pauses.');}
-  bindCanvas();host.addEventListener('pointermove',e=>{const p=relative(e);if(drag&&mode==='chart'){if(distance(p,drag)>3)moved=true;chartCenter={x:drag.cx-(p.x-drag.x)/chartZoom,y:drag.cy-(p.y-drag.y)/chartZoom};refresh();}hover=buttons.find(b=>p.x>=b.x&&p.x<b.x+b.w&&p.y>=b.y&&p.y<b.y+b.h)||null;host.style.cursor=hover?.enabled||inside(p)&&target(p)?'pointer':'default';});
+  bindCanvas();host.addEventListener('pointermove',e=>{const p=relative(e);if(drag&&mode==='chart'){if(distance(p,drag)>3)moved=true;chartCenter={x:wrapX(drag.cx-(p.x-drag.x)/chartZoom),y:drag.cy-(p.y-drag.y)/chartZoom};refresh();}hover=buttons.find(b=>p.x>=b.x&&p.x<b.x+b.w&&p.y>=b.y&&p.y<b.y+b.h)||null;host.style.cursor=hover?.enabled||inside(p)&&target(p)?'pointer':'default';});
   host.addEventListener('pointerdown',e=>{const p=relative(e);if(e.button!==0)return;moved=false;if(mode==='chart'&&inside(p)){const center=chartCenter||getState().position;drag={...p,cx:center.x,cy:center.y};host.setPointerCapture(e.pointerId);}});
   host.addEventListener('pointerup',e=>{const p=relative(e);drag=null;if(host.hasPointerCapture(e.pointerId))host.releasePointerCapture(e.pointerId);if(moved)return;const b=buttons.find(b=>p.x>=b.x&&p.x<b.x+b.w&&p.y>=b.y&&p.y<b.y+b.h);if(b){if(b.enabled)b.fn();return;}if(!inside(p))return;const hit=target(p);if(hit?.kind==='port')actions.select(hit.data.id);else if(hit?.kind==='landmark')actions.landmark(hit.data.id);else if(hit?.kind==='enemy')actions.enemy(hit.data);else if(mode==='sea'){const w=world(p);if(inSight(getState(),w))actions.course(w);}else notify('Select a known harbor or recorded landmark. Unknown waters must be explored from the sea.');});
   host.addEventListener('pointercancel',()=>{drag=null;moved=true;});host.addEventListener('wheel',e=>{e.preventDefault();if(mode==='sea')return;chartZoom=Math.max(.45,Math.min(12,chartZoom*Math.exp(-e.deltaY*.001)));refresh();},{passive:false});
@@ -130,8 +139,8 @@ export function createChart(canvas,getState,actions){
     focus(p){if(p){mode='chart';chartCenter={...p};chartZoom=3;}else{mode='sea';chartCenter=null;}refresh();},
     world(){
       if(mode!=='chart')toggleChart();
-      const known=ports.filter(p=>getState().known.includes(p.id)),left=Math.min(...known.map(p=>p.x)),right=Math.max(...known.map(p=>p.x)),top=Math.min(...known.map(p=>p.y)),bottom=Math.max(...known.map(p=>p.y));
-      chartCenter={x:(left+right)/2,y:(top+bottom)/2};chartZoom=Math.min(SEA_VIEW.width/(right-left+30),SEA_VIEW.height/(bottom-top+30));refresh();
+      const known=ports.filter(p=>getState().known.includes(p.id)),span=longitudeBounds(known),top=Math.min(...known.map(p=>p.y)),bottom=Math.max(...known.map(p=>p.y));
+      chartCenter={x:span.center,y:(top+bottom)/2};chartZoom=Math.min(SEA_VIEW.width/(span.width+30),SEA_VIEW.height/(bottom-top+30));refresh();
     },
     invalidate(){background.clear();lighting=null;refresh();},
     debug(){return {mode,backend,position:{...getState().position},view:{...SEA_VIEW},visiblePorts:ports.filter(p=>inSight(getState(),p)).map(p=>p.id),visibleEnemies:mode==='sea'?visiblePirates(getState()).map(p=>p.id):[],sightRadius:SIGHT_RADIUS,backgroundTiles:background.size,buttons:buttons.map(({id,x,y,w,h,enabled})=>({id,x,y,w,h,enabled}))};},

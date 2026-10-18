@@ -1,5 +1,6 @@
 import { windWidth, windHeight, windCell, windUnit, windVectors } from './assets/world-winds.js';
 import { calendarAt } from './world-time.js';
+import { longitudeDelta } from './world.js';
 
 const bytes=atob(windVectors),vectors=new Int8Array(bytes.length);
 for(let i=0;i<bytes.length;i++)vectors[i]=bytes.charCodeAt(i);
@@ -65,7 +66,7 @@ export function windReport(wind,heading){
 export function prevailingCost(day){
   const sample=prevailingSampler(day);
   return (a,b)=>{
-    const dx=b.x-a.x,dy=b.y-a.y,length=Math.hypot(dx,dy),steps=Math.max(1,Math.ceil(length/10));let cost=0;
+    const dx=longitudeDelta(a.x,b.x),dy=b.y-a.y,length=Math.hypot(dx,dy),steps=Math.max(1,Math.ceil(length/10));let cost=0;
     for(let i=0;i<steps;i++)cost+=length/steps/sailingFactor(sample({x:a.x+dx*(i+.5)/steps,y:a.y+dy*(i+.5)/steps}),{x:dx,y:dy});
     return cost;
   };

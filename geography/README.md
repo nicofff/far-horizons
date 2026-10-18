@@ -38,6 +38,8 @@ HydroRIVERS attribution: Lehner, B., Grill G. (2013), “Global river hydrograph
 
 The route planner subdivides coastal areas to individual terrain cells while using larger water rectangles offshore. Adjacent rectangles connect through their shared water edges. Segment checks traverse every crossed raster cell, including diagonal corners, so smoothing a route cannot cut across land.
 
+Longitude wraps at ±180° across sailing, collision, route graph edges, wind costs, chart records, and scenery. Latitude remains bounded. Routes use the shorter longitudinal segment between waypoints and can cross the Pacific in either direction. The sea camera keeps a continuous longitude for its bounded tile cache, so crossing the date line scrolls normally without rebuilding the whole view. Map revision 10 recalculates older saved courses and preserves voyage progress; the source terrain mask is unchanged.
+
 ## Rebuild
 
 From the project root:

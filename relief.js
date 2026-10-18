@@ -1,4 +1,5 @@
 import { reliefWidth, reliefHeight, reliefCell, reliefRuns } from './assets/world-relief.js';
+import { wrapX } from './world.js';
 
 export { reliefWidth, reliefHeight, reliefCell };
 export const reliefMask=new Uint8Array(reliefWidth*reliefHeight);
@@ -12,8 +13,8 @@ while(cursor<bytes.length){
 if(position!==reliefMask.length)throw new Error('Incomplete relief raster.');
 
 function reliefAt(x,y){
-  const px=Math.floor(x/reliefCell),py=Math.floor(y/reliefCell);
-  return px<0||px>=reliefWidth||py<0||py>=reliefHeight?0:reliefMask[py*reliefWidth+px];
+  const px=Math.floor(wrapX(x)/reliefCell),py=Math.floor(y/reliefCell);
+  return py<0||py>=reliefHeight?0:reliefMask[py*reliefWidth+px];
 }
 
 export function elevationAt(x,y){return (reliefAt(x,y)>>>2)*250;}

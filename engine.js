@@ -10,13 +10,14 @@ export { log } from './journal.js';
 import { MAX_FLEET, makeShip, shipStats, shipQuote, shipyardCatalog, portDevelopment, marketGoods, price, invest, settleDevelopment, nextMonthDay } from './economy.js';
 import { tuneById } from './music-score.js';
 import { windAt, prevailingWindAt, prevailingCost, sailingFactor } from './wind.js';
+import { wrapX, longitudeDelta, worldDistance } from './world.js';
 export { MAX_FLEET, shipStats, shipQuote, shipyardCatalog, portDevelopment, marketGoods, price, invest, marketCatalog, investmentLimit, nextMonthDay, formatDate } from './economy.js';
 
-export const distance = (a,b) => Math.hypot(a.x-b.x,a.y-b.y);
+export const distance = worldDistance;
 export const SIGHT_RADIUS = 8;
 export const CHART_CELL = 2;
 export const CHART_COLS = WORLD.width / CHART_CELL;
-export const MAP_REVISION = 9;
+export const MAP_REVISION = 10;
 
 export function createShip(type,name,options={}) {
   if(shipTypes[type].legacyOnly){const t=legacyShipTypes[type];return {id:globalThis.crypto?.randomUUID?.()||Math.random().toString(36),type,name,hull:t.hull,crew:t.crew,legacy:true,material:'beech',berths:t.crew,guns:t.guns};}
@@ -34,7 +35,7 @@ export const cargoUsed = s => Object.values(s.cargo).reduce((n,a)=>n+a,0)+(s.foo
 export const rationRate = s => Math.max(1,crewCount(s)/10);
 export const supplyDays = s => Math.floor(Math.min(s.food,s.water)/rationRate(s));
 export const fleetBaseSpeed = s => s.ships.length?Math.min(...s.ships.map(a=>shipStats(a).speed))*(s.morale<30?0.7:1)*(hasSkill(s,'celestial-navigation')?1.15:1):0;
-export const sailingHeading = s => s.heading||(s.route[0]?{x:s.route[0].x-s.position.x,y:s.route[0].y-s.position.y}:null);
+export const sailingHeading = s => s.heading||(s.route[0]?{x:longitudeDelta(s.position.x,s.route[0].x),y:s.route[0].y-s.position.y}:null);
 export const currentWind = s => windAt(s.position,s.day,s.weatherSeed??(s.seed>>>0));
 export const fleetSpeed = (s,heading=sailingHeading(s)) => fleetBaseSpeed(s)*sailingFactor(currentWind(s),heading);
 
@@ -47,7 +48,7 @@ export function estimatedPassage(s,route=s.route){
   const base=fleetBaseSpeed(s);if(!base)return 0;
   let elapsed=0,previous=s.position;
   for(const point of route){
-    const heading={x:point.x-previous.x,y:point.y-previous.y},length=distance(previous,point),steps=Math.max(1,Math.ceil(length/3));
+    const heading={x:longitudeDelta(previous.x,point.x),y:point.y-previous.y},length=distance(previous,point),steps=Math.max(1,Math.ceil(length/3));
     for(let i=0;i<steps;i++){
       const position={x:previous.x+heading.x*(i+.5)/steps,y:previous.y+heading.y*(i+.5)/steps};
       elapsed+=length/steps/base/sailingFactor(prevailingWindAt(position,s.day+elapsed),heading);
@@ -59,13 +60,13 @@ export function estimatedPassage(s,route=s.route){
 export const portById = id => ports.find(p=>p.id===id);
 export const inSight = (s,p) => distance(s.position,p)<=SIGHT_RADIUS;
 export const visiblePirates = s => pirates(s).filter(p=>inSight(s,p));
-export const recorded = (s,p) => s.seen.includes(Math.floor(p.y/CHART_CELL)*CHART_COLS+Math.floor(p.x/CHART_CELL));
+export const recorded = (s,p) => s.seen.includes(Math.floor(p.y/CHART_CELL)*CHART_COLS+Math.floor(wrapX(p.x)/CHART_CELL));
 export function reveal(s) {
   const seen=new Set(s.seen);
   const cx=Math.floor(s.position.x/CHART_CELL),cy=Math.floor(s.position.y/CHART_CELL);
   for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++){
-    const x=cx+dx,y=cy+dy;
-    if(x>=0&&x<CHART_COLS&&y>=0&&y<450&&distance(s.position,{x:(x+.5)*CHART_CELL,y:(y+.5)*CHART_CELL})<=SIGHT_RADIUS)seen.add(y*CHART_COLS+x);
+    const x=(cx+dx+CHART_COLS)%CHART_COLS,y=cy+dy;
+    if(y>=0&&y<450&&distance(s.position,{x:(x+.5)*CHART_CELL,y:(y+.5)*CHART_CELL})<=SIGHT_RADIUS)seen.add(y*CHART_COLS+x);
   }
   s.seen=[...seen];
   for(const p of ports) if(!s.known.includes(p.id)&&inSight(s,p)){s.known.push(p.id);log(s,'Land on the horizon',`Your lookout has charted ${p.name}.`,'discovery');}
@@ -80,8 +81,9 @@ export function steer(s,dx,dy) {
 }
 export function plotCourse(s,target) {
   if(s.battle||s.lost)return {ok:false,message:'Resolve the encounter first.'};
-  const p=typeof target==='string'?portById(target):target;
+  let p=typeof target==='string'?portById(target):target;
   if(!p)return {ok:false,message:'That harbor is not on your chart.'};
+  p={...p,x:wrapX(p.x)};
   if(p.id===s.port)return {ok:false,message:'You are already in this harbor.'};
   if(onLand(p.x,p.y))return {ok:false,message:'That is dry land. Set a course in open water.'};
   const path=sailingRoute(s,p);
@@ -179,7 +181,7 @@ export function refitShip(s,id,options={}){
   s.gold-=quote.cost;ship.material=quote.material;ship.berths=quote.berths;ship.guns=quote.guns;ship.crew=Math.min(ship.crew,quote.berths);ship.hull=Math.max(1,Math.round(quote.maxHull*condition));
   return {ok:true,message:`${ship.name} refitted for ${quote.cost.toLocaleString('en-US')} gold. Recruit crew and check provisions.`};
 }
-export function pirates(s) {return pirateTemplates.filter(e=>!s.defeated.includes(e.id)).map((e,i)=>({...e,x:e.x+Math.sin(s.day/10+i)*15,y:e.y+Math.cos(s.day/13+i)*10}));}
+export function pirates(s) {return pirateTemplates.filter(e=>!s.defeated.includes(e.id)).map((e,i)=>({...e,x:wrapX(e.x+Math.sin(s.day/10+i)*15),y:e.y+Math.cos(s.day/13+i)*10}));}
 export function startBattle(s,enemy) {
   if(s.battle||s.lost||!enemy)return false;
   const t=shipTypes[enemy.type];s.battle={enemy:{...enemy,hull:Math.round(t.hull*enemy.power),maxHull:Math.round(t.hull*enemy.power),crew:t.crew,guns:t.guns},round:0,messages:[`${enemy.name} closes in. The gun ports open.`]};s.paused=true;s.route=[];s.heading=null;s.destination=null;
@@ -244,16 +246,16 @@ export function advance(s,days) {
     const wind=currentWind(s);s.wind=Math.atan2(wind.y,wind.x);
     if(s.heading){
       const movement=fleetSpeed(s)*dt;
-      const next={x:s.position.x+s.heading.x*movement,y:s.position.y+s.heading.y*movement};
-      if(next.x<0||next.x>WORLD.width||next.y<1||next.y>WORLD.height-1||onLand(next.x,next.y)||!clearPassage(s.position,next)){
+      const next={x:wrapX(s.position.x+s.heading.x*movement),y:s.position.y+s.heading.y*movement};
+      if(next.y<1||next.y>WORLD.height-1||onLand(next.x,next.y)||!clearPassage(s.position,next)){
         s.paused=true;s.heading=null;log(s,'Land ahead!','The helmsman holds position before the shallows. Choose another heading.');
       }else{s.position=next;if(s.departedFrom&&distance(s.position,portById(s.departedFrom))>2)s.departedFrom=null;const harbor=ports.find(p=>p.id!==s.departedFrom&&distance(p,s.position)<.8);if(harbor){s.route=[];s.destination=harbor.id;arrive(s);}}
     }
     let sailingTime=s.heading?0:dt;
     while(sailingTime>0&&s.route.length){
       const p=s.route[0],d=distance(s.position,p),speed=fleetSpeed(s),time=d/speed;
-      if(time<=sailingTime){s.position={...p};s.route.shift();sailingTime-=time;}
-      else{const movement=speed*sailingTime;s.position.x+=(p.x-s.position.x)/d*movement;s.position.y+=(p.y-s.position.y)/d*movement;sailingTime=0;}
+      if(time<=sailingTime){s.position={...p,x:wrapX(p.x)};s.route.shift();sailingTime-=time;}
+      else{const movement=speed*sailingTime;s.position.x=wrapX(s.position.x+longitudeDelta(s.position.x,p.x)/d*movement);s.position.y+=(p.y-s.position.y)/d*movement;sailingTime=0;}
     }
     reveal(s);
     if(!s.route.length&&!s.heading){if(!s.paused)arrive(s);checkMilestones(s);break;}

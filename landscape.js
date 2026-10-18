@@ -1,10 +1,12 @@
 import { biomeStyleAt } from './biomes.js';
 import { seasonalStyleAt } from './world-time.js';
 import { elevationAt, mountainAt } from './relief.js';
+import { WORLD, wrapX } from './world.js';
 
 export function terrainHash(x,y){let h=Math.imul(x,374761393)^Math.imul(y,668265263);h=Math.imul(h^(h>>>13),1274126177);return (h^(h>>>16))>>>0;}
 
 export function landColor(x,y,coast,month){
+  x=wrapX(x);
   const style=month===undefined?biomeStyleAt(x,y):seasonalStyleAt(x,y,month),h=terrainHash(Math.floor(x*16),Math.floor(y*16));
   if(coast)return style.shore[h%4===0?1:0];
   const patch=terrainHash(Math.floor(x*3),Math.floor(y*3));
@@ -106,17 +108,17 @@ function mountainFits(x,y,landAt){
 export function drawScenery(c,position,view,landAt,month){
   const left=position.x-view.width/2/view.scale,top=position.y-view.height/2/view.scale,cell=.5,items=[];
   for(let gy=Math.floor(top/cell)-1;gy<(top+view.height/view.scale)/cell+2;gy++)for(let gx=Math.floor(left/cell)-1;gx<(left+view.width/view.scale)/cell+2;gx++){
-    const h=terrainHash(gx,gy),x=(gx+.5)*cell+((h>>>8)%7-3)*.035,y=(gy+.5)*cell+((h>>>16)%7-3)*.035;
+    const h=terrainHash((gx%3600+3600)%3600,gy),x=(gx+.5)*cell+((h>>>8)%7-3)*.035,y=(gy+.5)*cell+((h>>>16)%7-3)*.035;
     if(!landAt(x,y))continue;
-    const style=month===undefined?biomeStyleAt(x,y):seasonalStyleAt(x,y,month),cluster=terrainHash(Math.floor(x),Math.floor(y));
+    const style=month===undefined?biomeStyleAt(x,y):seasonalStyleAt(x,y,month),cluster=terrainHash(Math.floor(wrapX(x)),Math.floor(y));
     if(mountainAt(x,y)&&h%5!==0)continue;
     if(h%100>=style.density*100||(style.feature==='jungle'||style.feature==='pine')&&cluster%9===0)continue;
     if(!landAt(x-.3,y-.3)||!landAt(x+.3,y-.3)||!landAt(x,y-.55)||!landAt(x,y+.1))continue;
     items.push({x:Math.round((x-left)*view.scale),y:Math.round((y-top)*view.scale),style,h});
   }
-  const spacing=.7;
+  const columns=Math.round(WORLD.width/.7),spacing=WORLD.width/columns;
   for(let gy=Math.floor(top/spacing)-1;gy<(top+view.height/view.scale)/spacing+2;gy++)for(let gx=Math.floor(left/spacing)-1;gx<(left+view.width/view.scale)/spacing+2;gx++){
-    const h=terrainHash(gx+829,gy-431),x=(gx+.5)*spacing+((h>>>8)%7-3)*.03,y=(gy+.5)*spacing+((h>>>16)%7-3)*.04;
+    const h=terrainHash((gx%columns+columns)%columns+829,gy-431),x=(gx+.5)*spacing+((h>>>8)%7-3)*.03,y=(gy+.5)*spacing+((h>>>16)%7-3)*.04;
     const strength=mountainAt(x,y);if(!strength||h%100>=[0,42,68,88][strength])continue;
     if(!mountainFits(x,y,landAt))continue;
     const style=month===undefined?biomeStyleAt(x,y):seasonalStyleAt(x,y,month);

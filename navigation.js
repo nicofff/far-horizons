@@ -1,4 +1,5 @@
 import { terrainMask, rasterWidth as W, rasterHeight as H, rasterCell as C, onLand, clearPassage } from './terrain.js';
+import { wrapX, longitudeDelta } from './world.js';
 
 const MAX_LEVEL=4,levels=[terrainMask],widths=[W],heights=[H],leaves=Array.from({length:MAX_LEVEL+1},()=>new Map()),nodes=[];
 for(let level=1;level<=MAX_LEVEL;level++){
@@ -17,7 +18,8 @@ function split(level,x,y){
 }
 for(let y=0;y<heights[MAX_LEVEL];y++)for(let x=0;x<widths[MAX_LEVEL];x++)split(MAX_LEVEL,x,y);
 function nodeAt(x,y){
-  if(x<0||x>=W||y<0||y>=H)return -1;
+  if(y<0||y>=H)return -1;
+  if(x<0||x>=W)x=(x%W+W)%W;
   for(let level=MAX_LEVEL;level>=0;level--){const id=leaves[level].get((y>>level)*widths[level]+(x>>level));if(id!==undefined)return id;}
   return -1;
 }
@@ -30,7 +32,7 @@ function neighbors(id){
       const next=nodeAt(px,py);if(next<0||found.has(next))continue;
       const b=nodes[next],low=Math.max(vertical?a.y:a.x,vertical?b.y:b.x),high=Math.min(vertical?a.y+a.size:a.x+a.size,vertical?b.y+b.size:b.x+b.size);
       const portal=vertical?{x:edge*C,y:(low+high)*C/2}:{x:(low+high)*C/2,y:edge*C};
-      found.set(next,{id:next,portal,cost:Math.hypot(a.cx-portal.x,a.cy-portal.y)+Math.hypot(b.cx-portal.x,b.cy-portal.y)});
+      found.set(next,{id:next,portal,cost:Math.hypot(longitudeDelta(a.cx,portal.x),a.cy-portal.y)+Math.hypot(longitudeDelta(b.cx,portal.x),b.cy-portal.y)});
     }
   }
   const result=[...found.values()];adjacency.set(id,result);return result;
@@ -38,6 +40,7 @@ function neighbors(id){
 const costs=new Float64Array(nodes.length),previous=new Int32Array(nodes.length),visits=new Uint32Array(nodes.length),closed=new Uint32Array(nodes.length);
 let search=0;
 export function findRoute(start,end,options={}){
+  start={x:wrapX(start.x),y:start.y};end={x:wrapX(end.x),y:end.y};
   const travelCost=options.cost,minCost=options.minCost||1;
   if(onLand(start.x,start.y)||onLand(end.x,end.y))return [];
   if(!travelCost&&clearPassage(start,end))return [{x:end.x,y:end.y}];
@@ -54,7 +57,7 @@ export function findRoute(start,end,options={}){
       let stepCost=neighbor.cost;
       if(travelCost){const a={x:nodes[id].cx,y:nodes[id].cy},b={x:nodes[n].cx,y:nodes[n].cy};stepCost=travelCost(a,neighbor.portal)+travelCost(neighbor.portal,b);}
       const cost=costs[id]+stepCost;
-      if(visits[n]!==search||cost<costs[n]){visits[n]=search;costs[n]=cost;previous[n]=id;push(n,cost+Math.hypot(nodes[n].cx-nodes[to].cx,nodes[n].cy-nodes[to].cy)*minCost);}
+      if(visits[n]!==search||cost<costs[n]){visits[n]=search;costs[n]=cost;previous[n]=id;push(n,cost+Math.hypot(longitudeDelta(nodes[n].cx,nodes[to].cx),nodes[n].cy-nodes[to].cy)*minCost);}
     }
   }
   if(visits[to]!==search)return [];
@@ -73,6 +76,6 @@ export function findRoute(start,end,options={}){
     let cost=0,p=start;for(const q of route){cost+=travelCost(p,q);p=q;}
     if(travelCost(start,end)<=cost*1.01)return [{x:end.x,y:end.y}];
   }
-  return route;
+  return route.map(p=>({x:wrapX(p.x),y:p.y}));
 }
 export function navigationStats(){return {nodes:nodes.length,cachedNodes:adjacency.size};}

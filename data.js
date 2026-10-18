@@ -2,7 +2,7 @@ import { economyCatalog } from './assets/economy-catalog.js';
 import { portLocations } from './assets/world-ports.js';
 import { landmarks } from './assets/world-landmarks.js';
 export { landmarks };
-export const WORLD = { width: 1800, height: 900 };
+export { WORLD } from './world.js';
 export const xy = (lon, lat) => ({ x: (lon + 180) * 5, y: (90 - lat) * 5 });
 export const ports = [
   ["lisbon","Lisbon","Portugal","The river is crowded with ships taking on stores. Above the quays, tiled roofs climb toward the castle."],

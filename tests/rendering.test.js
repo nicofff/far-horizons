@@ -32,6 +32,17 @@ test('scenery tiles survive camera motion, cover the viewport, and have a bounde
   const before=samples;background.draw(c,position);assert.ok(samples>before,'invalidating a voyage rebuilds its scenery');
 });
 
+test('crossing the date line scrolls continuously and reuses scenery tiles',()=>{
+  const factory=canvasFactory(),draws=[];let samples=0;
+  const background=createSeaBackground(SEA_VIEW,()=>{samples++;return false;},factory.create),c={drawImage:(...args)=>draws.push(args)};
+  background.draw(c,{x:.1,y:350});const built=samples,first=draws.filter(a=>a.length===9);
+  draws.length=0;background.draw(c,{x:1799.9,y:350});
+  assert.ok(samples-built<built/2,'Crossing the date line only builds the newly exposed tile column.');
+  const shared=draws.filter(a=>a.length===9&&first.some(b=>b[0]===a[0]));assert.ok(shared.length);
+  for(const draw of shared){const before=first.find(a=>a[0]===draw[0]);assert.equal(draw[5]-before[5],8);assert.equal(draw[6],before[6]);}
+  assert.ok(background.size<=32);
+});
+
 test('surf animates cached water pixels, loops, and stays attached to the coast while scrolling',()=>{
   const factory=canvasFactory(),paint=[];let samples=0;
   const landAt=(x,y)=>{samples++;return x<=100;},background=createSeaBackground(SEA_VIEW,landAt,factory.create);
@@ -128,7 +139,7 @@ test('chart sleeps when static, wakes for input, and cancels rendering in a hidd
     const old=Object.getOwnPropertyDescriptor(globalThis,key);Object.defineProperty(globalThis,key,{value,writable:true,configurable:true});
     t.after(()=>old?Object.defineProperty(globalThis,key,old):delete globalThis[key]);
   }
-  const selected=[],s=createGame(7),chart=createChart(canvas,()=>s,{select:id=>selected.push(id),landmark:id=>selected.push(id)});
+  const selected=[],courses=[],s=createGame(7),chart=createChart(canvas,()=>s,{select:id=>selected.push(id),landmark:id=>selected.push(id),course:p=>courses.push(p)});
   await Promise.resolve();
   const step=time=>{const callbacks=[...raf.values()];raf.clear();for(const fn of callbacks)fn(time);};
   step(1000);assert.equal(raf.size,0);assert.equal(timers.size,1,'paused sea only wakes for sprite animation');
@@ -154,5 +165,9 @@ test('chart sleeps when static, wakes for input, and cancels rendering in a hidd
         assert.equal(selected.at(-1),id,`${port.id} / ${site.id} at ${point.x}, ${point.y}`);
       }
     }
+  });
+  await t.test('clicking west of the date line selects the nearby Pacific water',()=>{
+    s.position={x:.1,y:350};hostEvents.pointerup({clientX:216,clientY:192,pointerId:1});
+    assert.deepEqual(courses.at(-1),{x:1799.1,y:350});
   });
 });

@@ -1,12 +1,13 @@
 import { landColor, drawScenery, terrainHash } from './landscape.js';
 import { seasonalFrame } from './world-time.js';
+import { WORLD, nearestLongitude } from './world.js';
 
 const TILE=256,PADDING=32,MAX_TILES=32;
 export const SURF_STEP=300;
 const SURF_COLORS=['#83c6df','#b0dfe8','#d4eee5','#a0d1df'];
 
 export function createSeaBackground(view,landAt,createCanvas=()=>document.createElement('canvas')){
-  const tiles=new Map();
+  const tiles=new Map(),worldPixels=WORLD.width*view.scale;let cameraX=null;
   function tile(tx,ty,month){
     const plain=`${tx},${ty}`,key=month===null?plain:`${plain},${month}`;
     if(tiles.has(plain)&&!tiles.get(plain).scenery){const entry=tiles.get(plain);tiles.delete(plain);tiles.set(plain,entry);return entry;}
@@ -16,7 +17,7 @@ export function createSeaBackground(view,landAt,createCanvas=()=>document.create
     const surf=Array.from({length:8},()=>SURF_COLORS.map(()=>[]));let hasLand=false;
     c.fillStyle='#2865ce';c.fillRect(0,0,image.width,image.height);
     for(let sy=0;sy<image.height;sy+=2)for(let sx=0;sx<image.width;sx+=2){
-      const wx=(left+sx)/view.scale,wy=(top+sy)/view.scale,h=terrainHash(Math.floor(wx*8),Math.floor(wy*8));
+      const px=left+sx,wx=(px>=0&&px<worldPixels?px:(px%worldPixels+worldPixels)%worldPixels)/view.scale,wy=(top+sy)/view.scale,h=terrainHash(Math.floor(wx*8),Math.floor(wy*8));
       if(landAt(wx,wy)){
         hasLand=true;
         const coast=!landAt(wx-.12,wy)||!landAt(wx+.12,wy)||!landAt(wx,wy-.12)||!landAt(wx,wy+.12);
@@ -81,7 +82,8 @@ export function createSeaBackground(view,landAt,createCanvas=()=>document.create
     return entry.season;
   }
   function visibleTiles(position,month,paint){
-    const left=Math.round(position.x*view.scale-view.width/2),top=Math.round(position.y*view.scale-view.height/2);
+    cameraX=cameraX===null?position.x:nearestLongitude(cameraX,position.x);
+    const left=Math.round(cameraX*view.scale-view.width/2),top=Math.round(position.y*view.scale-view.height/2);
     for(let ty=Math.floor(top/TILE);ty*TILE<top+view.height;ty++)for(let tx=Math.floor(left/TILE);tx*TILE<left+view.width;tx++){
       paint(tile(tx,ty,month),view.x+tx*TILE-left,view.y+ty*TILE-top,tx,ty);
     }
@@ -103,7 +105,7 @@ export function createSeaBackground(view,landAt,createCanvas=()=>document.create
         c.drawImage(images.scenery,PADDING,PADDING,TILE,TILE,x,y,TILE,TILE);
       });
     },
-    clear(){tiles.clear();},
+    clear(){tiles.clear();cameraX=null;},
     get size(){return tiles.size;},
   };
 }

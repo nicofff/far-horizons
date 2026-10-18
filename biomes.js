@@ -1,4 +1,5 @@
 import { biomeWidth, biomeHeight, biomeCell, biomeRuns, biomeStyles } from './assets/world-biomes.js';
+import { wrapX } from './world.js';
 
 export { biomeWidth, biomeHeight, biomeCell, biomeStyles };
 export const biomeMask=new Uint8Array(biomeWidth*biomeHeight);
@@ -13,8 +14,8 @@ while(cursor<bytes.length){
 if(position!==biomeMask.length)throw new Error('Incomplete biome raster.');
 
 export function biomeAt(x,y){
-  const px=Math.floor(x/biomeCell),py=Math.floor(y/biomeCell);
-  return px<0||px>=biomeWidth||py<0||py>=biomeHeight?0:biomeMask[py*biomeWidth+px];
+  const px=Math.floor(wrapX(x)/biomeCell),py=Math.floor(y/biomeCell);
+  return py<0||py>=biomeHeight?0:biomeMask[py*biomeWidth+px];
 }
 
 export function biomeStyleAt(x,y){return biomeStyles[biomeAt(x,y)]||biomeStyles[4];}

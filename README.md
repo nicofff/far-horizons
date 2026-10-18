@@ -45,6 +45,8 @@ The sailing gauge shows where the wind comes from, strength in knots, and its ef
 
 ## Local awareness and charting
 
+Sail east or west across the Pacific without a map boundary. The world wraps at the date line, and Auto sail, lookout range, and recorded charts follow the same connected ocean. Existing saves keep their progress and recalculate active courses when loaded.
+
 The Paraná is navigable from the Río de la Plata near Montevideo to the lower Iguazú, ending below Iguazú Falls. Follow the river inland to record the falls and return to a collector for the report reward.
 
 The sailing screen shows remaining supply days below the date, based on whichever runs out first: food or water at the current fleet's consumption rate. The counter turns red at ten days or fewer.
