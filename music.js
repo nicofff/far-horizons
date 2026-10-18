@@ -7,12 +7,14 @@ const hz=midi=>440*2**((midi-69)/12);
 export function createMusic({heard=()=>[],onTune=()=>{}}={}){
   let prefs={enabled:true,volume:.6};
   try{Object.assign(prefs,JSON.parse(localStorage.getItem(PREFS_KEY))||{});}catch{}
-  let ctx=null,out,tone,bus,vinyl,wow,noise,timer=null,decks=[],region=null,candidate=null,candidateSince=0,harbor=false,hidden=false;
+  let ctx=null,out,tone,bus,vinyl,wow,noise,timer=null,resuming=null,decks=[],region=null,candidate=null,candidateSince=0,harbor=false,hidden=false;
   const scores=new Map(),rotation={};
   const score=id=>scores.get(id)||scores.set(id,composeTune(id)).get(id);
 
   function build(){
     ctx=new AudioContext();
+    const audio=ctx;
+    audio.onstatechange=()=>{if(ctx!==audio)return;if(audio.state==='closed')dispose();else sync();};
     out=ctx.createGain();out.gain.value=prefs.enabled?prefs.volume:0;out.connect(ctx.destination);
     // Gentle saturation and a low-pass "tape" tone give the dusty lo-fi colour.
     const shaper=ctx.createWaveShaper(),curve=new Float32Array(1024);
@@ -28,6 +30,14 @@ export function createMusic({heard=()=>[],onTune=()=>{}}={}){
     timer=setInterval(tick,25);
   }
 
+  function dispose(){
+    const audio=ctx;
+    clearInterval(timer);timer=null;ctx=null;resuming=null;decks=[];
+    if(!audio)return;
+    audio.onstatechange=null;
+    if(audio.state!=='closed')audio.close().catch(()=>{});
+  }
+
   function startVinyl(){
     const buffer=ctx.createBuffer(1,ctx.sampleRate*4,ctx.sampleRate),data=buffer.getChannelData(0);
     for(let i=0;i<data.length;i++){data[i]=(Math.random()*2-1)*.04;if(Math.random()<.00035)data[i]+=(Math.random()<.5?-1:1)*(.5+Math.random()*.5);}
@@ -37,8 +47,8 @@ export function createMusic({heard=()=>[],onTune=()=>{}}={}){
   }
 
   function osc(type,freq,t,end,dest){
-    const o=ctx.createOscillator();o.type=type;o.frequency.setValueAtTime(freq,t);wow.connect(o.detune);o.connect(dest);o.start(t);o.stop(end);
-    o.onended=()=>wow.disconnect(o.detune);return o;
+    const o=ctx.createOscillator(),modulation=wow;o.type=type;o.frequency.setValueAtTime(freq,t);modulation.connect(o.detune);o.connect(dest);o.start(t);o.stop(end);
+    o.onended=()=>modulation.disconnect(o.detune);return o;
   }
   function env(dest,t,attack,peak,decay,hold=0){
     const g=ctx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(peak,t+attack);
@@ -156,8 +166,10 @@ export function createMusic({heard=()=>[],onTune=()=>{}}={}){
 
   function tick(){
     if(!ctx||ctx.state!=='running')return;
-    const horizon=ctx.currentTime+LOOKAHEAD,total=LOOP_STEPS*SECTIONS.length;
+    const now=ctx.currentTime,horizon=now+LOOKAHEAD,total=LOOP_STEPS*SECTIONS.length;
     for(const deck of decks){
+      // A throttled tab must skip missed notes instead of creating them all at once.
+      if(deck.next<now){const skipped=Math.ceil((now+.05-deck.next)/deck.stepDur);deck.step+=skipped;deck.next+=skipped*deck.stepDur;}
       while(deck.next<horizon&&(!deck.ending||deck.next<deck.ending)){
         if(deck.step>=total){if(!deck.ending&&decks.at(-1)===deck)startDeck(nextTune(deck.tune.region));break;}
         scheduleStep(deck,deck.step,deck.next);deck.step++;deck.next+=deck.stepDur;
@@ -171,14 +183,19 @@ export function createMusic({heard=()=>[],onTune=()=>{}}={}){
   function applyVolume(){if(!ctx)return;const now=ctx.currentTime;out.gain.cancelScheduledValues(now);out.gain.setTargetAtTime(prefs.enabled?prefs.volume:0,now,.3);}
   function sync(){
     if(!ctx)return;
-    if(audible()){ctx.resume();if(region&&!decks.some(d=>!d.ending))startDeck(nextTune(region));}
-    else if(ctx.state==='running')setTimeout(()=>{if(!audible())ctx.suspend();},900);
+    const audio=ctx;
+    if(audio.state==='closed'){dispose();return;}
+    if(audible()){
+      if(audio.state!=='running'&&resuming!==audio){resuming=audio;audio.resume().catch(()=>{}).finally(()=>{if(resuming===audio)resuming=null;});}
+      if(region&&!decks.some(d=>!d.ending))startDeck(nextTune(region));
+    }
+    else if(audio.state==='running')setTimeout(()=>{if(ctx===audio&&!audible())audio.suspend().catch(()=>{});},900);
   }
 
   return {
     get enabled(){return prefs.enabled;},get volume(){return prefs.volume;},get region(){return region;},
     get playing(){const d=decks.filter(d=>!d.ending).at(-1);return d?tuneById(d.tune.id):null;},
-    unlock(){if(!ctx&&typeof AudioContext!=='undefined')build();sync();},
+    unlock(){if(!prefs.enabled||hidden)return;if(ctx?.state==='closed')dispose();if(!ctx&&typeof AudioContext!=='undefined')build();sync();},
     update({x,y,port}){
       const id=regionAt(x,y).id,now=performance.now();
       if(harbor!==!!port){harbor=!!port;if(ctx){tone.frequency.setTargetAtTime(harbor?HARBOR_TONE:SEA_TONE,ctx.currentTime,.8);for(const d of decks)d.drums.gain.setTargetAtTime(harbor?.35:1,ctx.currentTime,.8);}}
@@ -192,7 +209,7 @@ export function createMusic({heard=()=>[],onTune=()=>{}}={}){
       if(audible())startDeck(nextTune(id));
     },
     play(id){if(!tuneById(id))return;this.unlock();if(audible())startDeck(id,{notify:false});},
-    setEnabled(on){prefs.enabled=on;savePrefs();applyVolume();sync();},
+    setEnabled(on){prefs.enabled=on;savePrefs();if(!on)dispose();else this.unlock();},
     setVolume(v){prefs.volume=v;savePrefs();applyVolume();},
     setHidden(value){hidden=value;sync();},
   };

@@ -191,11 +191,13 @@ function steerFromKeys(){
   if(dx||dy){steer(state,dx,dy);updateStatus();}
 }
 document.addEventListener('keydown',e=>{
-  if(modal.open||e.ctrlKey||e.metaKey||e.altKey||['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName))return;
+  if(e.ctrlKey||e.metaKey||e.altKey||['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName))return;
   const key=e.key.toLowerCase();
+  if(key==='n'){if(!e.repeat){e.preventDefault();toggleMusic();}return;}
+  if(modal.open)return;
   if(directionKeys.has(key)&&chart.mode==='sea'){e.preventDefault();if(!e.repeat){steeringKeys.add(key);steerFromKeys();}return;}
   if(e.repeat)return;
-  const actions={enter:showCommands,z:showCommands,m:()=>chart.toggleChart(),f:showFleet,r:showSailData,p:showHarbor,t:cycleSpeed,n:toggleMusic,' ':togglePause,escape:showCommands};if(actions[key]){e.preventDefault();actions[key]();}
+  const actions={enter:showCommands,z:showCommands,m:()=>chart.toggleChart(),f:showFleet,r:showSailData,p:showHarbor,t:cycleSpeed,' ':togglePause,escape:showCommands};if(actions[key]){e.preventDefault();actions[key]();}
 });
 document.addEventListener('keyup',e=>{if(steeringKeys.delete(e.key.toLowerCase())&&!modal.open&&chart.mode==='sea'&&!state.paused)steerFromKeys();});
 window.addEventListener('blur',()=>steeringKeys.clear());
