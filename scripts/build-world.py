@@ -179,13 +179,14 @@ for feature in river_route['features']:
 strait_windows = [(25.8,39.7,29.4,41.5), (15.3,37.9,15.8,38.4), (9.4,54.5,13.1,56.3), (17.8,59.0,19.0,59.6), (36.2,45.0,36.9,45.6), (10.2,59.1,10.9,60.0), (16.4,68.0,17.7,68.65), (-135.0,57.5,-133.9,58.6)]
 open_water_windows = [(130.5,32.6,135.7,35.1), (139.65,41.05,142.0,42.0), (104.8,-6.9,106.4,-5.3)]
 strait_windows += open_water_windows
-clearance_windows = [(102.2,.4,104.8,2.2), (21.8,58.35,23.95,59.2)]
+clearance_windows = [(102.2,.4,104.8,2.2), (21.8,58.35,23.95,59.2), (-76,-54.3,-68,-52)]
 clearance_passages = [
     {'name':'Singapore Strait', 'approaches':[(103.3,1.3),(103.85,1.15),(104.7,1.3)], 'widthCells':3},
     {'name':'Durian approach', 'approaches':[(103.65,1.2),(103.65,.65)], 'widthCells':3},
     {'name':'Hari and Suur straits', 'approaches':[(23.1,59.1),(23.3,58.8),(23.55,58.4)], 'widthCells':3},
     {'name':'Soela Strait', 'approaches':[(22.3,58.7),(22.65,58.7),(23.3,58.8)], 'widthCells':3},
     {'name':'Voosi Strait', 'approaches':[(23.5,59.1),(23.4,58.85)], 'widthCells':3},
+    {'name':'Strait of Magellan', 'approaches':[(-68.2,-52.35),(-69.25,-52.4),(-69.65,-52.6),(-70.3,-52.83),(-70.65,-52.95),(-70.8,-53.5),(-71.25,-53.9),(-72,-53.7),(-72.5,-53.55),(-73.3,-53.15),(-74.2,-52.85),(-75.5,-52.7)], 'widthCells':3, 'source':'https://www.directemar.cl/directemar/generalidades-del-estrecho-de-magallanes'},
 ]
 strait_windows += clearance_windows
 for left,bottom,right,top in strait_windows:

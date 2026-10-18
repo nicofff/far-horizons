@@ -15,7 +15,7 @@ export const distance = (a,b) => Math.hypot(a.x-b.x,a.y-b.y);
 export const SIGHT_RADIUS = 8;
 export const CHART_CELL = 2;
 export const CHART_COLS = WORLD.width / CHART_CELL;
-export const MAP_REVISION = 8;
+export const MAP_REVISION = 9;
 
 export function createShip(type,name,options={}) {
   if(shipTypes[type].legacyOnly){const t=legacyShipTypes[type];return {id:globalThis.crypto?.randomUUID?.()||Math.random().toString(36),type,name,hull:t.hull,crew:t.crew,legacy:true,material:'beech',berths:t.crew,guns:t.guns};}
