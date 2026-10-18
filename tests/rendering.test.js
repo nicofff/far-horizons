@@ -9,8 +9,8 @@ import { landmarkPoint } from '../landmarks.js';
 function canvasFactory(){
   const images=[];
   function create(){
-    const calls={fills:0,images:[],pixels:[]},image={width:0,height:0,calls,setAttribute(){}};let record=false;
-    const context=new Proxy({fillRect(...args){calls.fills++;if(record)calls.pixels.push([...args,this.fillStyle]);},clearRect(){calls.pixels=[];},drawImage(...args){calls.images.push(args);}},{get:(o,key)=>key in o?o[key]:()=>{}});
+    const calls={fills:0,images:[],pixels:[],alphas:[]},image={width:0,height:0,calls,setAttribute(){}};let record=false;
+    const context=new Proxy({fillRect(...args){calls.fills++;if(record)calls.pixels.push([...args,this.fillStyle]);},clearRect(){calls.pixels=[];},drawImage(...args){calls.images.push(args);calls.alphas.push(typeof this.globalAlpha==='number'?this.globalAlpha:1);}},{get:(o,key)=>key in o?o[key]:()=>{}});
     image.getContext=(type,options)=>{image.alpha=options?.alpha!==false;record=image.alpha;return context;};images.push(image);return image;
   }
   return {create,images};
@@ -75,6 +75,28 @@ test('cached scenery renders above every water layer and keeps its tile-edge pad
     if(phase===0){built=samples;painted=fills;}
     else{assert.equal(samples,built,'no terrain probes while animating');assert.equal(fills,painted,'trees are not regenerated while animating');}
   }
+});
+
+test('seasonal crossfades reuse monthly scenery and ocean tiles within the bounded cache',()=>{
+  const factory=canvasFactory(),position={x:895,y:190};let samples=0;
+  const background=createSeaBackground(SEA_VIEW,(x,y)=>{samples++;return x<=895;},factory.create),draws=[];
+  const c={globalAlpha:1,drawImage:(image,...args)=>draws.push({image,args,alpha:c.globalAlpha})};
+  background.draw(c,position,0,.5);background.drawScenery(c,position,.5);
+  const built=samples,sceneryFills=()=>factory.images.filter(image=>image.width===320&&image.alpha).reduce((n,image)=>n+image.calls.fills,0),painted=sceneryFills();
+  for(const day of [1,5,10,15,29]){background.draw(c,position,300,day);background.drawScenery(c,position,day);}
+  assert.equal(samples,built,'passing days blend cached palettes without terrain probes');
+  assert.equal(sceneryFills(),painted,'foliage is not regenerated during a monthly crossfade');
+  assert.ok(factory.images.some(image=>image.calls.alphas.some(alpha=>alpha>0&&alpha<1)));assert.equal(c.globalAlpha,1);
+  const composites=factory.images.reduce((n,image)=>n+image.calls.images.length,0);
+  for(let phase=0;phase<8;phase++){background.draw(c,position,phase*300,29);background.drawScenery(c,position,29);}
+  assert.equal(factory.images.reduce((n,image)=>n+image.calls.images.length,0),composites,'animation reuses the blended tiles');
+  for(let month=0;month<12;month++){background.draw(c,position,0,month*31+.5);background.drawScenery(c,position,month*31+.5);}
+  assert.ok(background.size<=32,'additional seasons cannot grow the cache beyond its existing limit');
+  const seaFactory=canvasFactory();let seaSamples=0;
+  const ocean=createSeaBackground(SEA_VIEW,()=>{seaSamples++;return false;},seaFactory.create);
+  ocean.draw(c,position,0,.5);const seaBuilt=seaSamples;
+  for(const day of [31,80,170,270,360])ocean.draw(c,position,0,day);
+  assert.equal(seaSamples,seaBuilt,'open ocean does not allocate seasonal duplicates');
 });
 
 test('chart sleeps when static, wakes for input, and cancels rendering in a hidden tab',async t=>{

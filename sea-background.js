@@ -1,4 +1,5 @@
 import { landColor, drawScenery, terrainHash } from './landscape.js';
+import { seasonalFrame } from './world-time.js';
 
 const TILE=256,PADDING=32,MAX_TILES=32;
 export const SURF_STEP=300;
@@ -6,8 +7,9 @@ const SURF_COLORS=['#83c6df','#b0dfe8','#d4eee5','#a0d1df'];
 
 export function createSeaBackground(view,landAt,createCanvas=()=>document.createElement('canvas')){
   const tiles=new Map();
-  function tile(tx,ty){
-    const key=`${tx},${ty}`;
+  function tile(tx,ty,month){
+    const plain=`${tx},${ty}`,key=month===null?plain:`${plain},${month}`;
+    if(tiles.has(plain)&&!tiles.get(plain).scenery){const entry=tiles.get(plain);tiles.delete(plain);tiles.set(plain,entry);return entry;}
     if(tiles.has(key)){const entry=tiles.get(key);tiles.delete(key);tiles.set(key,entry);return entry;}
     const image=createCanvas();image.width=image.height=TILE+PADDING*2;
     const c=image.getContext('2d',{alpha:false}),left=tx*TILE-PADDING,top=ty*TILE-PADDING;
@@ -18,7 +20,7 @@ export function createSeaBackground(view,landAt,createCanvas=()=>document.create
       if(landAt(wx,wy)){
         hasLand=true;
         const coast=!landAt(wx-.12,wy)||!landAt(wx+.12,wy)||!landAt(wx,wy-.12)||!landAt(wx,wy+.12);
-        c.fillStyle=landColor(wx,wy,coast);c.fillRect(sx,sy,2,2);
+        c.fillStyle=landColor(wx,wy,coast,month);c.fillRect(sx,sy,2,2);
       }else{
         const shallow=landAt(wx-.25,wy)||landAt(wx+.25,wy)||landAt(wx,wy-.25)||landAt(wx,wy+.25);
         if(shallow){
@@ -40,10 +42,10 @@ export function createSeaBackground(view,landAt,createCanvas=()=>document.create
       // Render beyond each tile so trees crossing a seam survive the crop.
       scenery=createCanvas();scenery.width=image.width;scenery.height=image.height;
       const area={width:image.width,height:image.height,scale:view.scale};
-      drawScenery(scenery.getContext('2d'),{x:(left+image.width/2)/view.scale,y:(top+image.height/2)/view.scale},area,landAt);
+      drawScenery(scenery.getContext('2d'),{x:(left+image.width/2)/view.scale,y:(top+image.height/2)/view.scale},area,landAt,month);
     }
     const entry={image,scenery,surf:surf.map(colors=>colors.map(points=>new Uint16Array(points))),overlay:null,phase:-1};
-    tiles.set(key,entry);if(tiles.size>MAX_TILES)tiles.delete(tiles.keys().next().value);
+    tiles.set(hasLand?key:plain,entry);if(tiles.size>MAX_TILES)tiles.delete(tiles.keys().next().value);
     return entry;
   }
   function surfImage(entry,phase){
@@ -59,22 +61,47 @@ export function createSeaBackground(view,landAt,createCanvas=()=>document.create
     }
     return entry.overlay;
   }
-  function visibleTiles(position,paint){
+  function seasonalImages(entry,other,blend){
+    // Tiny palette steps let normal frames reuse one composite instead of alpha-blending every tile.
+    const step=Math.round(blend*16);
+    if(step===0)return entry;
+    if(step===16)return other;
+    if(!entry.season){
+      const make=()=>{const canvas=createCanvas();canvas.width=canvas.height=TILE+PADDING*2;return canvas;};
+      entry.season={image:make(),scenery:make(),step:-1};
+    }
+    if(entry.season.step!==step){
+      for(const layer of ['image','scenery']){
+        const c=entry.season[layer].getContext('2d',{alpha:layer!=='image'});
+        c.clearRect(0,0,TILE+PADDING*2,TILE+PADDING*2);c.globalAlpha=1;c.drawImage(entry[layer],0,0);
+        c.globalAlpha=step/16;c.drawImage(other[layer],0,0);c.globalAlpha=1;
+      }
+      entry.season.step=step;
+    }
+    return entry.season;
+  }
+  function visibleTiles(position,month,paint){
     const left=Math.round(position.x*view.scale-view.width/2),top=Math.round(position.y*view.scale-view.height/2);
     for(let ty=Math.floor(top/TILE);ty*TILE<top+view.height;ty++)for(let tx=Math.floor(left/TILE);tx*TILE<left+view.width;tx++){
-      paint(tile(tx,ty),view.x+tx*TILE-left,view.y+ty*TILE-top);
+      paint(tile(tx,ty,month),view.x+tx*TILE-left,view.y+ty*TILE-top,tx,ty);
     }
   }
   return {
-    draw(c,position,time=0){
-      const phase=Math.floor(time/SURF_STEP)%8;
-      visibleTiles(position,(entry,x,y)=>{
-        c.drawImage(entry.image,PADDING,PADDING,TILE,TILE,x,y,TILE,TILE);
+    draw(c,position,time=0,day){
+      const phase=Math.floor(time/SURF_STEP)%8,{month,next,blend}=seasonalFrame(day);
+      visibleTiles(position,month,(entry,x,y,tx,ty)=>{
+        const images=blend&&entry.scenery?seasonalImages(entry,tile(tx,ty,next),blend):entry;
+        c.drawImage(images.image,PADDING,PADDING,TILE,TILE,x,y,TILE,TILE);
         const overlay=surfImage(entry,phase);if(overlay)c.drawImage(overlay,x,y);
       });
     },
-    drawScenery(c,position){
-      visibleTiles(position,(entry,x,y)=>{if(entry.scenery)c.drawImage(entry.scenery,PADDING,PADDING,TILE,TILE,x,y,TILE,TILE);});
+    drawScenery(c,position,day){
+      const {month,next,blend}=seasonalFrame(day);
+      visibleTiles(position,month,(entry,x,y,tx,ty)=>{
+        if(!entry.scenery)return;
+        const images=blend?seasonalImages(entry,tile(tx,ty,next),blend):entry;
+        c.drawImage(images.scenery,PADDING,PADDING,TILE,TILE,x,y,TILE,TILE);
+      });
     },
     clear(){tiles.clear();},
     get size(){return tiles.size;},

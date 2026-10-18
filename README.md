@@ -41,6 +41,8 @@ The economy uses the original game's regional goods and shipyard catalog from do
 
 The sailing screen shows remaining supply days below the date, based on whichever runs out first: food or water at the current fleet's consumption rate. The counter turns red at ten days or fewer.
 
+Daylight follows the fractional voyage day, with a restrained blue night tint, warm dawn and dusk, and lit harbor windows. A small phase and season indicator sits below the supplies. Lighting eases during fast travel and stays fixed while paused. Temperate foliage and ground colors shift through the calendar, with reversed seasons south of the equator and longer summer days. Tropical forests, mangroves, deserts, and permanent ice keep their regional palettes. Monthly scenery colors blend in sixteen small cached steps; ordinary frames reuse those composites within the existing 32-tile limit, and open ocean shares its tiles across seasons.
+
 The lookout's range is eight world units, approximately 96 nautical miles. Only nearby harbors, discoveries, and enemy fleets are rendered in the sailing view. Pirate encounters require close contact. The fixed camera follows the ship rather than revealing the world around it through panning or zooming.
 
 The chart shows recorded water and coastlines, plus known harbor positions. It never shows live enemy fleets. Known positions can be used for Auto sail without revealing distant terrain. New harbors are charted only when your fleet approaches within lookout range. Landmarks require an even closer visit.

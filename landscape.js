@@ -1,9 +1,10 @@
 import { biomeStyleAt } from './biomes.js';
+import { seasonalStyleAt } from './world-time.js';
 
 export function terrainHash(x,y){let h=Math.imul(x,374761393)^Math.imul(y,668265263);h=Math.imul(h^(h>>>13),1274126177);return (h^(h>>>16))>>>0;}
 
-export function landColor(x,y,coast){
-  const style=biomeStyleAt(x,y),h=terrainHash(Math.floor(x*16),Math.floor(y*16));
+export function landColor(x,y,coast,month){
+  const style=month===undefined?biomeStyleAt(x,y):seasonalStyleAt(x,y,month),h=terrainHash(Math.floor(x*16),Math.floor(y*16));
   if(coast)return style.shore[h%4===0?1:0];
   const patch=terrainHash(Math.floor(x*3),Math.floor(y*3));
   return style.ground[h%29===0?1:patch%7===0?2:0];
@@ -63,12 +64,12 @@ function scenery(c,x,y,style,h){
   }
 }
 
-export function drawScenery(c,position,view,landAt){
+export function drawScenery(c,position,view,landAt,month){
   const left=position.x-view.width/2/view.scale,top=position.y-view.height/2/view.scale,cell=.5,items=[];
   for(let gy=Math.floor(top/cell)-1;gy<(top+view.height/view.scale)/cell+2;gy++)for(let gx=Math.floor(left/cell)-1;gx<(left+view.width/view.scale)/cell+2;gx++){
     const h=terrainHash(gx,gy),x=(gx+.5)*cell+((h>>>8)%7-3)*.035,y=(gy+.5)*cell+((h>>>16)%7-3)*.035;
     if(!landAt(x,y))continue;
-    const style=biomeStyleAt(x,y),cluster=terrainHash(Math.floor(x),Math.floor(y));
+    const style=month===undefined?biomeStyleAt(x,y):seasonalStyleAt(x,y,month),cluster=terrainHash(Math.floor(x),Math.floor(y));
     if(h%100>=style.density*100||(style.feature==='jungle'||style.feature==='pine')&&cluster%9===0)continue;
     if(!landAt(x-.3,y-.3)||!landAt(x+.3,y-.3)||!landAt(x,y-.55)||!landAt(x,y+.1))continue;
     items.push({x:Math.round((x-left)*view.scale),y:Math.round((y-top)*view.scale),style,h});
