@@ -246,7 +246,7 @@ document.addEventListener('keydown',e=>{
 document.addEventListener('keyup',e=>{if(steeringKeys.delete(e.key.toLowerCase())&&!modal.open&&chart.mode==='sea'&&!state.paused)steerFromKeys();});
 window.addEventListener('blur',()=>steeringKeys.clear());
 document.addEventListener('visibilitychange',()=>{steeringKeys.clear();simulation.visibilityChanged();save();});window.addEventListener('pagehide',()=>save());
-const simulation=createSimulationLoop(frame,{idle:()=>state.paused||state.battle||state.lost});
+const simulation=createSimulationLoop(frame,{idle:()=>state.paused||state.battle||state.lost,foregroundInterval:1000/30});
 function wakeSimulation(){simulation.wake();}
 function frame(seconds,now){const contract=state.guild.active?.id;advance(state,seconds*state.speed*.045);if(contract&&!state.guild.active&&state.guild.history[0]?.id===contract&&state.guild.history[0].outcome==='expired'){notify('Guild assignment expired. Check the quest log.');save();}music.update({...state.position,port:state.port});
   if(state.port!==lastPort){lastPort=state.port;if(state.port){notify('Landfall at '+portById(state.port).name+'. Welcome ashore.');save();showHarbor();}}

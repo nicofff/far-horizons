@@ -3,9 +3,9 @@ import assert from 'node:assert/strict';
 import { createSimulationLoop } from '../simulation-loop.js';
 import { createGame, steer, advance, plotCourse, rationRate, supplyDays, acceptGuildJob, validateSave } from '../engine.js';
 
-function harness({background=false,paused=false,step}={}){
+function harness({background=false,paused=false,step,foregroundInterval=0}={}){
   let time=0,hidden=background,idle=paused,id=0;const frames=new Map(),timers=new Map(),ticks=[];
-  const loop=createSimulationLoop((seconds,now)=>{ticks.push(seconds);step?.(seconds,now);},{idle:()=>idle,hidden:()=>hidden,now:()=>time,
+  const loop=createSimulationLoop((seconds,now)=>{ticks.push(seconds);step?.(seconds,now);},{idle:()=>idle,hidden:()=>hidden,now:()=>time,foregroundInterval,
     requestFrame:fn=>{frames.set(++id,fn);return id;},cancelFrame:key=>frames.delete(key),
     setTimer:(fn,delay)=>{timers.set(++id,{fn,delay});return id;},clearTimer:key=>timers.delete(key)});
   return {loop,frames,timers,ticks,get time(){return time;},setIdle(value){idle=value;},
@@ -24,6 +24,18 @@ test('background sailing uses a single one-second timer and preserves selected s
   for(let i=0;i<10;i++){assert.equal(h.frames.size,0);assert.equal(h.timers.size,1);assert.equal([...h.timers.values()][0].delay,1000);h.timer();}
   assert.ok(Math.abs(s.day-1.8)<1e-10);assert.ok(s.position.x>1);assert.ok(Math.abs(s.food-(food-1.8*rationRate(s)))<1e-10);assert.ok(Math.abs(s.water-(water-1.8*rationRate(s)))<1e-10);
   assert.ok(validateSave(s));h.loop.stop();assert.equal(h.timers.size,0);
+});
+
+test('foreground simulation runs at thirty ticks per second independent of display refresh and wakes for commands',()=>{
+  const h=harness({foregroundInterval:1000/30});h.loop.wake();h.frame(0);
+  assert.equal(h.frames.size,0);assert.equal(h.timers.size,1);
+  for(let i=0;i<30;i++)h.timer(1000/30);
+  assert.equal(h.frames.size,0);assert.equal(h.ticks.length,31);
+  assert.ok(Math.abs(h.ticks.reduce((sum,seconds)=>sum+seconds,0)-1)<1e-10);
+  h.loop.wake();assert.equal(h.timers.size,0);assert.equal(h.frames.size,1);h.frame(8);
+  assert.ok(Math.abs(h.ticks.at(-1)-.008)<1e-10);
+  h.visibility(true);assert.equal(h.frames.size,0);assert.equal([...h.timers.values()][0].delay,1000);
+  h.setIdle(true);h.timer();assert.equal(h.timers.size,0);h.loop.stop();
 });
 
 test('tab transitions settle elapsed background time exactly once and cancel obsolete callbacks',()=>{

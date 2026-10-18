@@ -62,6 +62,28 @@ export function createSeaBackground(view,landAt,createCanvas=()=>document.create
     }
     return entry.overlay;
   }
+  function waveImage(entry,tx,ty,phase){
+    if(!entry.waves){
+      const left=tx*TILE,top=ty*TILE,points=[];
+      for(let wy=Math.floor((top-10)/view.scale);wy*view.scale<top+TILE+2;wy++)for(let wx=Math.floor((left-30)/view.scale);wx*view.scale<left+TILE+2;wx++){
+        const x=(wx%WORLD.width+WORLD.width)%WORLD.width,h=terrainHash(x,wy);
+        if(h%3===0||landAt(wx+.4,wy+.4))continue;
+        points.push([Math.round(wx*view.scale+(.2+(h%5)*.1)*view.scale-left),Math.round((wy+.2)*view.scale-top),h]);
+      }
+      const image=createCanvas();image.width=image.height=TILE;
+      entry.waves={image,points,phase:-1};
+    }
+    const waves=entry.waves;
+    if(waves.phase!==phase){
+      const c=waves.image.getContext('2d');c.clearRect(0,0,TILE,TILE);
+      for(const [x,y,h] of waves.points){
+        c.fillStyle=h%2?'#4b85e0':'#3b78dc';const shift=phase===h%4?1:0;
+        c.fillRect(x,y+shift,6,1);c.fillRect(x-1,y+1+shift,1,1);c.fillRect(x+6,y-1+shift,1,1);
+      }
+      waves.phase=phase;
+    }
+    return waves.image;
+  }
   function seasonalImages(entry,other,blend){
     // Tiny palette steps let normal frames reuse one composite instead of alpha-blending every tile.
     const step=Math.round(blend*16);
@@ -104,6 +126,10 @@ export function createSeaBackground(view,landAt,createCanvas=()=>document.create
         const images=blend?seasonalImages(entry,tile(tx,ty,next),blend):entry;
         c.drawImage(images.scenery,PADDING,PADDING,TILE,TILE,x,y,TILE,TILE);
       });
+    },
+    drawWaves(c,position,time=0,day){
+      const {month}=seasonalFrame(day),phase=Math.floor(time/450)%4;
+      visibleTiles(position,month,(entry,x,y,tx,ty)=>c.drawImage(waveImage(entry,tx,ty,phase),x,y));
     },
     clear(){tiles.clear();cameraX=null;},
     get size(){return tiles.size;},

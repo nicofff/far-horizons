@@ -1,0 +1,25 @@
+<!doctype html><meta charset="utf-8"><title>Sailing renderer benchmark</title><body><pre id="results">Running…</pre><script type="module">
+import { createChart } from '/chart.js';
+import { createGame } from '/engine.js';
+import { ports } from '/data.js';
+const pending=new Map();let frameId=0;
+window.requestAnimationFrame=fn=>{pending.set(++frameId,fn);return frameId;};
+window.cancelAnimationFrame=id=>pending.delete(id);
+const methods=['fillRect','drawImage','fillText','stroke','save','restore'],counts={};
+if(location.hash==='#counts')for(const method of methods){const original=CanvasRenderingContext2D.prototype[method];CanvasRenderingContext2D.prototype[method]=function(...args){counts[method]=(counts[method]||0)+1;return original.apply(this,args);};}
+const s=createGame(7);s.port=null;s.paused=false;s.escapedUntil=1e9;s.lastEvent=1e9;
+const host=document.createElement('div'),canvas=document.createElement('canvas');host.append(canvas);document.body.append(host);
+const chart=createChart(canvas,()=>s,{});await new Promise(resolve=>setTimeout(resolve,50));
+const rows=[];let now=1000;
+for(const [name,position] of [['ocean',{x:600,y:400}],['coast',ports.find(p=>p.id==='lisbon')],['Andes',ports.find(p=>p.id==='callao')]]){
+ s.position={x:position.x,y:position.y};s.day=199.5;chart.invalidate();Object.keys(counts).forEach(k=>counts[k]=0);
+ const samples=[];
+ for(let i=0;i<660;i++){
+  now+=34;s.position.x+=.025;
+  const callbacks=[...pending.values()];pending.clear();const start=performance.now();for(const fn of callbacks)fn(now);const elapsed=performance.now()-start;
+  if(i>=60)samples.push(elapsed);
+ }
+ samples.sort((a,b)=>a-b);rows.push({name,mean:samples.reduce((a,b)=>a+b,0)/samples.length,p50:samples[300],p95:samples[570],max:samples.at(-1),counts:{...counts}});
+}
+s.paused=true;window.benchmarkResults=rows;document.getElementById('results').textContent=JSON.stringify(rows,null,2);
+</script>

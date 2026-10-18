@@ -14,10 +14,10 @@ export function drawWindArrow(c,x,y,wind,color=P.muted,size=8){
   line(dx*size,dy*size,dx*(size-4)+dy*3,dy*(size-4)-dx*3);
 }
 
-export function drawWindGauge(c,wind,heading){
+export function drawWindGauge(c,wind,heading,drawText=text){
   const report=windReport(wind,heading),percent=Math.round(report.factor*100);
   c.fillStyle='#182c69';c.fillRect(6,6,125,29);
-  text(c,`WIND FROM ${report.from}`,12,11,P.gold);
-  text(c,`${Math.round(report.speed)}KT${heading?' '+report.point+' '+percent+'%':''}`,12,23,report.point==='HEAD'?P.red:P.white);
+  drawText(c,`WIND FROM ${report.from}`,12,11,P.gold);
+  drawText(c,`${Math.round(report.speed)}KT${heading?' '+report.point+' '+percent+'%':''}`,12,23,report.point==='HEAD'?P.red:P.white);
   drawWindArrow(c,119,23,wind,P.muted,6);
 }

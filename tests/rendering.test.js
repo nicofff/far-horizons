@@ -77,7 +77,7 @@ test('cached scenery renders above every water layer and keeps its tile-edge pad
   for(let phase=0;phase<8;phase++){
     draws.length=0;background.draw(c,position,phase*SURF_STEP);
     assert.equal(draws.some(isScenery),false,'the water pass cannot bake in tree canopies');
-    draws.push('open-water waves');background.drawScenery(c,position);
+    background.drawWaves(c,position,phase*SURF_STEP);draws.push('open-water waves');background.drawScenery(c,position);
     const first=draws.findIndex(isScenery);assert.ok(first>draws.indexOf('open-water waves'));
     assert.ok(draws.slice(first).every(isScenery),'all foreground tiles render after all water tiles');
     for(const args of draws.filter(isScenery))assert.deepEqual(args.slice(1,5),[32,32,256,256]);
@@ -86,6 +86,20 @@ test('cached scenery renders above every water layer and keeps its tile-edge pad
     if(phase===0){built=samples;painted=fills;}
     else{assert.equal(samples,built,'no terrain probes while animating');assert.equal(fills,painted,'trees are not regenerated while animating');}
   }
+});
+
+test('ocean wave pixels survive scrolling, animate only on phase changes, and wrap at the date line',()=>{
+  const factory=canvasFactory();let samples=0;
+  const background=createSeaBackground(SEA_VIEW,()=>{samples++;return false;},factory.create),draws=[];
+  const c={drawImage:(...args)=>draws.push(args)},position={x:.1,y:350};
+  background.drawWaves(c,position,0);const built=samples,fills=()=>factory.images.reduce((n,image)=>n+image.calls.fills,0),painted=fills();
+  assert.ok(painted>0);background.drawWaves(c,{x:.125,y:350},100);
+  assert.equal(samples,built);assert.equal(fills(),painted,'moving within cached tiles reuses wave pixels');
+  background.drawWaves(c,position,450);assert.ok(fills()>painted,'the next wave phase changes its cached overlay');
+  const waves=factory.images.filter(image=>image.width===256&&image.alpha);assert.ok(waves.length);
+  draws.length=0;background.drawWaves(c,{x:1799.9,y:350},450);
+  assert.ok(draws.some(draw=>waves.includes(draw[0])),'date-line crossing retains the shared wave tiles');
+  assert.ok(samples-built<built/2,'crossing the date line only builds the newly exposed column');assert.ok(background.size<=32);
 });
 
 test('seasonal crossfades reuse monthly scenery and ocean tiles within the bounded cache',()=>{

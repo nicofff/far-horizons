@@ -1,6 +1,7 @@
 import { ports, discoveries } from './data.js';
 import { onLand, inSight, visiblePirates, supplyDays, SIGHT_RADIUS, CHART_CELL, CHART_COLS, distance, currentWind, sailingHeading } from './engine.js';
-import { text, wrapText, panel, palette as P, drawShip, drawTown } from './pixel.js';
+import { text as paintText, wrapText, panel, palette as P, drawShip as paintShip, drawTown } from './pixel.js';
+import { createCachedArt } from './cached-art.js';
 import { createDisplay } from './display.js';
 import { biomeStyleAt } from './biomes.js';
 import { createSeaBackground, SURF_STEP } from './sea-background.js';
@@ -16,24 +17,20 @@ export function seaPoint(position,p){return {x:SEA_VIEW.x+SEA_VIEW.width/2+longi
 export function createChart(canvas,getState,actions){
   const host=canvas.parentElement,frame=document.createElement('canvas');frame.width=SCREEN.width;frame.height=SCREEN.height;
   const c=frame.getContext('2d',{alpha:false});c.imageSmoothingEnabled=false;
+  const {text,drawShip}=createCachedArt({text:paintText,drawShip:paintShip});
   let display,backend='Starting',mode='sea',chartCenter=null,chartZoom=2.6,drag=null,moved=false,buttons=[],hover=null,notice='',noticeUntil=0,lastTime=0,animationId=null,timer=null,lighting=null;
-  const hash=(x,y)=>{let h=Math.imul(x,374761393)^Math.imul(y,668265263);h=Math.imul(h^(h>>>13),1274126177);return (h^(h>>>16))>>>0;};
   const landAt=(x,y)=>onLand((Math.floor(x*8)+.5)/8,(Math.floor(y*8)+.5)/8),background=createSeaBackground(SEA_VIEW,landAt);
   const fog=document.createElement('canvas');fog.width=SCREEN.width;fog.height=SCREEN.height;const f=fog.getContext('2d');f.fillStyle='#192a47';
   for(let sy=0;sy<SEA_VIEW.height;sy+=2)for(let sx=0;sx<SEA_VIEW.width;sx+=2){const dist=Math.hypot((sx-SEA_VIEW.width/2)/SEA_VIEW.scale,(sy-SEA_VIEW.height/2)/SEA_VIEW.scale);if(dist>SIGHT_RADIUS||dist>SIGHT_RADIUS-.5&&(sx+sy)%4===0)f.fillRect(sx,sy,2,2);}
   host.addEventListener('display-replaced',e=>{display=e.detail.display;bindCanvas();refresh();});
   createDisplay(canvas,frame,{forceCanvas:new URLSearchParams(location.search).get('renderer')==='canvas',onBackend:name=>{backend=name;host.dataset.renderer=name;}}).then(d=>{display=d;refresh();});
   function terrain(s,time){
-    const v=SEA_VIEW,start={x:s.position.x-v.width/2/v.scale,y:s.position.y-v.height/2/v.scale};
+    const v=SEA_VIEW;
     const light=daylightAt(s.day,s.position.y),fade=lighting&&!s.paused?1-Math.exp(-(time-lighting.time)/900):1;
     lighting={...light,night:lighting?lighting.night+(light.night-lighting.night)*fade:light.night,warmth:lighting?lighting.warmth+(light.warmth-lighting.warmth)*fade:light.warmth,time};
     c.save();c.beginPath();c.rect(v.x,v.y,v.width,v.height);c.clip();
     background.draw(c,s.position,time,s.day);
-    const wavePhase=Math.floor(time/450)%4,minx=Math.floor(start.x),miny=Math.floor(start.y);
-    for(let wy=miny;wy<start.y+v.height/v.scale;wy++)for(let wx=minx;wx<start.x+v.width/v.scale;wx++){
-      const h=hash(wrapX(wx),wy);if(h%3===0||landAt(wx+.4,wy+.4))continue;const p=seaPoint(s.position,{x:wx+.2+(h%5)*.1,y:wy+.2});
-      c.fillStyle=h%2?'#4b85e0':'#3b78dc';const shift=wavePhase===h%4?1:0;c.fillRect(Math.round(p.x),Math.round(p.y+shift),6,1);c.fillRect(Math.round(p.x-1),Math.round(p.y+1+shift),1,1);c.fillRect(Math.round(p.x+6),Math.round(p.y-1+shift),1,1);
-    }
+    background.drawWaves(c,s.position,time,s.day);
     background.drawScenery(c,s.position,s.day);
     drawDaylight(c,v,lighting);
     for(const d of discoveries.filter(d=>inSight(s,d))){
@@ -91,7 +88,7 @@ export function createChart(canvas,getState,actions){
     const date=calendarAt(s.day),months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
     c.fillStyle='#182c69';c.fillRect(417,6,89,25);text(c,String(date.getUTCFullYear()),475,9,P.gold);text(c,`${months[date.getUTCMonth()]} ${date.getUTCDate()}`,432,21,P.white);
     if(mode==='sea'){
-      drawWindGauge(c,currentWind(s),sailingHeading(s));
+      drawWindGauge(c,currentWind(s),sailingHeading(s),text);
       const days=supplyDays(s),label=`${days} ${days===1?'DAY':'DAYS'}`;
       c.fillStyle='#182c69';c.fillRect(417,34,89,25);text(c,'SUPPLIES',423,37,P.gold);text(c,label,500-label.length*6,49,days<=10?P.red:P.white);
       c.fillStyle='#182c69';c.fillRect(417,62,89,12);text(c,`${lighting.phase} ${lighting.season}`,422,65,P.muted);

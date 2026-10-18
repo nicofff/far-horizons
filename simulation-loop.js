@@ -2,6 +2,7 @@ export function createSimulationLoop(step,{
   idle,hidden=()=>document.hidden,now=()=>performance.now(),
   requestFrame=callback=>requestAnimationFrame(callback),cancelFrame=id=>cancelAnimationFrame(id),
   setTimer=(callback,delay)=>setTimeout(callback,delay),clearTimer=id=>clearTimeout(id),
+  foregroundInterval=0,
 }){
   let last=now(),frame=null,timer=null,wasHidden=hidden(),wasIdle=idle();
   function cancel(){if(frame!==null)cancelFrame(frame);if(timer!==null)clearTimer(timer);frame=timer=null;}
@@ -10,6 +11,7 @@ export function createSimulationLoop(step,{
     if(hidden()){
       if(!wasIdle)timer=setTimer(()=>tick(now()),1000);
     }else if(wasIdle)timer=setTimer(()=>tick(now()),250);
+    else if(foregroundInterval>0)timer=setTimer(()=>tick(now()),foregroundInterval);
     else frame=requestFrame(tick);
   }
   function tick(time){
@@ -23,7 +25,7 @@ export function createSimulationLoop(step,{
     wake(){
       if(wasIdle)last=now();
       if(timer!==null){clearTimer(timer);timer=null;}
-      if(frame===null)schedule();
+      if(frame===null){if(!hidden())frame=requestFrame(tick);else schedule();}
     },
     visibilityChanged(){cancel();tick(now());},
     stop:cancel,
