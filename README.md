@@ -15,21 +15,30 @@ Open [the game](http://localhost:5173). The server listens on your computer only
 ## Controls
 
 - Arrow keys or WASD set a heading. The ship continues on that heading until you stop, turn, or encounter land. The camera follows the fleet.
-- Enter or Z opens the sea or port commands. Use Up/Down and Enter to select, or click a command. Escape closes a menu.
+- Enter or Z opens the sea or port commands. Use Up/Down and Enter to select, or click a command. Escape returns one menu, then closes port or sea commands.
 - M opens or closes the recorded chart. Drag and scroll there to inspect your notes. The sailing view cannot pan or zoom away from the fleet.
-- F opens fleet commands. R opens sailing data. P reopens the current harbor menu. Harbors open automatically when you arrive.
+- F opens Ships, C opens Cargo, J opens Journal, and R opens Voyage status. P reopens port or sea commands. Harbors open automatically when you arrive.
 - Space pauses or resumes sailing. T cycles 1X, 4X, and 16X time. N turns music on or off. The controls below the screen also work with a mouse or touch.
+- The Help link in any menu, or ?, opens the Captain's handbook for that screen. Closing Help restores the same menu and selections.
 - Click nearby open water to quick-sail to that location. Click a visible harbor or enemy ship to inspect it.
 
 Menus, landfall, low provisions, and combat pause time. Sailing continues at the selected speed when you switch tabs, and music follows its on/off setting. Closing a menu leaves the voyage paused; press Space to resume.
 
+## Port menus
+
+The Harbor hub stays inside the 4:3 playfield as a bottom command window. Ashore contains supplies, market, shipyard, crew café, guild, and residents. Aboard contains ships and crew, cargo and provisions, journal and reports, voyage status, sailing destinations, and save options. Supply anchorages disable unavailable services.
+
+Ships and Crew have their own tabs. Cargo separates trade goods from provisions. Journal groups quests, reports, contacts, the ship's log, and the songbook. The café shows each ship's crew and assigned berths, the recruitment price, and a Fully crewed state when there are no vacancies. Debt contacts also appear there when relevant. Voyage status holds conditions and passage estimates. Waiting ashore is available under Set sail and the investment and shipyard screens.
+
+Routine menus prioritize quantities, costs, requirements, and action feedback. Mechanical explanations live in the optional Captain's handbook, opened from Help or ?. Help retains the underlying menu nodes and their controls, including transaction quantities, and returns without changing voyage state.
+
 ## First passage
 
-In Lisbon, visit Butler Marco at the Franco residence from the harbor menu. Sign a discovery contract, ask for a rumour, then ask about Olives. Palma becomes a known destination. Olives can teach Cartography and buy reports of your newly charted waters. See [port specialists and reporting](SPECIALISTS.md) for the full roster and rules.
+In Lisbon, visit Butler Marco at the Franco residence under Residents in the harbor menu. Sign a discovery contract, ask for a rumour, then ask about Olives. Palma becomes a known destination. Olives can teach Cartography and buy reports of your newly charted waters. See [port specialists and reporting](SPECIALISTS.md) for the full roster and rules.
 
-In Lisbon's harbor menu, visit the market and buy five units of Olive Oil. Choose **Auto sail** and select Madeira. Use T twice for 16X travel if desired. Landfall pauses the game and opens the harbor menu automatically. Enter Madeira's market and sell the Olive Oil at its higher regional price.
+In Lisbon's harbor menu, visit the market and buy five units of Olive Oil. Choose **Set sail…** and select Madeira. Use T twice for 16X travel if desired. Landfall pauses the game and opens the harbor menu automatically. Enter Madeira's market and sell the Olive Oil at its higher regional price.
 
-Use Harbor / Supply to choose 10, 25, 50, or 100 days of provisions. Food and water take cargo space. Each ten crew consume one unit of each per day, with a minimum of one unit. Water is free in port. Order ships at regional shipyards, wait for construction, then return to the ordering port to launch them. Or capture pirates by weakening them with gunfire and boarding. Provision again after expanding the fleet.
+Use Harbor supplies to choose 10, 25, 50, or 100 days of provisions. Food and water take cargo space. Each ten crew consume one unit of each per day, with a minimum of one unit. Water is free in port. Order ships at regional shipyards, wait for construction, then return to the ordering port to launch them. Or capture pirates by weakening them with gunfire and boarding. Provision again after expanding the fleet.
 
 Invest separately in a port's Economy to add goods and its Industry to unlock ships and hull materials. Development costs 300 gold per point and settles at the start of the next calendar month. Each department accepts up to 50,000 gold per month, with development capped at 1,000. Capitals have fixed development. The investment window shows pending funding, the settlement date, and unlock requirements. Wait in harbor to advance the calendar.
 
@@ -39,13 +48,13 @@ The economy uses the original game's regional goods and shipyard catalog from do
 
 ## Guild work
 
-Visit Guild / Assignments in any trading port for letter delivery, goods procurement, cargo transport, debt collection, and pirate bounties. Carry one contract at a time. Commands and fleet menus open the Guild quest log with your next stop, deadline, and contract record. Cargo jobs include a quoted purchase allowance; debts and bounties require a return to the issuing guild. Deadlines include shore leave, and failure or abandonment costs renown. See [guild rules and sources](GUILDS.md).
+Visit Guild in any trading port for letter delivery, goods procurement, cargo transport, debt collection, and pirate bounties. Carry one contract at a time. Journal → Quests opens the Guild quest log with your next stop, deadline, and contract record. Cargo jobs include a quoted purchase allowance; debts and bounties require a return to the issuing guild. Deadlines include shore leave, and failure or abandonment costs renown. See [guild rules and sources](GUILDS.md).
 
 ## Wind and passages
 
 Prevailing winds follow [NOAA PSL monthly surface-wind normals](https://psl.noaa.gov/data/gridded/data.ncep.reanalysis.html), including the trade winds, westerlies, and reversing Indian Ocean monsoons. Smooth local weather adds variation over a few voyage days. Fair winds speed the fleet, headwinds slow it, and light air reduces progress. The crew handles tacking and keeps your chosen heading, so a headwind cannot trap you in a strait. Longer Auto sail passages weigh seasonal wind costs, and passage estimates account for winds along the route.
 
-The sailing gauge shows where the wind comes from, strength in knots, and its effect on speed. Its arrow points downwind. The recorded chart adds muted prevailing-wind arrows over recorded waters; Sail data shows current conditions and the remaining passage estimate. Winds follow the voyage clock and survive saves and fast travel without rerolling. See [wind sources and gameplay rules](geography/WINDS.md).
+The sailing gauge shows where the wind comes from, strength in knots, and its effect on speed. Its arrow points downwind. The recorded chart adds muted prevailing-wind arrows over recorded waters; Voyage status shows current conditions and the remaining passage estimate. Winds follow the voyage clock and survive saves and fast travel without rerolling. See [wind sources and gameplay rules](geography/WINDS.md).
 
 ## Local awareness and charting
 

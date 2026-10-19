@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Far Horizons · Port menu studies</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./study.css">
+</head>
+<body>
+  <header class="study-header">
+    <div class="study-tools"><nav id="options" aria-label="Choose a layout"><button data-layout="board" aria-pressed="true"><b>A</b> Direct commands</button><button data-layout="town" aria-pressed="false"><b>B</b> Harbor hub</button><button data-layout="ledger" aria-pressed="false"><b>C</b> Tabbed logbook</button></nav><div class="scene-toggle" aria-label="Preview a situation"><button data-scene="port" aria-pressed="true">In port</button><button data-scene="sea" aria-pressed="false">At sea</button><button id="reset" title="Reset the sample voyage">Reset</button></div></div>
+    <p id="concept-note"></p>
+  </header>
+  <main id="study" data-layout="board" data-scene="port" aria-label="Interactive menu layout prototype"></main>
+  <footer class="study-footer"><span>MENU PROTOTYPES / YOUR SAVED VOYAGE IS UNTOUCHED</span><a href="/">Back to the game</a></footer>
+  <script type="module" src="./study.js"></script>
+</body>
+</html>

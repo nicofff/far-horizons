@@ -17,3 +17,49 @@ dialog{font-size:16px;position:fixed;inset:auto;top:calc(var(--screen-top, 0px) 
 dialog{max-width:calc(780px * var(--ui-scale,1))}
 
 .screen .ship-preview{box-sizing:content-box;display:block;flex:0 0 auto;width:96px;height:80px;object-fit:contain;image-rendering:pixelated;background:linear-gradient(#263e60 75%,#2a6888 75%);border:1px solid #8a754f}.battle-grid .ship-preview,.menu-body>.ship-preview{margin-bottom:12px}@media(max-width:650px),(max-height:500px){.screen .ship-preview{width:72px;height:60px}.ship-row{gap:10px}}
+
+dialog{overflow:hidden}
+#modal-content{max-height:calc((var(--screen-height,600px) - 24px)/var(--ui-scale,1))}
+#menu-page,#help-page{display:flex;flex-direction:column;max-height:inherit;min-height:0}
+#menu-page[hidden]{display:none}
+.menu-body{overflow:auto;min-height:0;scrollbar-color:#96784c #dfc58e;scrollbar-width:thin}
+.menu-header,.menu-footer{flex-shrink:0}
+.menu-header-actions{display:flex;align-items:center;gap:14px}
+.menu-back{border:0;background:none;color:#76593f;font-size:.8em;padding:0}
+.menu-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:7px 17px;font-size:11px;line-height:1.5}
+.menu-footer button{text-decoration:none}
+.menu-footer button:hover{text-decoration:underline}
+dialog[data-menu=harbor]:not([data-help]){top:calc(var(--screen-top,0px) + var(--screen-height,600px)*.97);transform:translate(-50%,-100%);width:calc(var(--screen-width,800px)*.94);max-width:none;max-height:calc(var(--screen-height,600px)*.53)}
+dialog[data-menu=harbor]:not([data-help]) #modal-content{max-height:calc((var(--screen-height,600px)*.53 - 6px)/var(--ui-scale,1))}
+dialog[data-menu=harbor] .menu-header{padding:9px 17px}
+dialog[data-menu=harbor] .menu-body{padding:8px 16px}
+.hub-columns{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.hub-columns>section{min-width:0}
+.hub-columns>section+section{border-left:1px solid #b59a67;padding-left:20px}
+.hub-columns h2{font-size:11px;color:#80664a;letter-spacing:1px;margin:0 0 5px}
+.hub-columns .menu-actions{gap:0}
+.hub-columns .menu-actions button{font-size:14px;padding:3px 8px;line-height:1.5}
+.menu-tabs{display:flex;gap:5px;border-bottom:1px solid #b59a67;margin:0 0 14px;padding-bottom:7px}
+.menu-tabs button{border:1px solid transparent;color:#786249;background:transparent;padding:5px 12px;font-size:13px}
+.menu-tabs button[aria-current=page]{border-color:#a68a58;background:#cfb582;color:var(--ink)}
+.data-table{width:100%;border-collapse:collapse;font-size:14px}
+.data-table th{color:#786249;font-size:12px;font-weight:normal;text-align:left;border-bottom:1px solid #a98a57;padding:8px 4px}
+.data-table td{border-bottom:1px solid #bfa36b;padding:12px 4px}
+.data-table th:not(:first-child),.data-table td:not(:first-child){text-align:right}
+.supply-quote{display:flex;gap:20px;flex-wrap:wrap;padding:14px 0;font-size:14px}
+.supply-quote strong{font-weight:normal;margin-left:auto}
+.data-pair{display:flex;justify-content:space-between;gap:14px;border-bottom:1px solid #bfa36b;padding:9px 0;font-size:13px}
+.data-pair strong{font-weight:normal;white-space:nowrap}
+.voyage-data{display:grid;grid-template-columns:1fr auto;gap:0 18px;margin:0;font-size:14px}
+.voyage-data dt,.voyage-data dd{padding:10px 0;border-bottom:1px solid #bfa36b;margin:0}
+.voyage-data dd{text-align:right}
+.handbook details{border-bottom:1px solid #bfa36b;padding:12px 0}
+.handbook details:first-child{padding-top:0}
+.handbook summary{cursor:pointer;color:#604a36;padding:4px 0}
+.handbook details p{font-size:14px;margin:10px 0;line-height:1.8}
+.help-controls{display:grid;grid-template-columns:auto 1fr;gap:10px 18px;font-size:13px}
+.help-controls dt,.help-controls dd{margin:0}
+.help-controls dt{color:#6c513a}
+.port-flavor{font-size:14px!important}
+.trade-table thead th{position:sticky;top:-1px;background:var(--paper)}
+@media(max-width:800px),(max-height:550px){.hub-columns{gap:12px}.hub-columns>section+section{padding-left:12px}.hub-columns .menu-actions button{font-size:11px;padding:3px 5px}.hub-columns h2{font-size:10px}.menu-footer{font-size:9px;padding:6px 12px}.menu-header-actions{gap:9px}.data-table,.voyage-data,.supply-quote{font-size:12px}.data-table th,.menu-tabs button{font-size:11px}.handbook details p{font-size:12px}.help-controls{font-size:11px;gap:8px 12px}.menu-back{font-size:11px}.hub-columns .menu-actions button:before{width:10px}dialog[data-menu=harbor] .menu-header{padding:8px 12px}dialog[data-menu=harbor] .menu-body{padding:7px 10px}}
