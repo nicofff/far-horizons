@@ -3,6 +3,7 @@
 # ///
 import json
 import subprocess
+import unicodedata
 from pathlib import Path
 from fontTools.fontBuilder import FontBuilder
 from fontTools.pens.ttGlyphPen import TTGlyphPen
@@ -32,6 +33,11 @@ for char in alphabet:
     mapping[ord(char)] = f"uni{ord(char):04X}"
     if char.isalpha():
         mapping[ord(char.lower())] = mapping[ord(char)]
+# Match the canvas renderer's accent folding instead of mixing in a fallback font.
+for codepoint in range(0x00C0, 0x0180):
+    base = "".join(char for char in unicodedata.normalize("NFD", chr(codepoint)) if not unicodedata.combining(char)).upper()
+    if len(base) == 1 and base in alphabet:
+        mapping[codepoint] = mapping[ord(base)]
 font.setupCharacterMap(mapping)
 font.setupGlyf(glyphs)
 font.setupHorizontalMetrics(metrics)
