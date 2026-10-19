@@ -16,19 +16,22 @@ const $=id=>document.getElementById(id),fmt=n=>Math.floor(n).toLocaleString('en-
 const esc=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const SAVE_KEY='far-horizons-v1';let yardMaterial='beech',yardFit='standard';let state,modalType=null,tradeQuantity=5,lastPort,saveAvailable=true,saveTime=0;
 const supplyOptions=[10,25,50,100];
-const steeringKeys=new Set(),directionKeys=new Set(['arrowleft','a','arrowright','d','arrowup','w','arrowdown','s']);
+const steeringKeys=new Set(),directionKeys=new Set(['arrowleft','a','arrowright','d','arrowup','w','arrowdown','s']);let controlsInset=34;
 try{const raw=localStorage.getItem(SAVE_KEY);state=raw?migrateSave(JSON.parse(raw)):null;}catch{saveAvailable=false;}
 state ||= createGame();state.paused=true;lastPort=state.port;
 const modal=$('modal');
 for(const event of ['pointerdown','pointerup','pointermove','wheel'])modal.addEventListener(event,e=>e.stopPropagation());
+document.querySelectorAll('.play-controls').forEach(controls=>{for(const event of ['pointerdown','pointerup','pointermove','wheel'])controls.addEventListener(event,e=>e.stopPropagation());});
 function fitMenus(){
   const screen=$('screen'),root=document.documentElement;
   root.style.setProperty('--ui-scale',Math.max(1,screen.getBoundingClientRect().width/1024));
   const rect=screen.getBoundingClientRect();
+  const strip=$('command-strip').getBoundingClientRect();controlsInset=Math.ceil((rect.bottom-strip.top)/rect.height*384);
+  root.style.setProperty('--menu-height',Math.max(100,strip.top-rect.top-12)+'px');
   for(const [key,value] of Object.entries({top:rect.top,left:rect.left,width:rect.width,height:rect.height}))root.style.setProperty('--screen-'+key,value+'px');
 }
 new ResizeObserver(fitMenus).observe($('screen'));window.addEventListener('resize',fitMenus);document.fonts.ready.then(fitMenus);fitMenus();
-const chart=createChart($('chart'),()=>state,{port:showHarbor,fleet:showFleet,log:showLog,menu:showCommands,pause:togglePause,speed:cycleSpeed,select:showPort,landmark:showLandmark,course,enemy:showEnemy,mode:()=>{steeringKeys.clear();updateStatus();}});
+const chart=createChart($('chart'),()=>state,{bottomInset:()=>controlsInset,port:showHarbor,fleet:showFleet,log:showLog,menu:showCommands,pause:togglePause,speed:cycleSpeed,select:showPort,landmark:showLandmark,course,enemy:showEnemy,mode:()=>{steeringKeys.clear();updateStatus();}});
 function notify(message){chart.notify(message);$('status').textContent=message;}
 const music=createMusic({heard:()=>state.songbook,onTune:tune=>{if(state.songbook.includes(tune.id))return;state.songbook.push(tune.id);save();notify(`New song: ${tune.name}, ${regionById(tune.region).name}. Added to your songbook.`);}});
 for(const event of ['pointerdown','keydown'])document.addEventListener(event,()=>music.unlock(),{capture:true});
@@ -36,7 +39,12 @@ function toggleMusic(){music.setEnabled(!music.enabled);notify(music.enabled?'Mu
 function save(announce=false){try{localStorage.setItem(SAVE_KEY,JSON.stringify(state));saveAvailable=true;if(announce)notify('Voyage saved.');}catch{saveAvailable=false;if(announce)notify('Browser storage unavailable. Export your voyage from the voyage menu.');}}
 function result(r){notify(r.message);if(r.ok){save();updateStatus();}return r.ok;}
 function transact(r,render){const ok=result(r);if(ok)render();const feedback=$('menu-feedback');if(feedback){feedback.textContent=r.message;feedback.hidden=false;}return ok;}
-function updateStatus(refresh=true){if(refresh){chart.refresh();wakeSimulation();}const p=portById(state.port);$('status').textContent=`${p?'At anchor in '+p.name:state.paused?'Holding position':'Under sail'}. ${supplyDays(state)} days of provisions. ${state.ships.length} ships. ${fmt(state.gold)} gold.`;$('speed-button').innerHTML=`${state.speed}X <small>SPEED</small>`;$('pause-button').setAttribute('aria-label',state.paused?'Resume sailing':'Pause sailing');}
+function updateStatus(refresh=true){if(refresh){chart.refresh();wakeSimulation();}const p=portById(state.port);$('status').textContent=`${p?'At anchor in '+p.name:state.paused?'Holding position':'Under sail'}. ${supplyDays(state)} days of provisions. ${state.ships.length} ships. ${fmt(state.gold)} gold.`;
+  const speed=$('speed-button'),pause=$('pause-button'),next=state.speed===1?4:state.speed===4?16:1;
+  speed.textContent=state.speed===1?'>':state.speed===4?'>>':'>>>';speed.title=`Travel speed ${state.speed}X. Change to ${next}X.`;speed.setAttribute('aria-label',speed.title);
+  pause.textContent=state.paused?'▶':'||';pause.title=state.paused?'Resume sailing':'Pause sailing';pause.setAttribute('aria-label',pause.title);pause.setAttribute('aria-pressed',String(state.paused));pause.disabled=!!(p||state.battle||state.lost||!sailingHeading(state));
+  $('chart-button').setAttribute('aria-pressed',String(chart.mode==='chart'));
+}
 function showModal(type,title,body){
   steeringKeys.clear();state.paused=true;modalType=type;modal.dataset.menu=type;delete modal.dataset.help;
   const canBack=!['harbor','commands','battle','lost'].includes(type),hub=type==='harbor';
@@ -286,8 +294,7 @@ function showSongbook(){
 function newGame(){state=createGame(Date.now()>>>0);lastPort=state.port;chart.invalidate();chart.focus();modal.close();modalType=null;save();updateStatus();notify('Lisbon. Butler Marco at the Franco residence is looking for discovery reports.');showHarbor();}
 function showLost(){showModal('lost','Lost at sea',`<p>The voyage lasted ${Math.floor(state.day)} days. ${state.visited.length} harbors visited, ${state.found.length} discoveries made.</p><button class="paper-button" id="lost-new">Begin a new voyage</button>`);$('lost-new').onclick=newGame;}
 $('import-file').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;if(file.size>2_000_000)throw new Error('Save file is too large.');const imported=migrateSave(JSON.parse(await file.text()));if(!imported)throw new Error('Invalid Far Horizons save.');state=imported;lastPort=state.port;modal.close();modalType=null;chart.invalidate();chart.focus();save();updateStatus();notify('Voyage restored.');if(state.lost)showLost();else if(state.battle)showBattle();else if(state.port)showHarbor();}catch(err){notify(err.message);}e.target.value='';};
-$('commands-button').onclick=showCommands;$('chart-button').onclick=()=>{if(!modal.open)chart.toggleChart();};$('fleet-button').onclick=showFleet;$('sail-data-button').onclick=showSailData;$('pause-button').onclick=togglePause;$('speed-button').onclick=cycleSpeed;
-document.querySelectorAll('[data-steer]').forEach(b=>b.onclick=()=>{if(modal.open||chart.mode!=='sea')return;steer(state,...b.dataset.steer.split(',').map(Number));updateStatus();});
+$('commands-button').onclick=showCommands;$('chart-button').onclick=()=>{if(!modal.open)chart.toggleChart();};$('fleet-button').onclick=showFleet;$('cargo-button').onclick=showCargo;$('journal-button').onclick=showJournal;$('sail-data-button').onclick=showSailData;$('pause-button').onclick=togglePause;$('speed-button').onclick=cycleSpeed;
 function steerFromKeys(){
   const held=(a,b)=>Number(steeringKeys.has(a)||steeringKeys.has(b));
   const dx=held('arrowright','d')-held('arrowleft','a'),dy=held('arrowdown','s')-held('arrowup','w');
@@ -313,4 +320,4 @@ function frame(seconds,now){const contract=state.guild.active?.id;advance(state,
   if(state.battle&&modalType!=='battle')showBattle();if(state.lost&&modalType!=='lost')showLost();
   if(now-saveTime>4000){save();saveTime=now;updateStatus(false);}
 }
-updateStatus();save();chart.notify(state.day<.1&&state.port==='lisbon'?'Lisbon. Visit Butler Marco before you sail.':state.port?'Welcome back to '+portById(state.port).name+'.':'Voyage restored. ENTER opens commands. SPACE resumes a passage.');if(state.port&&!state.battle&&!state.lost)showHarbor();wakeSimulation();
+updateStatus();save();chart.notify(state.day<.1&&state.port==='lisbon'?'Lisbon. Visit Butler Marco before you sail.':state.port?'Welcome back to '+portById(state.port).name+'.':'Voyage restored. Open Menu for commands or resume with the play control.');if(state.port&&!state.battle&&!state.lost)showHarbor();wakeSimulation();

@@ -18,11 +18,11 @@ Open [the game](http://localhost:5173). The server listens on your computer only
 - Enter or Z opens the sea or port commands. Use Up/Down and Enter to select, or click a command. Escape returns one menu, then closes port or sea commands.
 - M opens or closes the recorded chart. Drag and scroll there to inspect your notes. The sailing view cannot pan or zoom away from the fleet.
 - F opens Ships, C opens Cargo, J opens Journal, and R opens Voyage status. P reopens port or sea commands. Harbors open automatically when you arrive.
-- Space pauses or resumes sailing. T cycles 1X, 4X, and 16X time. N turns music on or off. The controls below the screen also work with a mouse or touch.
+- Space pauses or resumes sailing. T cycles 1X, 4X, and 16X time. N turns music on or off. The navigation strip inside the playfield opens Menu, Chart, Ships, Cargo, Journal, and Voyage. Separate controls below the sailing readouts pause or resume travel and cycle speed. They work with a mouse or touch: > is 1X, >> is 4X, and >>> is 16X.
 - The Help link in any menu, or ?, opens the Captain's handbook for that screen. Closing Help restores the same menu and selections.
-- Click nearby open water to quick-sail to that location. Click a visible harbor or enemy ship to inspect it.
+- Click or tap nearby open water to quick-sail to that location. Click a visible harbor or enemy ship to inspect it.
 
-Menus, landfall, low provisions, and combat pause time. Sailing continues at the selected speed when you switch tabs, and music follows its on/off setting. Closing a menu leaves the voyage paused; press Space to resume.
+Menus, landfall, low provisions, and combat pause time. Sailing continues at the selected speed when you switch tabs, and music follows its on/off setting. Closing a menu leaves the voyage paused; use the play control or Space to resume.
 
 ## Port menus
 

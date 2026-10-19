@@ -11,12 +11,16 @@
 </head>
 <body>
   <main class="console" aria-label="Far Horizons game">
-    <div class="screen" id="screen"><canvas id="chart" width="512" height="384" tabindex="0"></canvas><dialog id="modal" aria-labelledby="menu-title"><div id="modal-content"></div></dialog></div>
-    <nav class="controller" aria-label="Game controls">
-      <span class="direction-pad"><button data-steer="-1,0" aria-label="Sail west">◀</button><span><button data-steer="0,-1" aria-label="Sail north">▲</button><button data-steer="0,1" aria-label="Sail south">▼</button></span><button data-steer="1,0" aria-label="Sail east">▶</button></span>
-      <button id="commands-button">ENTER <small>COMMANDS</small></button><button id="chart-button">M <small>CHART</small></button><button id="fleet-button">F <small>SHIPS</small></button><button id="sail-data-button">R <small>VOYAGE</small></button><button id="pause-button">SPACE <small>PAUSE</small></button><button id="speed-button">1X <small>SPEED</small></button>
-    </nav>
-    <p class="keyboard-hint">ARROWS / WASD TO STEER · ENTER TO ACT · ESC TO RETURN</p>
+    <div class="screen" id="screen">
+      <canvas id="chart" width="512" height="384" tabindex="0"></canvas>
+      <nav class="command-strip play-controls" id="command-strip" aria-label="Game navigation">
+        <button id="commands-button">Menu</button><button id="chart-button">Chart</button><button id="fleet-button">Ships</button><button id="cargo-button">Cargo</button><button id="journal-button">Journal</button><button id="sail-data-button">Voyage</button>
+      </nav>
+      <div class="sailing-controls play-controls" role="group" aria-label="Sailing time">
+        <button id="pause-button" aria-label="Resume sailing" aria-pressed="true">▶</button><button id="speed-button" aria-label="Travel speed 1X. Change to 4X.">&gt;</button>
+      </div>
+      <dialog id="modal" aria-labelledby="menu-title"><div id="modal-content"></div></dialog>
+    </div>
     <p class="sr-only" id="status" role="status" aria-live="polite"></p>
   </main>
   <input type="file" id="import-file" accept="application/json" hidden>

@@ -79,7 +79,8 @@ export function createChart(canvas,getState,actions){
     for(const d of discoveries.filter(d=>s.found.includes(d.id))){const q=toScreen(d);c.fillStyle=P.gold;c.fillRect(Math.round(q.x),Math.round(q.y)-3,1,7);c.fillRect(Math.round(q.x)-3,Math.round(q.y),7,1);}
     for(const p of ports.filter(p=>s.known.includes(p.id))){const q=toScreen(p);if(q.x<v.x+8||q.x>v.x+v.width-8||q.y<v.y+8||q.y>v.y+v.height-8)continue;c.fillStyle=s.visited.includes(p.id)?P.gold:P.white;c.fillRect(Math.round(q.x)-2,Math.round(q.y)-2,5,5);const labelX=Math.min(v.x+v.width-p.name.length*6-5,q.x+6);text(c,p.name,labelX,q.y-3,P.white);}
     const p=toScreen(s.position);drawShip(c,p.x,p.y,{type:s.ships[0]?.type,small:true});c.restore();text(c,'RECORDED COASTS ONLY',v.x+9,v.y+9,P.gold);
-    c.fillStyle='#202450';c.fillRect(v.x+5,v.y+v.height-19,350,14);text(c,'DRAG TO PAN',v.x+10,v.y+v.height-16,P.muted);for(const [label,color,x]of [['LAND','#91a878',102],['SEA','#2a6888',151],['UNKNOWN','#35405a',194]]){c.fillStyle=color;c.fillRect(x,368,6,6);text(c,label,x+10,368,P.muted);}text(c,'ARROWS: WIND',263,368,P.muted);
+    const legendY=v.height-(actions.bottomInset?.()||0)-19;
+    c.fillStyle='#202450';c.fillRect(v.x+5,legendY,350,14);text(c,'DRAG TO PAN',v.x+10,legendY+3,P.muted);for(const [label,color,x]of [['LAND','#91a878',102],['SEA','#2a6888',151],['UNKNOWN','#35405a',194]]){c.fillStyle=color;c.fillRect(x,legendY+3,6,6);text(c,label,x+10,legendY+3,P.muted);}text(c,'ARROWS: WIND',263,legendY+3,P.muted);
   }
   function draw(time){
     animationId=null;if(document.hidden)return;
@@ -93,8 +94,7 @@ export function createChart(canvas,getState,actions){
       c.fillStyle='#182c69';c.fillRect(417,34,89,25);text(c,'SUPPLIES',423,37,P.gold);text(c,label,500-label.length*6,49,days<=10?P.red:P.white);
       c.fillStyle='#182c69';c.fillRect(417,62,89,12);text(c,`${lighting.phase} ${lighting.season}`,422,65,P.muted);
     }
-    c.fillStyle='#182c69';c.fillRect(458,365,48,13);text(c,`${s.speed}X ${s.paused?'II':'>'}`,464,368,P.gold);
-    if(notice&&time<noticeUntil){panel(c,7,326,498,51,'#e6d19a');text(c,'LOOKOUT',18,335,'#59433f');wrapText(c,notice,18,349,475,'#352b37',2);}
+    if(notice&&time<noticeUntil){const y=SCREEN.height-(actions.bottomInset?.()||0)-58;panel(c,7,y,498,51,'#e6d19a');text(c,'LOOKOUT',18,y+9,'#59433f');wrapText(c,notice,18,y+23,475,'#352b37',2);}
     display?.present();
     if(host.querySelector('dialog')?.open)return;
     if(!s.paused){animationId=requestAnimationFrame(draw);return;}
@@ -124,7 +124,7 @@ export function createChart(canvas,getState,actions){
     });
     if(landmark)return {kind:'landmark',data:landmark};
     if(port)return {kind:'port',data:port};if(mode==='sea'){const enemy=visiblePirates(s).find(q=>distance(q,w)<.8);if(enemy)return {kind:'enemy',data:enemy};}return null;}
-  function bindCanvas(){host.querySelector('canvas').setAttribute('aria-label','Retro sailing game. Arrow keys or WASD steer. M opens the recorded chart. Harbors open automatically on arrival. P reopens the harbor menu. F opens Ships. C opens Cargo. J opens Journal. R opens Voyage status. Question mark opens Help. Space pauses.');}
+  function bindCanvas(){host.querySelector('canvas').setAttribute('aria-label','Retro sailing game. Click or tap nearby water to sail. The bottom strip opens menus; the controls below supplies pause or change speed. Arrow keys or WASD steer. M opens the recorded chart. Harbors open automatically on arrival. P reopens the harbor menu. F opens Ships. C opens Cargo. J opens Journal. R opens Voyage status. Question mark opens Help. Space pauses.');}
   bindCanvas();host.addEventListener('pointermove',e=>{const p=relative(e);if(drag&&mode==='chart'){if(distance(p,drag)>3)moved=true;chartCenter={x:wrapX(drag.cx-(p.x-drag.x)/chartZoom),y:drag.cy-(p.y-drag.y)/chartZoom};refresh();}hover=buttons.find(b=>p.x>=b.x&&p.x<b.x+b.w&&p.y>=b.y&&p.y<b.y+b.h)||null;host.style.cursor=hover?.enabled||inside(p)&&target(p)?'pointer':'default';});
   host.addEventListener('pointerdown',e=>{const p=relative(e);if(e.button!==0)return;moved=false;if(mode==='chart'&&inside(p)){const center=chartCenter||getState().position;drag={...p,cx:center.x,cy:center.y};host.setPointerCapture(e.pointerId);}});
   host.addEventListener('pointerup',e=>{const p=relative(e);drag=null;if(host.hasPointerCapture(e.pointerId))host.releasePointerCapture(e.pointerId);if(moved)return;const b=buttons.find(b=>p.x>=b.x&&p.x<b.x+b.w&&p.y>=b.y&&p.y<b.y+b.h);if(b){if(b.enabled)b.fn();return;}if(!inside(p))return;const hit=target(p);if(hit?.kind==='port')actions.select(hit.data.id);else if(hit?.kind==='landmark')actions.landmark(hit.data.id);else if(hit?.kind==='enemy')actions.enemy(hit.data);else if(mode==='sea'){const w=world(p);if(inSight(getState(),w))actions.course(w);}else notify('Select a known harbor or recorded landmark. Unknown waters must be explored from the sea.');});
