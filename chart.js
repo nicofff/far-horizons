@@ -87,11 +87,12 @@ export function createChart(canvas,getState,actions){
     if(time-lastTime<30){animationId=requestAnimationFrame(draw);return;}lastTime=time;
     const s=getState();buttons=[];c.fillStyle=P.ink;c.fillRect(0,0,512,384);if(mode==='chart')recordedChart(s);else terrain(s,time);
     const date=calendarAt(s.day),months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-    c.fillStyle='#182c69';c.fillRect(417,6,89,25);text(c,String(date.getUTCFullYear()),475,9,P.gold);text(c,`${months[date.getUTCMonth()]} ${date.getUTCDate()}`,432,21,P.white);
+    const dateLabel=`${months[date.getUTCMonth()]} ${date.getUTCDate()} ${date.getUTCFullYear()}`;
+    c.fillStyle='#182c69';c.fillRect(417,6,89,17);text(c,dateLabel,417+(89-dateLabel.length*6)/2,11,P.gold);
     if(mode==='sea'){
       drawWindGauge(c,currentWind(s),sailingHeading(s),text);
       const days=supplyDays(s),label=`${days} ${days===1?'DAY':'DAYS'}`;
-      c.fillStyle='#182c69';c.fillRect(417,34,89,25);text(c,'SUPPLIES',423,37,P.gold);text(c,label,500-label.length*6,49,days<=10?P.red:P.white);
+      c.fillStyle='#182c69';c.fillRect(6,38,125,25);text(c,'SUPPLIES',6+(125-8*6)/2,41,P.gold);text(c,label,6+(125-label.length*6)/2,53,days<=10?P.red:P.white);
     }
     if(notice&&time<noticeUntil){const y=SCREEN.height-(actions.bottomInset?.()||0)-58;panel(c,7,y,498,51,'#e6d19a');text(c,'LOOKOUT',18,y+9,'#59433f');wrapText(c,notice,18,y+23,475,'#352b37',2);}
     display?.present();

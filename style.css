@@ -69,7 +69,7 @@ dialog[data-menu=harbor] .menu-body{padding:8px 16px}
 .command-strip{position:absolute;left:1.5%;right:1.5%;bottom:1.5%;height:clamp(32px,5.5cqw,64px);display:grid;grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch;background:var(--paper);color:var(--ink);border:3px double #8c714b;padding:2px;z-index:1}
 .command-strip button{border:1px solid transparent;border-radius:0;background:transparent;color:inherit;font-size:clamp(9px,1.55cqw,24px);padding:0 2px;text-transform:uppercase;min-width:0}
 .command-strip button:hover,.command-strip button[aria-pressed=true]{background:#cbb17e;border-color:#a3895a}
-.sailing-controls{position:absolute;right:1.17%;top:16.15%;width:max(17.38%,88px);display:grid;grid-template-columns:1fr 1fr;background:#182c69;color:var(--gold);z-index:1}
+.sailing-controls{position:absolute;right:1.17%;top:6.77%;width:max(17.38%,88px);display:grid;grid-template-columns:1fr 1fr;background:#182c69;color:var(--gold);z-index:1}
 .sailing-controls button{display:grid;place-items:center;height:clamp(26px,5.4cqw,64px);line-height:1;border:0;border-radius:0;background:transparent;color:inherit;padding:0}
 .time-icon{display:block;height:clamp(14px,2cqw,28px);width:auto}
 .sailing-controls button+button{border-left:1px solid #61718f}
