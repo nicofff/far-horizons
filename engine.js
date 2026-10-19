@@ -39,7 +39,7 @@ export function createShip(type,name,options={}) {
 }
 export function createGame(seed=1530) {
   const home=ports[0];
-  const s={version:4,mapRevision:MAP_REVISION,windRevision:1,weatherSeed:seed>>>0,seed,day:0,gold:7200,fame:0,food:120,water:140,morale:95,ships:[createShip('caravela-latina','Santa Clara')],cargo:{},position:{x:home.x,y:home.y},port:'lisbon',route:[],heading:null,destination:null,known:[...initialKnown],visited:['lisbon'],found:[],seen:[],investments:{},development:{},shipOrders:[],expedition:createExpedition(),guild:createGuild(),songbook:[],defeated:[],battle:null,lost:false,won:false,rewards:[],events:[],lastEvent:-20,supplyWarned:false,wind:0.4,speed:1,paused:true};
+  const s={version:4,mapRevision:MAP_REVISION,windRevision:1,weatherSeed:seed>>>0,seed,day:0,gold:7200,fame:0,food:120,water:140,morale:95,ships:[createShip('caravela-latina','Santa Clara')],cargo:{},position:{x:home.x,y:home.y},port:'lisbon',route:[],heading:null,destination:null,known:[...initialKnown],visited:['lisbon'],found:[],seen:[],investments:{},development:{},shipOrders:[],expedition:createExpedition(),guild:createGuild(),songbook:[],defeated:[],battle:null,lost:false,won:false,rewards:[],events:[],lastEvent:-20,supplyWarned:false,wind:0.4,speed:4,paused:true};
   log(s,'A letter of passage','The chart ends at the horizon. Your voyage begins in Lisbon. Butler Marco at the Franco residence is looking for discovery reports. Visit him before you sail.','discovery');reveal(s);s.expedition.charted=s.seen.length;return s;
 }
 export function random(s) {s.seed=(Math.imul(s.seed,1664525)+1013904223)>>>0;return s.seed/4294967296;}

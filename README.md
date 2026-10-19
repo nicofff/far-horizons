@@ -36,7 +36,7 @@ Routine menus prioritize quantities, costs, requirements, and action feedback. M
 
 In Lisbon, visit Butler Marco at the Franco residence under Residents in the harbor menu. Sign a discovery contract, ask for a rumour, then ask about Olives. Palma becomes a known destination. Olives can teach Cartography and buy reports of your newly charted waters. See [port specialists and reporting](SPECIALISTS.md) for the full roster and rules.
 
-In Lisbon's harbor menu, visit the market and buy five units of Olive Oil. Choose **Set sail…** and select Madeira. Use T twice for 16X travel if desired. Landfall pauses the game and opens the harbor menu automatically. Enter Madeira's market and sell the Olive Oil at its higher regional price.
+In Lisbon's harbor menu, visit the market and buy five units of Olive Oil. Choose **Set sail…** and select Madeira. Voyages start at 4X travel speed. Use T once for 16X if desired. Landfall pauses the game and opens the harbor menu automatically. Enter Madeira's market and sell the Olive Oil at its higher regional price.
 
 Use Harbor supplies to choose 10, 25, 50, or 100 days of provisions. Food and water take cargo space. Each ten crew consume one unit of each per day, with a minimum of one unit. Water is free in port. Order ships at regional shipyards, wait for construction, then return to the ordering port to launch them. Or capture pirates by weakening them with gunfire and boarding. Provision again after expanding the fleet.
 
