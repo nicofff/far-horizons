@@ -92,7 +92,6 @@ export function createChart(canvas,getState,actions){
       drawWindGauge(c,currentWind(s),sailingHeading(s),text);
       const days=supplyDays(s),label=`${days} ${days===1?'DAY':'DAYS'}`;
       c.fillStyle='#182c69';c.fillRect(417,34,89,25);text(c,'SUPPLIES',423,37,P.gold);text(c,label,500-label.length*6,49,days<=10?P.red:P.white);
-      c.fillStyle='#182c69';c.fillRect(417,62,89,12);text(c,`${lighting.phase} ${lighting.season}`,422,65,P.muted);
     }
     if(notice&&time<noticeUntil){const y=SCREEN.height-(actions.bottomInset?.()||0)-58;panel(c,7,y,498,51,'#e6d19a');text(c,'LOOKOUT',18,y+9,'#59433f');wrapText(c,notice,18,y+23,475,'#352b37',2);}
     display?.present();

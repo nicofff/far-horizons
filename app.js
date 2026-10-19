@@ -14,6 +14,13 @@ import { helpMarkup } from './menu-help.js';
 
 const $=id=>document.getElementById(id),fmt=n=>Math.floor(n).toLocaleString('en-US');
 const esc=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function timeIcon(rows,count=1){
+  const points=rows.flatMap((row,y)=>[...row].flatMap((pixel,x)=>pixel==='1'?[{x,y}]:[])),left=Math.min(...points.map(p=>p.x)),width=Math.max(...points.map(p=>p.x))-left+1,rects=[];
+  for(let n=0;n<count;n++)for(const {x,y}of points)rects.push(`<rect x="${n*(width+1)+x-left}" y="${y}" width="1" height="1"/>`);
+  return `<svg class="time-icon" aria-hidden="true" viewBox="0 0 ${count*(width+1)-1} ${rows.length}" fill="currentColor" shape-rendering="crispEdges">${rects.join('')}</svg>`;
+}
+const chevron=['10000','01000','00100','00010','00100','01000','10000'];
+const timeIcons={pause:timeIcon(Array(7).fill('11011')),play:timeIcon(['10000','11000','11100','11110','11100','11000','10000']),1:timeIcon(chevron),4:timeIcon(chevron,2),16:timeIcon(chevron,3)};
 const SAVE_KEY='far-horizons-v1';let yardMaterial='beech',yardFit='standard';let state,modalType=null,tradeQuantity=5,lastPort,saveAvailable=true,saveTime=0;
 const supplyOptions=[10,25,50,100];
 const steeringKeys=new Set(),directionKeys=new Set(['arrowleft','a','arrowright','d','arrowup','w','arrowdown','s']);let controlsInset=34;
@@ -41,8 +48,8 @@ function result(r){notify(r.message);if(r.ok){save();updateStatus();}return r.ok
 function transact(r,render){const ok=result(r);if(ok)render();const feedback=$('menu-feedback');if(feedback){feedback.textContent=r.message;feedback.hidden=false;}return ok;}
 function updateStatus(refresh=true){if(refresh){chart.refresh();wakeSimulation();}const p=portById(state.port);$('status').textContent=`${p?'At anchor in '+p.name:state.paused?'Holding position':'Under sail'}. ${supplyDays(state)} days of provisions. ${state.ships.length} ships. ${fmt(state.gold)} gold.`;
   const speed=$('speed-button'),pause=$('pause-button'),next=state.speed===1?4:state.speed===4?16:1;
-  speed.textContent=state.speed===1?'>':state.speed===4?'>>':'>>>';speed.title=`Travel speed ${state.speed}X. Change to ${next}X.`;speed.setAttribute('aria-label',speed.title);
-  pause.textContent=state.paused?'▶':'||';pause.title=state.paused?'Resume sailing':'Pause sailing';pause.setAttribute('aria-label',pause.title);pause.setAttribute('aria-pressed',String(state.paused));pause.disabled=!!(p||state.battle||state.lost||!sailingHeading(state));
+  speed.innerHTML=timeIcons[state.speed];speed.title=`Travel speed ${state.speed}X. Change to ${next}X.`;speed.setAttribute('aria-label',speed.title);
+  pause.innerHTML=state.paused?timeIcons.play:timeIcons.pause;pause.title=state.paused?'Resume sailing':'Pause sailing';pause.setAttribute('aria-label',pause.title);pause.setAttribute('aria-pressed',String(state.paused));pause.disabled=!!(p||state.battle||state.lost||!sailingHeading(state));
   $('chart-button').setAttribute('aria-pressed',String(chart.mode==='chart'));
 }
 function showModal(type,title,body){
