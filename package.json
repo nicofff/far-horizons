@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "node server.mjs",
     "start": "node server.mjs",
+    "build": "node scripts/build-site.mjs",
     "test": "node --test tests/*.test.js",
     "build:economy": "node scripts/build-economy.mjs"
   },

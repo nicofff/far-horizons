@@ -94,6 +94,10 @@ The font is checked in at `assets/far-horizons.ttf`. To regenerate it from the s
 uv run scripts/build-pixel-font.py
 ```
 
+## Publishing
+
+Run `npm run build` to create `_site/`. The publishing workflow uploads that directory. Each build places scripts, styles, fonts, and data in a directory identified by a content hash; the HTML entry points select that release together, including nested module imports. Changes therefore get new asset URLs instead of reusing a previous deployment's cached files. The full map and design studies remain available at their existing paths. Browser saves keep the same origin and storage key.
+
 ## Geography
 
 The world uses a 7,200 × 3,600 raster generated from [Natural Earth coastlines](https://www.naturalearthdata.com/downloads/10m-physical-vectors/10m-land/) and geographic city coordinates. Sailing, charts, collision, and navigation share that terrain. All 100 trading ports and 30 supply ports from the [original-game roster](https://unchartedwatersnewhorizons.com/?p=36) are playable, alongside the prototype's Azores and Cape Verde anchorages. Inland river ports use sourced river channels. Regional labels and inland cities with coastal gateways have explicit location notes in [the geography documentation](geography/README.md).
