@@ -133,7 +133,7 @@ function bindGuildOrder(render){
 function showGuild(){
   checkGuildDeadline(state);if(!hasGuild(state.port))return showQuestLog();
   const p=portById(state.port),q=state.guild.active,offers=q?[]:availableGuildJobs(state);save();
-  showModal('guild',p.name+' / Guild',`<div class="summary"><span>Gold <strong>${fmt(state.gold)}</strong></span><span>Renown <strong>${fmt(state.fame)}</strong></span><span>Contracts fulfilled <strong>${state.guild.completed}</strong></span></div>${q?`<h2>Your current orders</h2>${guildOrder(q,true)}`:`<h2>Available assignments</h2>${offers.map(q=>guildOrder(q)).join('')||'<p>No more assignments this month.</p>'}`}<div class="links menu-links">${menuButton('guild-quests','Quest log')}${menuButton('guild-market','Market')}${menuButton('guild-harbor','Harbor')}</div>`);
+  showModal('guild',p.name+' / Guild',`<div class="summary"><span>Gold <strong>${fmt(state.gold)}</strong></span><span>Renown <strong>${fmt(state.fame)}</strong></span><span>Contracts fulfilled <strong>${state.guild.completed}</strong></span></div>${q?`<h2>Your current orders</h2>${guildOrder(q,true)}`:`<h2>Available assignments</h2>${offers.map(q=>guildOrder(q)).join('')||'<p>No assignments available this month. Check another port or return next month.</p>'}`}<div class="links menu-links">${menuButton('guild-quests','Quest log')}${menuButton('guild-market','Market')}${menuButton('guild-harbor','Harbor')}</div>`);
   modal.querySelectorAll('[data-guild-accept]').forEach(b=>b.onclick=()=>transact(acceptGuildJob(state,b.dataset.guildAccept),showGuild));
   bindGuildOrder(showGuild);$('guild-quests').onclick=showQuestLog;$('guild-market').onclick=showMarket;$('guild-harbor').onclick=showHarbor;
 }

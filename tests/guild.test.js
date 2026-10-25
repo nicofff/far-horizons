@@ -2,18 +2,22 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { ports, pirateTemplates } from '../data.js';
 import { createGame, availableGuildJobs, acceptGuildJob, completeGuildJob, collectGuildDebt, abandonGuildJob, trade, portById, plotCourse, advance, pirates, startBattle, battleAction, migrateSave, validateSave, waitInPort, steer, onLand, findRoute } from '../engine.js';
-import { guildTypes, checkGuildDeadline, guildPirate } from '../guild.js';
+import { guildTypes, guildJobs, checkGuildDeadline, guildPirate } from '../guild.js';
 import { clearPassage } from '../terrain.js';
 
 function dock(s,id){const p=portById(id);s.port=id;s.position={x:p.x,y:p.y};s.route=[];s.destination=null;s.heading=null;s.paused=true;}
-function accept(kind){const s=createGame(7);assert.ok(acceptGuildJob(s,kind).ok);return s;}
+const jobSeeds={letter:3,buy:6,transport:14,debt:2,pirate:313};
+function accept(kind){const s=createGame(jobSeeds[kind]);assert.ok(acceptGuildJob(s,kind).ok);return s;}
 function sail(s,id){s.lastEvent=s.day;s.escapedUntil=s.day+1000;s.food=s.water=120;s.supplyWarned=true;assert.ok(plotCourse(s,id).ok);advance(s,100);assert.equal(s.port,id);}
 
 test('all five sourced job types have stable offers, actual local stock, and a single active contract',()=>{
-  const s=createGame(7),seen=[...s.seen],seed=s.seed,offers=availableGuildJobs(s);
-  assert.deepEqual(offers.map(q=>q.kind),Object.keys(guildTypes));assert.deepEqual(availableGuildJobs(migrateSave(structuredClone(s))),offers);
-  assert.equal(s.seed,seed);assert.deepEqual(s.seen,seen);
-  for(const q of offers){assert.ok(q.days>=30&&q.days<=365);assert.ok(q.fee>0);}
+  for(const kind of Object.keys(guildTypes)){
+    const s=createGame(jobSeeds[kind]),seen=[...s.seen],seed=s.seed,offers=availableGuildJobs(s);
+    assert.ok(offers.some(q=>q.kind===kind));assert.deepEqual(availableGuildJobs(migrateSave(structuredClone(s))),offers);
+    assert.equal(s.seed,seed);assert.deepEqual(s.seen,seen);
+    for(const q of offers){assert.ok(q.days>=30&&q.days<=365);assert.ok(q.fee>0);}
+  }
+  const s=createGame(jobSeeds.debt),seen=[...s.seen],offers=availableGuildJobs(s);
   const target=offers.find(q=>q.kind==='debt').target;assert.ok(!s.known.includes(target));
   assert.ok(acceptGuildJob(s,'debt').ok);assert.ok(s.known.includes(target));assert.deepEqual(s.seen,seen);
   const active=structuredClone(s.guild.active);assert.equal(acceptGuildJob(s,'letter').ok,false);assert.deepEqual(s.guild.active,active);
@@ -95,10 +99,46 @@ test('old saves gain an empty ledger and malformed active assignments are reject
   const pirate=accept('pirate');pirate.guild.active.enemy.x=NaN;assert.equal(validateSave(pirate),false);
 });
 
-test('the same five jobs are available beyond Europe and supply anchorages have no guild',()=>{
-  const s=createGame(7);
+test('trading ports offer subsets of job types, with no supply-port guilds',()=>{
+  const s=createGame(7);let open=0;
   for(const {id} of ports.filter(p=>!p.supplyOnly)){
-    dock(s,id);const jobs=availableGuildJobs(s);assert.deepEqual(jobs.map(q=>q.kind),Object.keys(guildTypes),id);assert.equal(onLand(jobs.find(q=>q.kind==='pirate').enemy.x,jobs.find(q=>q.kind==='pirate').enemy.y),false,id);
+    dock(s,id);const jobs=availableGuildJobs(s);if(!jobs.length)continue;open++;
+    assert.ok(jobs.every(q=>Object.hasOwn(guildTypes,q.kind)),id);assert.equal(new Set(jobs.map(q=>q.kind)).size,jobs.length);
+    const pirate=jobs.find(q=>q.kind==='pirate');if(pirate)assert.equal(onLand(pirate.enemy.x,pirate.enemy.y),false,id);
   }
+  assert.ok(open>0&&open<ports.filter(p=>!p.supplyOnly).length);
   const supply=ports.find(p=>p.supplyOnly);dock(s,supply.id);assert.deepEqual(availableGuildJobs(s),[]);assert.equal(acceptGuildJob(s,'letter').ok,false);
+});
+
+test('monthly work stays fixed across visits and saves, rerolls at the month boundary, and preserves accepted orders',()=>{
+  const s=createGame(46),offers=availableGuildJobs(s),seen=[...s.seen],seed=s.seed;
+  assert.deepEqual(offers.map(q=>q.kind),['letter']);assert.equal(s.seed,seed);assert.deepEqual(s.seen,seen);
+  s.seed=123456;dock(s,'seville');availableGuildJobs(s);dock(s,'lisbon');s.day=29.5;
+  assert.deepEqual(availableGuildJobs(s),offers);assert.deepEqual(availableGuildJobs(migrateSave(structuredClone(s))),offers);
+  assert.ok(acceptGuildJob(s,'letter').ok);const order=structuredClone(s.guild.active);
+  assert.ok(waitInPort(s,1).ok);assert.equal(s.day,30);assert.deepEqual(s.guild.active,order);assert.deepEqual(availableGuildJobs(s),[]);
+  assert.ok(abandonGuildJob(s).ok);
+  for(const kind of Object.keys(guildTypes))assert.equal(acceptGuildJob(s,kind).ok,false);
+  dock(s,'seville');availableGuildJobs(s);dock(s,'lisbon');
+  assert.deepEqual(availableGuildJobs(s),[]);assert.deepEqual(availableGuildJobs(migrateSave(structuredClone(s))),[]);
+});
+
+test('each job type appears about four percent of port-months, with mixed boards and separate monthly and voyage rolls',()=>{
+  const trading=ports.filter(p=>!p.supplyOnly),passage=(start,end)=>({route:[end],days:2}),patterns=[];
+  for(const seed of [7,8]){
+    const s=createGame(seed),pattern=[],counts=Object.fromEntries(Object.keys(guildTypes).map(kind=>[kind,0]));let open=0,mixed=0;
+    for(let month=0;month<24;month++){
+      s.day=(Date.UTC(1522,3+month,1)-Date.UTC(1522,3,1))/86400000;
+      for(const p of trading){
+        dock(s,p.id);const jobs=guildJobs(s,passage);
+        pattern.push(jobs.map(q=>q.kind));if(jobs.length)open++;if(jobs.length>1&&jobs.length<5)mixed++;
+        for(const q of jobs)counts[q.kind]++;
+      }
+    }
+    for(const [kind,count]of Object.entries(counts)){const rate=count/pattern.length;assert.ok(rate>.03&&rate<.05,`${kind} rate was ${rate}.`);}
+    const rate=open/pattern.length;assert.ok(rate>.15&&rate<.22,`Nonempty board rate was ${rate}.`);assert.ok(mixed>0);
+    assert.notDeepEqual(pattern.slice(0,trading.length),pattern.slice(trading.length,trading.length*2));
+    assert.equal(s.seed,seed);patterns.push(pattern);
+  }
+  assert.notDeepEqual(patterns[0],patterns[1]);
 });

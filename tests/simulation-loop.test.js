@@ -68,7 +68,7 @@ test('background catch-up stops at landfall and leaves the fleet paused for the 
 test('low supplies and pirate encounters still interrupt hidden sailing immediately',()=>{
   const s=voyage();s.food=s.water=10.1*rationRate(s);const h=sailingHarness(s);h.timer(60000);
   assert.equal(s.paused,true);assert.ok(supplyDays(s)<=10);assert.ok(s.day<1);assert.equal(h.timers.size,0);h.loop.stop();
-  const battle=createGame(7);battle.speed=16;assert.ok(acceptGuildJob(battle,'pirate').ok);const enemy=battle.guild.active.enemy;assert.ok(plotCourse(battle,{...enemy,id:undefined,enemy:enemy.id}).ok);
+  const battle=createGame(313);battle.speed=16;assert.ok(acceptGuildJob(battle,'pirate').ok);const enemy=battle.guild.active.enemy;assert.ok(plotCourse(battle,{...enemy,id:undefined,enemy:enemy.id}).ok);
   const b=sailingHarness(battle);b.timer(60000);assert.equal(battle.battle?.enemy.id,enemy.id);assert.equal(battle.paused,true);assert.equal(b.timers.size,0);assert.ok(validateSave(battle));b.loop.stop();
 });
 

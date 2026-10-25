@@ -18,7 +18,7 @@ Debt collections stay in a sealed purse outside the ship's spendable gold. A deb
 
 ## Offers and deadlines
 
-Each port offers one job of each type per calendar month. Destinations, cargo, contact names, and pirate names vary by port, month, and voyage seed. Closing a menu, reloading, completing, or abandoning an offer cannot immediately generate another copy of that offer. Other ports have their own boards. New-month boards refresh independently of an unfinished contract.
+Each of the five contract types has its own 4% chance of appearing at each trading port in a calendar month. A board can offer none, one, or several types. This averages one job per five ports, with about an 18.5% chance that a port has at least one job. Each type is rolled again at the start of each month and stays fixed for that port and voyage throughout the month, including after leaving, reopening menus, or reloading. Destinations, cargo, contact names, and pirate names also vary by port, month, and voyage seed. Completing or abandoning an offer cannot immediately generate another copy. Other ports have their own rolls. New-month boards refresh independently of an unfinished contract, which keeps its original terms and deadline.
 
 Offers use nearby trading ports reachable by the actual navigation graph, with market stocks checked against local development. The planner estimates passage time with the fleet's speed and seasonal winds. A deadline allows at least 30 days, or 1.75 times the estimated journey plus six days, rounded up. Procurement and debt collection include the return journey. This avoids offering impossible thirty-day passages across our geographic map. The weather can still change, and detours or a slower fleet can use up the margin.
 

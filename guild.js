@@ -35,11 +35,14 @@ export function guildJobs(s,passage){
   const origin=byPort(s.port),period=s.guild.month,key=`${origin.id}/${period}`;
   let cache=boards.get(s);if(!cache){cache=new Map();boards.set(s,cache);}
   if(!cache.has(key)){
-    cache.clear();const seed=hash(`${s.weatherSeed??s.seed}/${key}`),near=ports.filter(p=>!p.supplyOnly&&p.id!==origin.id).sort((a,b)=>worldDistance(origin,a)-worldDistance(origin,b)).slice(0,12);
+    cache.clear();
+    const kinds=new Set(Object.keys(guildTypes).filter(kind=>hash(`${s.weatherSeed??s.seed}/${key}/${kind}/availability`)%25===0));
+    if(!kinds.size){cache.set(key,[]);return [];}
+    const seed=hash(`${s.weatherSeed??s.seed}/${key}`),near=ports.filter(p=>!p.supplyOnly&&p.id!==origin.id).sort((a,b)=>worldDistance(origin,a)-worldDistance(origin,b)).slice(0,12);
     const trips=new Map(),trip=p=>{if(!trips.has(p.id))trips.set(p.id,passage(origin,p));return trips.get(p.id);};
     const reachable=near.filter(p=>{const t=trip(p);return t.route.length&&Number.isFinite(t.days)&&t.days<=40;});
     const offers=[];
-    const make=(kind,extra,days)=>offers.push({id:`${key}/${kind}`,kind,origin:origin.id,target:origin.id,source:null,good:null,quantity:0,reimbursement:0,contact:null,enemy:null,...extra,fee:guildTypes[kind].fee,fame:guildTypes[kind].fame,days:Math.max(30,Math.ceil(days*1.75+6))});
+    const make=(kind,extra,days)=>{if(kinds.has(kind))offers.push({id:`${key}/${kind}`,kind,origin:origin.id,target:origin.id,source:null,good:null,quantity:0,reimbursement:0,contact:null,enemy:null,...extra,fee:guildTypes[kind].fee,fame:guildTypes[kind].fame,days:Math.max(30,Math.ceil(days*1.75+6))});};
     if(reachable.length){
       const destination=reachable[seed%Math.min(4,reachable.length)];
       make('letter',{target:destination.id,contact:['the harbor clerk','the guild secretary','the warehouse factor'][seed%3]},trip(destination).days);
